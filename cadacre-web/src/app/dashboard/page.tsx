@@ -3,6 +3,9 @@ import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { ShortlistForm } from "@/components/ShortlistForm";
+import { TownMapExplorer } from "@/components/map/TownMapExplorer";
+import { FadeUp } from "@/components/motion/FadeIn";
+import { getAllTowns } from "@/data";
 
 export default async function DashboardPage({
   searchParams,
@@ -35,43 +38,56 @@ export default async function DashboardPage({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-16">
-        <p className="font-mono-figure text-xs uppercase tracking-[0.2em] text-survey-brass">
-          Dashboard
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-semibold text-ink-navy">
-          Welcome{user?.firstName ? `, ${user.firstName}` : ""}.
-        </h1>
-        <p className="mt-2 text-sm text-charcoal/70">
-          Enter your budget and target yield to generate your shortlist.
-        </p>
-
-        {justUnlocked && (
-          <p className="mt-4 rounded-sm border border-deep-forest bg-deep-forest/10 px-4 py-3 text-sm text-deep-forest">
-            Payment confirmed — your full report is unlocked below.
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-16">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono-figure text-xs uppercase tracking-[0.2em] text-survey-brass">
+            Dashboard
           </p>
-        )}
-        {unlockError && (
-          <p className="mt-4 rounded-sm border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-            We couldn&apos;t confirm that payment. If you were charged, contact
-            support@cadacre.com and we&apos;ll sort it out.
+          <h1 className="mt-3 font-display text-3xl font-semibold text-ink-navy">
+            Welcome{user?.firstName ? `, ${user.firstName}` : ""}.
+          </h1>
+          <p className="mt-2 text-sm text-charcoal/70">
+            Enter your budget and target yield to generate your shortlist.
           </p>
-        )}
 
-        <div className="mt-8 rounded-sm border border-faded-rule bg-white/30 p-5 text-xs leading-relaxed text-charcoal/60">
-          Cadacre provides general information based on public data and is not
-          personalised financial, investment, or legal advice.
+          {justUnlocked && (
+            <p className="mt-4 rounded-sm border border-deep-forest bg-deep-forest/10 px-4 py-3 text-sm text-deep-forest">
+              Payment confirmed — your full report is unlocked below.
+            </p>
+          )}
+          {unlockError && (
+            <p className="mt-4 rounded-sm border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+              We couldn&apos;t confirm that payment. If you were charged, contact
+              support@cadacre.com and we&apos;ll sort it out.
+            </p>
+          )}
         </div>
 
-        <div className="mt-6">
-          {user && (
-            <ShortlistForm
-              clerkUserId={user.id}
-              defaultBudget={budgetParam}
-              defaultYieldPct={yieldParam}
-              autoSubmit={justUnlocked && Boolean(budgetParam && yieldParam)}
-            />
-          )}
+        <FadeUp className="mt-8">
+          <p className="mx-auto max-w-3xl text-sm text-charcoal/70">
+            Browse all 18 towns on the map — click a pin for the full record.
+          </p>
+          <div className="mt-4">
+            <TownMapExplorer towns={getAllTowns()} />
+          </div>
+        </FadeUp>
+
+        <div className="mx-auto max-w-3xl">
+          <div className="mt-8 rounded-sm border border-faded-rule bg-white/30 p-5 text-xs leading-relaxed text-charcoal/60">
+            Cadacre provides general information based on public data and is not
+            personalised financial, investment, or legal advice.
+          </div>
+
+          <div className="mt-6">
+            {user && (
+              <ShortlistForm
+                clerkUserId={user.id}
+                defaultBudget={budgetParam}
+                defaultYieldPct={yieldParam}
+                autoSubmit={justUnlocked && Boolean(budgetParam && yieldParam)}
+              />
+            )}
+          </div>
         </div>
       </main>
 

@@ -51,6 +51,10 @@ export type Town = {
   id: string;
   name: string;
   state: "NSW";
+  // Public town-centroid coordinates, used only for map pin placement — a
+  // geographic fact, not a sourced dataset figure like price/yield. Never
+  // an address-level or property-level location (see AGENTS.md §5a/§5b).
+  coordinates: { lat: number; lng: number };
   medianPrice: SourcedField<number>;
   medianRent: SourcedField<number>;
   grossYieldPct: SourcedField<number>;
@@ -72,6 +76,7 @@ export const towns: Town[] = [
     id: "bathurst-nsw",
     name: "Bathurst",
     state: "NSW",
+    coordinates: { lat: -33.4193, lng: 149.5775 },
     medianPrice: {
       value: 665000,
       ...yip("12 months to May 2026"),
@@ -107,6 +112,7 @@ export const towns: Town[] = [
     id: "orange-nsw",
     name: "Orange",
     state: "NSW",
+    coordinates: { lat: -33.2839, lng: 149.1000 },
     medianPrice: {
       value: 730000,
       source: "PRD Orange Property Market Update, 1st Half 2026 (Q4 2025 data)",
@@ -150,6 +156,7 @@ export const towns: Town[] = [
     id: "dubbo-nsw",
     name: "Dubbo",
     state: "NSW",
+    coordinates: { lat: -32.2569, lng: 148.6011 },
     medianPrice: {
       value: 665000,
       ...yip("12 months to May 2026"),
@@ -190,6 +197,7 @@ export const towns: Town[] = [
     id: "wagga-wagga-nsw",
     name: "Wagga Wagga",
     state: "NSW",
+    coordinates: { lat: -35.1082, lng: 147.3598 },
     medianPrice: {
       value: 705000,
       source: "PRD Wagga Wagga Property Market Update, 1st Half 2026",
@@ -238,6 +246,7 @@ export const towns: Town[] = [
     id: "tamworth-nsw",
     name: "Tamworth",
     state: "NSW",
+    coordinates: { lat: -31.0927, lng: 150.9294 },
     medianPrice: {
       value: 650000,
       source: "PRD Tamworth Property Market Update, 1st Half 2026",
@@ -281,6 +290,7 @@ export const towns: Town[] = [
     id: "armidale-nsw",
     name: "Armidale",
     state: "NSW",
+    coordinates: { lat: -30.5106, lng: 151.6656 },
     medianPrice: {
       value: 625000,
       ...yip("12 months to May 2026"),
@@ -316,6 +326,7 @@ export const towns: Town[] = [
     id: "albury-nsw",
     name: "Albury",
     state: "NSW",
+    coordinates: { lat: -36.0737, lng: 146.9135 },
     medianPrice: {
       value: 668000,
       source: "PRD Albury Property Market Update, 1st Half 2026",
@@ -359,6 +370,7 @@ export const towns: Town[] = [
     id: "coffs-harbour-nsw",
     name: "Coffs Harbour",
     state: "NSW",
+    coordinates: { lat: -30.2963, lng: 153.1157 },
     medianPrice: {
       value: 950000,
       source: "PRD Coffs Harbour Property Market Update, 1st Half 2026",
@@ -402,6 +414,7 @@ export const towns: Town[] = [
     id: "lismore-nsw",
     name: "Lismore",
     state: "NSW",
+    coordinates: { lat: -28.8135, lng: 153.2777 },
     medianPrice: {
       value: 695000,
       source: "PRD Lismore Property Market Update, 2nd Half 2025",
@@ -445,6 +458,7 @@ export const towns: Town[] = [
     id: "tweed-heads-nsw",
     name: "Tweed Heads",
     state: "NSW",
+    coordinates: { lat: -28.1774, lng: 153.5468 },
     medianPrice: {
       value: 1333500,
       source: "PRD Tweed Heads Property Market Update, 1st Half 2026",
@@ -494,6 +508,7 @@ export const towns: Town[] = [
     id: "goulburn-nsw",
     name: "Goulburn",
     state: "NSW",
+    coordinates: { lat: -34.7544, lng: 149.7166 },
     medianPrice: {
       value: 685000,
       ...yip("12 months to May 2026"),
@@ -534,6 +549,7 @@ export const towns: Town[] = [
     id: "griffith-nsw",
     name: "Griffith",
     state: "NSW",
+    coordinates: { lat: -34.2874, lng: 146.0537 },
     medianPrice: {
       value: 660000,
       ...yip("12 months to May 2026"),
@@ -569,6 +585,7 @@ export const towns: Town[] = [
     id: "queanbeyan-nsw",
     name: "Queanbeyan",
     state: "NSW",
+    coordinates: { lat: -35.3538, lng: 149.2331 },
     medianPrice: {
       value: 873500,
       source: "Your Investment Property Mag — CoreLogic suburb data",
@@ -608,6 +625,7 @@ export const towns: Town[] = [
     id: "mudgee-nsw",
     name: "Mudgee",
     state: "NSW",
+    coordinates: { lat: -32.5946, lng: 149.5871 },
     medianPrice: {
       value: 737500,
       ...yip("12 months to May 2026"),
@@ -648,6 +666,7 @@ export const towns: Town[] = [
     id: "maitland-nsw",
     name: "Maitland",
     state: "NSW",
+    coordinates: { lat: -32.7326, lng: 151.5556 },
     medianPrice: {
       value: 672500,
       ...yip("12 months to May 2026"),
@@ -683,6 +702,7 @@ export const towns: Town[] = [
     id: "cessnock-nsw",
     name: "Cessnock",
     state: "NSW",
+    coordinates: { lat: -32.8337, lng: 151.3550 },
     medianPrice: {
       value: 720000,
       ...yip("12 months to May 2026"),
@@ -723,6 +743,7 @@ export const towns: Town[] = [
     id: "cowra-nsw",
     name: "Cowra",
     state: "NSW",
+    coordinates: { lat: -33.8362, lng: 148.6900 },
     medianPrice: {
       value: 480000,
       ...yip("12 months to May 2026"),
@@ -758,6 +779,7 @@ export const towns: Town[] = [
     id: "port-macquarie-nsw",
     name: "Port Macquarie",
     state: "NSW",
+    coordinates: { lat: -31.4333, lng: 152.9094 },
     medianPrice: {
       value: 922000,
       ...yip("12 months to May 2026"),
