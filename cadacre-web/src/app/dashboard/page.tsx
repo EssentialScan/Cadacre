@@ -1,21 +1,35 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { UserButton } from "@clerk/nextjs";
+import Image from "next/image";
 import Link from "next/link";
+import { ShortlistForm } from "@/components/ShortlistForm";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const user = await currentUser();
+  const params = await searchParams;
+
+  const budgetParam = typeof params.budget === "string" ? params.budget : undefined;
+  const yieldParam = typeof params.yield === "string" ? params.yield : undefined;
+  const justUnlocked = params.unlocked === "1";
+  const unlockError = params.unlock_error === "1";
 
   return (
     <div className="flex min-h-screen flex-col bg-parchment">
       <header className="border-b border-faded-rule">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-sm border border-ink-navy text-sm font-display font-semibold text-ink-navy">
-              C
-            </span>
-            <span className="font-display text-xl font-semibold text-ink-navy">
-              Cadacre
-            </span>
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/content.png"
+              alt="Cadacre"
+              width={1254}
+              height={1254}
+              priority
+              className="h-12 w-12"
+            />
           </Link>
           <UserButton />
         </div>
@@ -32,49 +46,48 @@ export default async function DashboardPage() {
           Enter your budget and target yield to generate your shortlist.
         </p>
 
-        <form className="mt-10 space-y-6 rounded-sm border border-faded-rule bg-white/50 p-6">
-          <div>
-            <label className="block text-sm font-medium text-ink-navy">
-              Budget (AUD)
-            </label>
-            <input
-              type="number"
-              placeholder="650000"
-              className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-4 py-2 font-mono-figure text-sm outline-none focus:border-ink-navy"
-              disabled
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-ink-navy">
-              Target gross yield (%)
-            </label>
-            <input
-              type="number"
-              placeholder="5.0"
-              className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-4 py-2 font-mono-figure text-sm outline-none focus:border-ink-navy"
-              disabled
-            />
-          </div>
-          <button
-            type="button"
-            disabled
-            className="w-full cursor-not-allowed rounded-sm bg-ink-navy/40 px-6 py-3 text-sm font-semibold text-parchment"
-          >
-            Generate shortlist — coming soon
-          </button>
-        </form>
+        {justUnlocked && (
+          <p className="mt-4 rounded-sm border border-deep-forest bg-deep-forest/10 px-4 py-3 text-sm text-deep-forest">
+            Payment confirmed — your full report is unlocked below.
+          </p>
+        )}
+        {unlockError && (
+          <p className="mt-4 rounded-sm border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+            We couldn&apos;t confirm that payment. If you were charged, contact
+            support@cadacre.com and we&apos;ll sort it out.
+          </p>
+        )}
 
-        <p className="mt-6 text-xs text-charcoal/50">
-          The live town dataset (ABS / SQM Research) isn&apos;t wired up yet.
-          This is a placeholder dashboard shell — the filtering engine ships
-          next.
-        </p>
-
-        <div className="mt-10 rounded-sm border border-faded-rule bg-white/30 p-5 text-xs leading-relaxed text-charcoal/60">
+        <div className="mt-8 rounded-sm border border-faded-rule bg-white/30 p-5 text-xs leading-relaxed text-charcoal/60">
           Cadacre provides general information based on public data and is not
           personalised financial, investment, or legal advice.
         </div>
+
+        <div className="mt-6">
+          {user && (
+            <ShortlistForm
+              clerkUserId={user.id}
+              defaultBudget={budgetParam}
+              defaultYieldPct={yieldParam}
+              autoSubmit={justUnlocked && Boolean(budgetParam && yieldParam)}
+            />
+          )}
+        </div>
       </main>
+
+      <footer className="border-t border-faded-rule">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-6 py-6 text-xs text-charcoal/50">
+          <span>© {new Date().getFullYear()} Cadacre. All rights reserved.</span>
+          <span className="flex gap-4">
+            <Link href="/terms" className="hover:text-ink-navy">
+              Terms of Service
+            </Link>
+            <Link href="/privacy" className="hover:text-ink-navy">
+              Privacy Policy
+            </Link>
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }

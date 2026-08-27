@@ -1,12 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --ink-navy: #1b2430;
-  --parchment: #faf7f0;
-  --survey-brass: #b8894f;
-  --deep-forest: #2f4538;
-  --faded-rule: #c9c2b4;
-  --charcoal: #2a2a28;
+  /* Premium "land registry" palette — near-black ink, warm ivory canvas,
+     antique gold accent, deep teal secondary, soft stone hairlines. */
+  --ink-navy: #12161c;
+  --parchment: #f6f2e9;
+  --survey-brass: #c6992f;
+  --deep-forest: #1f4741;
+  --faded-rule: #d9d2c1;
+  --charcoal: #2b2a25;
+
+  --gold-bright: #e0b64b;
+  --teal-bright: #2f6b62;
 
   --background: var(--parchment);
   --foreground: var(--charcoal);
@@ -19,6 +24,8 @@
   --color-deep-forest: var(--deep-forest);
   --color-faded-rule: var(--faded-rule);
   --color-charcoal: var(--charcoal);
+  --color-gold-bright: var(--gold-bright);
+  --color-teal-bright: var(--teal-bright);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -49,4 +56,13 @@ body {
 }
 .ledger-row:last-child {
   border-bottom: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--gold-bright);
+  color: var(--ink-navy);
 }

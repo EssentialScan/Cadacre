@@ -35,7 +35,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         lang="en"
         className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
       >
-        <body className="min-h-full flex flex-col bg-parchment text-charcoal">
+        <body
+          className="min-h-full flex flex-col bg-parchment text-charcoal"
+          suppressHydrationWarning
+        >
           {children}
         </body>
       </html>

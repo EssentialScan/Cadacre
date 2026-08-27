@@ -44,18 +44,26 @@ This file gives any AI coding agent (Claude Code, etc.) working on this repo ful
 
 **Name origin:** "Cadacre" riffs on *cadastre* — the real term for a government land/property record. The entire visual identity should read as "a modern land registry," not a generic SaaS dashboard.
 
-**Design tokens (do not deviate without discussion):**
-- Ink Navy `#1B2430` — primary dark / headings
-- Parchment `#FAF7F0` — primary background
-- Survey Brass `#B8894F` — accent, CTAs
-- Deep Forest `#2F4538` — secondary accent
-- Faded Rule `#C9C2B4` — hairlines, dividers, disabled/locked states
-- Charcoal `#2A2A28` — body text
+**Design tokens (do not deviate without discussion):** token *names* below are
+stable and used throughout the codebase (`bg-parchment`, `text-ink-navy`,
+etc. in `src/app/globals.css`); the underlying hex values were updated
+2026-08-27 to a "premium land registry" palette — near-black ink, warm ivory
+canvas, antique gold accent, deep teal secondary. Changing the values in
+`globals.css` cascades everywhere automatically since every component
+references the token names, not hardcoded hex.
+- Ink Navy `#12161C` — primary dark / headings
+- Parchment `#F6F2E9` — primary background
+- Survey Brass `#C6992F` (bright variant `#E0B64B`) — accent, CTAs
+- Deep Forest `#1F4741` — secondary accent
+- Faded Rule `#D9D2C1` — hairlines, dividers, disabled/locked states
+- Charcoal `#2B2A25` — body text
 
 **Typography:**
-- Display: **Fraunces** (serif, characterful — used for headlines, section titles, the numeral system in "How it works")
-- Body/UI: **IBM Plex Sans**
+- Display: **Fraunces** (serif, characterful — used for most headlines, section titles, the numeral system in "How it works")
+- Body/UI: **IBM Plex Sans** — also used bold/tight-tracked for the homepage Hero headline specifically, for a more corporate/professional feel than the serif elsewhere
 - Data/figures: **IBM Plex Mono** — all numbers (prices, yields, percentages) should render in mono to reinforce the "recorded, not decorated" feel
+
+**Logo:** `public/content.png` (1254×1254, square lockup — "CA" monogram over "CADACRE" wordmark, ivory background) — used in `SiteHeader.tsx` and `SiteFooter.tsx`. Keep it square-cropped as-is; don't stretch or reflow the lockup.
 
 **Signature UI element:** Results are displayed as a "ledger" — ruled rows, monospace figures, a check-mark per qualifying entry — not a generic dashboard card grid. Preserve this pattern when adding new result types.
 
@@ -98,6 +106,82 @@ These apply to every feature, every piece of copy, and every code change. If a r
 
 **Sample dataset fields per town:** name, state, median_price, gross_yield_pct, vacancy_rate_pct — expand only with real, sourced data, never invented figures.
 
+### 5a. Hazard flags & infrastructure projects (town-level, sourced)
+
+Added on top of the core price/yield/vacancy fields. Same non-negotiable rule
+applies: **real, sourced data only — never fabricated, never estimated.** If
+no credible official source is found for a town, the field is marked
+`"Not mapped"` / omitted, exactly like a missing price or yield figure.
+
+- **Bushfire risk flag** — sourced from the relevant state emergency service
+  (NSW: NSW RFS Bush Fire Prone Land mapping / disaster declaration history).
+  Displayed in the ledger as a small icon next to the town, town-level only.
+- **Flood risk flag** — sourced from the relevant state emergency service
+  (NSW: NSW SES flood information, council flood studies, BOM flood
+  classifications, disaster declaration history). Same display rule as
+  bushfire.
+- **Publicly announced infrastructure projects** — new hospitals, highways,
+  rail lines, university campuses, defence bases. Sourced from state
+  government budget papers, Infrastructure Australia, or council websites.
+  Stored and rendered as plain text, e.g.:
+  `"Inland Rail corridor — planned completion 2027 (source: ARTC)"`.
+  Shown in the full PDF report per town (not crammed into the free ledger).
+- **Granularity rule (hard constraint):** all of the above stays at
+  **town-level**. Never drop to property-level hazard or infrastructure
+  analysis — that would imply a specific-address assessment Cadacre is not
+  licensed or positioned to make (see Section 4). The PDF report's
+  "Before you proceed" checklist exists specifically to push
+  property-specific verification (exact-address bushfire/flood risk,
+  building/pest inspection, insurance quotes, etc.) back onto the buyer and
+  their own professionals, not onto Cadacre.
+- **PDF report "Before you proceed" checklist** — 5-7 items a rentvestor
+  should verify independently before acting on the shortlist (e.g. confirm
+  the *exact address's* bushfire/flood risk via council Section 10.7
+  certificate, get a building/pest inspection, get insurance quotes before
+  purchasing, verify rental appraisal with local property managers, check
+  zoning/nearby planned developments, speak to a licensed advisor). This
+  checklist is the mechanism that keeps the product legally and honestly
+  town-level (see Section 4, item 3) while still being genuinely useful.
+- **Important research finding (2026-08-27):** neither NSW RFS nor NSW SES
+  publishes a single official Low/Moderate/High/Extreme rating per town —
+  RFS Bush Fire Prone Land mapping is parcel/vegetation-category level, and
+  SES doesn't issue a categorical adjective per LGA either. The `level` on
+  each town's `bushfireRisk`/`floodRisk` in `src/data/towns.ts` is
+  **Cadacre's own characterization**, assigned only where there's solid
+  documented evidence (an explicit official statement, a declared disaster,
+  or quantified flood-study findings) — otherwise `level: null` ("Not
+  mapped"), never a guess. Every UI/PDF surface of these fields must keep
+  saying this is Cadacre's characterization, not a quoted agency rating —
+  see the disclaimer text in `src/app/api/report/route.tsx` and the tooltip
+  copy in `src/components/HazardIcons.tsx` for the exact wording to reuse.
+
+### 5b. Google Maps (town-level entry point, not property-level analysis)
+
+Each ledger row (web ledger and the homepage sample ledger) has a small map
+pin next to the town name (`src/components/TownMapToggle.tsx`) that toggles
+an inline embedded Google Map for that town, plus a link to open it in
+Google Maps directly.
+
+- **Implementation:** the keyless Google Maps embed
+  (`https://www.google.com/maps?q=<query>&output=embed`) — no API key or
+  billing required, works immediately. This is intentionally the simplest
+  thing that works; there is no `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` configured
+  anywhere in this repo yet.
+- **Upgrade path:** a richer multi-marker interactive map (e.g. all ranked
+  towns pinned on one map with an info-window of their ledger data) would
+  need the Maps JavaScript API, which requires a billed Google Cloud API
+  key. Don't wire that up speculatively — do it when asked, and add the key
+  to `.env.local.example` with setup notes at that point.
+- **Granularity boundary (important):** the map lets a user pan/zoom/street-
+  view to a specific address *inside Google's own product* once they click
+  through — that's fine, it's the user doing their own lookup, not Cadacre
+  publishing a property-level assessment. Do not use this map integration to
+  add any Cadacre-generated property-level rating, pin annotation, or
+  recommendation layer on top of it — that would violate the town-level-only
+  rule in Section 4 and §5a above. The UI copy next to the map pin ("opens
+  Google Maps, where you can look up a specific property yourself") exists
+  to keep that boundary explicit to users — keep it if you touch this code.
+
 ---
 
 ## 6. Current Status Snapshot
@@ -105,9 +189,40 @@ These apply to every feature, every piece of copy, and every code change. If a r
 - [x] Business concept validated through discussion, not yet through real users
 - [x] Name selected: Cadacre (checked for trademark/brand collisions — none found as of naming)
 - [x] Design direction and working front-end prototype built (`cadacre.html`)
-- [ ] Real ABS/SQM data not yet integrated (placeholder data only)
-- [ ] Stripe payment not yet live
-- [ ] Terms of Service / Privacy Policy not yet drafted
+- [x] Production Next.js app built end-to-end: Clerk auth-gated dashboard →
+      budget/yield form → ranking engine → free-3 teaser ledger → Stripe
+      Payment Link paywall → `/api/stripe/verify` unlock → downloadable PDF
+      report (`cadacre-web/`). Builds and lints clean.
+- [x] Town dataset is real, sourced, non-fabricated data (18 NSW regional
+      towns; PRD market updates + Your Investment Property Mag/CoreLogic
+      suburb data, each figure carrying its own source URL and as-of date;
+      unavailable figures are `null`, never guessed) — **note:** sourced
+      from PRD/YIP, not literally ABS/SQM as Section 5 specifies; revisit if
+      ABS/SQM-specific sourcing is required, and vacancy rate is missing for
+      most YIP-sourced towns.
+- [x] Hazard flags & infrastructure projects shipped (2026-08-27) — all 18
+      towns now carry sourced `bushfireRisk`/`floodRisk` (NSW RFS/SES,
+      disaster-declaration history; `null` where no credible source was
+      found — see §5a caveat above) and `infrastructureProjects` (state
+      budget papers / Infrastructure Australia / council sites). Shown as
+      small icons in the web ledger (`HazardIcons.tsx`) and as a full
+      table column + infrastructure notes + a 7-item "Before you proceed"
+      checklist in the PDF report (`api/report/route.tsx`). Town-level only.
+- [x] Google Maps entry point shipped (2026-08-27) — a map pin next to each
+      town in the ledger toggles a keyless embedded map + link-out to
+      Google Maps (`TownMapToggle.tsx`); no API key configured/needed for
+      this. See §5b for the granularity boundary and the upgrade path if a
+      full multi-marker map (needs a billed Maps JS API key) is wanted later.
+- [x] Logo shipped (2026-08-27) — `public/content.png` wired into
+      `SiteHeader.tsx` and `SiteFooter.tsx`.
+- [x] Terms of Service / Privacy Policy drafted in-app (`/terms`, `/privacy`)
+      — both carry a visible "pending professional legal review" notice and
+      must not be treated as final until a lawyer signs off.
+- [ ] Stripe payment not yet *live* — code path is complete but
+      `NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL` / `STRIPE_SECRET_KEY` are unset;
+      needs a real Stripe Payment Link created and a live test payment run
+      before this can be marked done (see Section 6 rule below).
+- [ ] Legal review of ToS/Privacy not yet done
 - [ ] Domain not yet purchased
 - [ ] Zero real users, zero real revenue
 

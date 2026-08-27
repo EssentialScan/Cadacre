@@ -1,99 +1,100 @@
-import Link from "next/link";
 import { SignUpButton } from "@clerk/nextjs";
+import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { ParallaxImage } from "@/components/motion/ParallaxImage";
 
 export function Hero() {
   return (
-    <section className="border-b border-faded-rule bg-parchment">
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
-        <div>
-          <p className="mb-4 font-mono-figure text-xs uppercase tracking-[0.2em] text-survey-brass">
-            Regional investment records · Australia
-          </p>
-          <h1 className="font-display text-4xl font-semibold leading-[1.1] text-ink-navy sm:text-5xl">
-            Priced out of Sydney? Here&apos;s where the numbers say to look
-            instead.
-          </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-charcoal/80">
-            Enter your budget and target yield. Cadacre searches public
-            housing records — median price, rental yield, vacancy rate — and
-            returns a plain, ranked shortlist of regional towns. No sponsored
-            placements, no buyer&apos;s agent pushing you toward their listing.
-          </p>
+    <section className="relative flex min-h-[92vh] flex-col overflow-hidden bg-parchment text-ink-navy">
+      <ParallaxImage
+        src="/pexels-omergulen-19366884.jpg"
+        alt="Golden-hour light on a regional apartment façade"
+        className="absolute inset-0"
+        priority
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 bg-linear-to-t from-parchment via-parchment/92 to-parchment/55" />
+      <div className="absolute inset-0 bg-linear-to-r from-parchment/85 via-parchment/30 to-parchment/70" />
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
-              <button className="rounded-sm bg-survey-brass px-6 py-3 text-sm font-semibold text-ink-navy transition hover:bg-survey-brass/90">
-                Run your free shortlist
-              </button>
-            </SignUpButton>
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 sm:px-8">
+        <FadeUp className="pt-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 font-mono-figure text-[11px] uppercase tracking-[0.25em] text-charcoal/55">
+            <span>Cadacre &middot; Regional Property Record</span>
+            <span>Est. 2026 &middot; Australia</span>
+          </div>
+        </FadeUp>
+
+        <div className="flex flex-1 flex-col justify-center py-16 sm:py-20">
+          <FadeUp>
+            <p className="font-mono-figure text-xs uppercase tracking-[0.3em] text-survey-brass">
+              For Sydney renters priced out of Sydney
+            </p>
+          </FadeUp>
+          <FadeUp delay={0.08}>
+            <h1 className="mt-5 max-w-3xl font-sans text-[2.5rem] font-bold leading-[1.12] tracking-tight text-ink-navy sm:text-6xl md:text-[3.9rem]">
+              Sydney closed the door.
+              <br />
+              The record found{" "}
+              <span className="text-survey-brass">eighteen more.</span>
+            </h1>
+          </FadeUp>
+          <FadeUp delay={0.16}>
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-charcoal/75 sm:text-lg">
+              Enter your budget and target yield. Cadacre checks it against
+              public housing records for regional Australia and hands back a
+              ranked shortlist — median price, rental yield, vacancy rate.
+              Sourced, dated, and never sponsored.
+            </p>
+          </FadeUp>
+
+          <FadeUp delay={0.24} className="mt-10 flex flex-wrap items-center gap-5">
+            <Magnetic>
+              <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+                <button className="group relative overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment">
+                  <span className="relative z-10">
+                    Run your free shortlist
+                  </span>
+                  <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />
+                </button>
+              </SignUpButton>
+            </Magnetic>
             <a
               href="#sample"
-              className="text-sm font-medium text-ink-navy underline decoration-faded-rule underline-offset-4 hover:decoration-ink-navy"
+              className="group relative text-sm font-medium text-ink-navy"
             >
-              See a sample record →
+              See a sample record
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink-navy transition-transform duration-300 ease-out group-hover:scale-x-100" />
             </a>
-          </div>
-
-          <p className="mt-6 text-xs text-charcoal/60">
-            First 3 results free. Full ranked report is a one-time $39 — no
-            subscription.
-          </p>
+          </FadeUp>
         </div>
 
-        <LedgerPreviewCard />
+        <Stagger className="grid grid-cols-2 gap-6 border-t border-faded-rule py-6 font-mono-figure text-xs uppercase tracking-wide text-charcoal/55 sm:grid-cols-4">
+          <StaggerItem>
+            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+              18
+            </span>
+            Towns on file
+          </StaggerItem>
+          <StaggerItem>
+            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+              3 free
+            </span>
+            Results, no card
+          </StaggerItem>
+          <StaggerItem>
+            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+              $39
+            </span>
+            Full record, once
+          </StaggerItem>
+          <StaggerItem>
+            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+              0
+            </span>
+            Sponsored placements
+          </StaggerItem>
+        </Stagger>
       </div>
     </section>
-  );
-}
-
-function LedgerPreviewCard() {
-  const rows = [
-    { town: "Bathurst, NSW", price: "$612,000", yield: "5.1%", vacancy: "1.2%", locked: false },
-    { town: "Orange, NSW", price: "$588,000", yield: "5.4%", vacancy: "0.9%", locked: false },
-    { town: "Dubbo, NSW", price: "$549,000", yield: "5.8%", vacancy: "1.0%", locked: false },
-    { town: "———", price: "———", yield: "———", vacancy: "———", locked: true },
-    { town: "———", price: "———", yield: "———", vacancy: "———", locked: true },
-  ];
-
-  return (
-    <div className="rounded-sm border border-faded-rule bg-white/60 shadow-sm">
-      <div className="flex items-center justify-between border-b border-faded-rule px-5 py-3">
-        <span className="font-display text-sm font-semibold text-ink-navy">
-          Shortlist — Budget $650,000 · Target yield 5%
-        </span>
-        <span className="font-mono-figure text-xs text-charcoal/50">
-          Sample
-        </span>
-      </div>
-      <div className="grid grid-cols-4 gap-2 border-b border-faded-rule px-5 py-2 text-[11px] font-semibold uppercase tracking-wide text-charcoal/50">
-        <span>Town</span>
-        <span>Median</span>
-        <span>Yield</span>
-        <span>Vacancy</span>
-      </div>
-      {rows.map((row, i) => (
-        <div
-          key={i}
-          className={`ledger-row grid grid-cols-4 gap-2 px-5 py-3 text-sm ${
-            row.locked ? "text-charcoal/30" : "text-charcoal"
-          }`}
-        >
-          <span className={row.locked ? "" : "font-medium text-ink-navy"}>
-            {row.locked ? "Locked" : row.town}
-          </span>
-          <span className="font-mono-figure">{row.price}</span>
-          <span className="font-mono-figure">{row.yield}</span>
-          <span className="font-mono-figure">{row.vacancy}</span>
-        </div>
-      ))}
-      <div className="border-t border-faded-rule px-5 py-3 text-center">
-        <Link
-          href="#pricing"
-          className="text-xs font-medium text-survey-brass hover:text-survey-brass/80"
-        >
-          Unlock the full ranked record — $39 one-time →
-        </Link>
-      </div>
-    </div>
   );
 }

@@ -1,4 +1,7 @@
 import { SignUpButton } from "@clerk/nextjs";
+import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
+import { DrawRule } from "@/components/motion/DrawRule";
+import { Magnetic } from "@/components/motion/Magnetic";
 
 const included = [
   "Full ranked list of every qualifying regional town",
@@ -10,37 +13,60 @@ const included = [
 export function Pricing() {
   return (
     <section id="pricing" className="border-b border-faded-rule bg-white/40">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <div className="mx-auto max-w-lg rounded-sm border border-ink-navy bg-parchment p-8 text-center shadow-sm">
-          <p className="font-mono-figure text-xs uppercase tracking-[0.2em] text-survey-brass">
-            One-time payment
-          </p>
-          <p className="mt-3 font-display text-5xl font-semibold text-ink-navy">
-            $39
-          </p>
-          <p className="mt-1 text-sm text-charcoal/60">
-            No subscription. No recurring charge.
-          </p>
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:items-start">
+          <FadeUp className="md:col-span-5">
+            <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
+              04 — Access
+            </p>
+            <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink-navy">
+              One number. No subscription. No catch.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-charcoal/70">
+              A wrong regional pick can cost a lot more than a buyer&apos;s
+              agent fee. This costs $39 and takes about two minutes to run.
+              Run the free shortlist first — you only pay to unlock the full
+              ranked report.
+            </p>
+          </FadeUp>
 
-          <ul className="mt-8 space-y-3 text-left text-sm text-charcoal/80">
-            {included.map((item) => (
-              <li key={item} className="flex items-start gap-2">
-                <span className="mt-0.5 text-deep-forest">✓</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <FadeUp delay={0.1} className="md:col-span-6 md:col-start-7">
+            <DrawRule />
+            <div className="flex items-baseline justify-between pt-8">
+              <span className="font-mono-figure text-xs uppercase tracking-[0.2em] text-charcoal/50">
+                One-time payment
+              </span>
+              <span className="font-display text-5xl font-semibold text-ink-navy">
+                $39
+              </span>
+            </div>
 
-          <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
-            <button className="mt-8 w-full rounded-sm bg-ink-navy px-6 py-3 text-sm font-semibold text-parchment transition hover:bg-ink-navy/90">
-              Get your full report
-            </button>
-          </SignUpButton>
+            <Stagger className="mt-8 divide-y divide-faded-rule border-t border-faded-rule">
+              {included.map((item) => (
+                <StaggerItem
+                  key={item}
+                  className="flex items-start gap-3 py-3 text-sm text-charcoal/80"
+                >
+                  <span className="mt-0.5 font-mono-figure text-deep-forest">
+                    ✓
+                  </span>
+                  <span>{item}</span>
+                </StaggerItem>
+              ))}
+            </Stagger>
 
-          <p className="mt-4 text-xs text-charcoal/50">
-            Run the free shortlist first — you only pay to unlock the full
-            ranked report.
-          </p>
+            <Magnetic strength={0.15} className="mt-10 block w-full">
+              <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+                <button className="group relative w-full overflow-hidden rounded-sm bg-ink-navy px-6 py-3 text-sm font-semibold text-parchment">
+                  <span className="relative z-10">Unlock the full record</span>
+                  <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/30 transition-transform duration-300 ease-out group-hover:translate-x-0" />
+                </button>
+              </SignUpButton>
+            </Magnetic>
+            <p className="mt-4 text-xs text-charcoal/50">
+              No subscription. No recurring charge.
+            </p>
+          </FadeUp>
         </div>
       </div>
     </section>

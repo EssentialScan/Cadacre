@@ -1,36 +1,50 @@
+import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
+import { DrawRule } from "@/components/motion/DrawRule";
+
 const steps = [
   {
     n: "I",
     title: "Enter your numbers",
-    body: "Your budget and the gross rental yield you're targeting. No account required to see your first results.",
+    body: "Budget, and the gross yield you need to make the sums work. Fifteen seconds. No account, no card.",
   },
   {
     n: "II",
-    title: "Cadacre filters the record",
-    body: "Every regional town is checked against ABS median price data and SQM vacancy rates. Only towns that clear your criteria make the list.",
+    title: "Cadacre checks the record",
+    body: "Every regional town on file is checked against your criteria — median price, gross yield, vacancy rate. Only the ones that clear the bar make your list.",
   },
   {
     n: "III",
-    title: "See your ranked shortlist",
-    body: "The top 3 towns are shown free, ranked by yield. The full ranked list — plus a downloadable report — unlocks for a one-time $39.",
+    title: "Get your ranked shortlist",
+    body: "Top 3 towns, free, ranked by yield. Unlock the full list and a downloadable report for a one-time $39 — less than a week of Sydney rent.",
   },
 ];
 
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="border-b border-faded-rule">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="font-display text-3xl font-semibold text-ink-navy">
-          How it works
-        </h2>
-        <p className="mt-3 max-w-xl text-sm text-charcoal/70">
-          Three steps, drawn entirely from public housing data.
-        </p>
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <FadeUp>
+            <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
+              02 — Method
+            </p>
+            <h2 className="mt-4 font-display text-3xl font-semibold text-ink-navy sm:text-4xl">
+              Three steps. No sales pitch.
+            </h2>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <p className="max-w-xs text-sm text-charcoal/60">
+              Drawn entirely from public housing data — nothing proprietary,
+              nothing withheld until you pay.
+            </p>
+          </FadeUp>
+        </div>
 
-        <div className="mt-12 grid gap-10 md:grid-cols-3">
+        <Stagger className="mt-16 grid gap-x-8 gap-y-12 md:grid-cols-3">
           {steps.map((step) => (
-            <div key={step.n} className="border-t-2 border-ink-navy pt-5">
-              <span className="font-display text-2xl font-semibold text-survey-brass">
+            <StaggerItem key={step.n}>
+              <DrawRule className="mb-5" />
+              <span className="font-display text-3xl font-semibold text-survey-brass">
                 {step.n}
               </span>
               <h3 className="mt-3 font-display text-lg font-semibold text-ink-navy">
@@ -39,9 +53,9 @@ export function HowItWorks() {
               <p className="mt-2 text-sm leading-relaxed text-charcoal/75">
                 {step.body}
               </p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
