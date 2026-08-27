@@ -182,6 +182,51 @@ Google Maps directly.
   Google Maps, where you can look up a specific property yourself") exists
   to keep that boundary explicit to users — keep it if you touch this code.
 
+### 5c. Dashboard town map + detail panel (separate from 5b, free/open)
+
+`/dashboard` now renders an interactive map of all 18 towns immediately on
+load, above the budget/yield form — `src/components/map/TownMapExplorer.tsx`
+(orchestrator), `TownMap.tsx` (Leaflet map), `TownDetailPanel.tsx` (the
+click-through detail dialog). This is a **separate feature** from §5b's
+per-row Google Maps toggle — different library, different purpose:
+
+- **Implementation:** `leaflet` + `react-leaflet` with **OpenStreetMap**
+  tiles — no API key, no billing, works immediately (same reasoning as §5b:
+  don't wire up a billed Google Maps JS API key speculatively). Custom
+  brand `DivIcon` pins avoid Leaflet's classic broken-default-marker-icon
+  bundler issue. The map component is loaded via
+  `next/dynamic(..., { ssr: false })` since Leaflet touches `window` at
+  import time.
+- **Fully open, not paywall-gated:** unlike the ranked shortlist (free-3 +
+  $39 unlock), clicking any of the 18 pins shows that town's full record
+  for free to anyone on the dashboard — this is a deliberate product
+  decision (confirmed with the founder), not an oversight. The map is a
+  general "browse the public record" tool; the $39 paywall stays exactly
+  where it already was, on the personalized budget/yield-ranked shortlist
+  + PDF report. Don't add paywall gating to the map without it being
+  explicitly requested again.
+- **Town-level only, same as everything else in §5a/§5b:** the panel shows
+  price/yield/vacancy/hazard-flags/infrastructure — never a property-level
+  rating. Address-level lookup happens only via the "Open in Google Maps"
+  link-out inside the panel (reuses the exact URL pattern from
+  `TownMapToggle.tsx`), never as a Cadacre-generated layer.
+- **`coordinates: { lat, lng }`** was added to every `Town` in
+  `src/data/towns.ts` — public town-centroid coordinates (a geographic
+  fact, not a sourced dataset figure), used only for pin placement.
+- **Known gotcha if you touch this again:** Leaflet's internal panes use
+  `z-index` values up to ~700-1000 (markers/tooltips/popups), and
+  `.leaflet-container` doesn't establish its own stacking context — so
+  anything meant to render *above* the map (like this modal) needs a
+  z-index well past Tailwind's `z-50` ceiling. The panel backdrop uses
+  `z-[9999]` for this reason; don't drop it back to a "normal" z-index.
+- **Pre-existing bug found during verification of this feature (not
+  introduced by it):** the budget input in `ShortlistForm.tsx` uses
+  `min={1} step={1000}`, which makes HTML5 number-input step validation
+  reject round values like `700000` (only `699001`/`700001`-style values
+  pass) — confirmed via an end-to-end Clerk test-mode sign-up + Playwright
+  session. Worth fixing (e.g. `min={0} step={1000}`) next time this file
+  is touched.
+
 ---
 
 ## 6. Current Status Snapshot
@@ -213,6 +258,13 @@ Google Maps directly.
       Google Maps (`TownMapToggle.tsx`); no API key configured/needed for
       this. See §5b for the granularity boundary and the upgrade path if a
       full multi-marker map (needs a billed Maps JS API key) is wanted later.
+- [x] Dashboard town map + detail panel shipped (2026-08-27) — Leaflet/OSM
+      interactive map on `/dashboard`, all 18 towns pinned, visible before
+      any form interaction; clicking a pin opens a full town-level detail
+      panel. Free/open, not paywall-gated (deliberate — see §5c). Verified
+      end-to-end via a real Clerk test-mode sign-up + Playwright session
+      (not just build/lint) — a real z-index stacking bug (Leaflet panes
+      rendering above the modal) was caught and fixed this way; see §5c.
 - [x] Logo shipped (2026-08-27) — `public/content.png` wired into
       `SiteHeader.tsx` and `SiteFooter.tsx`.
 - [x] Terms of Service / Privacy Policy drafted in-app (`/terms`, `/privacy`)
