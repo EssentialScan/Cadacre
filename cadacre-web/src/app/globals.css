@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --ink-navy: #1b2430;
+  --parchment: #faf7f0;
+  --survey-brass: #b8894f;
+  --deep-forest: #2f4538;
+  --faded-rule: #c9c2b4;
+  --charcoal: #2a2a28;
+
+  --background: var(--parchment);
+  --foreground: var(--charcoal);
+}
+
+@theme inline {
+  --color-ink-navy: var(--ink-navy);
+  --color-parchment: var(--parchment);
+  --color-survey-brass: var(--survey-brass);
+  --color-deep-forest: var(--deep-forest);
+  --color-faded-rule: var(--faded-rule);
+  --color-charcoal: var(--charcoal);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+.font-mono-figure {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ledger rule pattern used across result tables */
+.ledger-row {
+  border-bottom: 1px solid var(--faded-rule);
+}
+.ledger-row:last-child {
+  border-bottom: none;
+}
