@@ -18,6 +18,12 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-charcoal/80 md:flex">
+          <Link href="/explore" className="hover:text-ink-navy">
+            Explore map
+          </Link>
+          <Link href="/listings" className="hover:text-ink-navy">
+            Market scout
+          </Link>
           <a href="#how-it-works" className="hover:text-ink-navy">
             How it works
           </a>

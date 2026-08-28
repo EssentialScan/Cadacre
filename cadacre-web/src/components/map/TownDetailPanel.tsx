@@ -1,10 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import type { Town } from "@/data/towns";
 import { HazardIcons } from "@/components/HazardIcons";
+import { NearbyContext, type NearbyResearchData } from "@/components/NearbyContext";
+import { PropertyWorth } from "@/components/PropertyWorth";
+import { PublicRecordLayers } from "@/components/PublicRecordLayers";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -48,13 +51,21 @@ function DataRow({
 
 export function TownDetailPanel({
   town,
+  location,
   onClose,
 }: {
   town: Town | null;
+  location?: { lat: number; lng: number } | null;
   onClose: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [resolvedLocation, setResolvedLocation] = useState<{
+    name: string;
+    address: string;
+    postcode: string | null;
+  } | null>(null);
+  const [nearbyResearch, setNearbyResearch] = useState<NearbyResearchData | null>(null);
 
   // SSR-safe "are we mounted on the client" check for the portal below —
   // avoids a setState-in-effect (react-hooks/set-state-in-effect).
@@ -65,7 +76,7 @@ export function TownDetailPanel({
   );
 
   useEffect(() => {
-    if (!town) return;
+    if (!town && !location) return;
     closeButtonRef.current?.focus();
 
     function onKeyDown(e: KeyboardEvent) {
@@ -91,19 +102,20 @@ export function TownDetailPanel({
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [town, onClose]);
+  }, [town, location, onClose]);
 
   if (!mounted) return null;
 
-  const mapsQuery = town
+  const mapLocation = town?.coordinates ?? location;
+  const mapsQuery = mapLocation
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${town.name}, ${town.state}, Australia`
+        town ? `${town.name}, ${town.state}, Australia` : `${mapLocation.lat},${mapLocation.lng}`
       )}`
     : "";
 
   return createPortal(
     <AnimatePresence>
-      {town && (
+      {(town || location) && (
         <motion.div
           className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
@@ -122,24 +134,24 @@ export function TownDetailPanel({
             role="dialog"
             aria-modal="true"
             aria-labelledby="town-panel-heading"
-            className="relative z-10 w-full max-w-lg overflow-hidden rounded-sm border border-faded-rule bg-parchment shadow-[0_30px_60px_-25px_rgba(18,22,28,0.45)]"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 24 }}
-            transition={{ duration: 0.35, ease: EASE }}
+            className="relative z-10 flex h-full w-full max-w-xl flex-col overflow-hidden border-l border-faded-rule bg-parchment shadow-[-20px_0_60px_-25px_rgba(18,22,28,0.45)]"
+            initial={{ opacity: 0, x: 80 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 80 }}
+            transition={{ duration: 0.4, ease: EASE }}
           >
             <div className="h-1 w-full bg-survey-brass" aria-hidden />
-            <div className="max-h-[80vh] overflow-y-auto p-6 sm:p-7">
+            <div className="overflow-y-auto p-6 sm:p-8">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-mono-figure text-xs uppercase tracking-[0.2em] text-survey-brass">
-                    {town.state}
+                    {town?.state ?? "Map location"}
                   </p>
                   <h2
                     id="town-panel-heading"
                     className="mt-1 font-display text-2xl font-semibold text-ink-navy"
                   >
-                    {town.name}
+                    {town?.name ?? "Selected location"}
                   </h2>
                 </div>
                 <button
@@ -162,7 +174,31 @@ export function TownDetailPanel({
                 </button>
               </div>
 
-              <div className="mt-6 divide-y divide-faded-rule border-y border-faded-rule">
+              <div className="mt-6 border border-ink-navy bg-white/60 p-4 shadow-[4px_4px_0_var(--faded-rule)]">
+                <p className="font-mono-figure text-[10px] uppercase tracking-[0.18em] text-survey-brass">
+                  Location summary
+                </p>
+                <h3 className="mt-1 font-display text-xl font-semibold text-ink-navy">
+                  {resolvedLocation?.name ?? town?.name ?? "Resolving location…"}
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-charcoal/65">
+                  {resolvedLocation?.address ?? (town ? `${town.name}, ${town.state}, Australia` : "Finding the address for this pin…")}
+                </p>
+                <div className="mt-4 grid grid-cols-2 gap-3 border-t border-faded-rule pt-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-charcoal/45">Postcode</p>
+                    <p className="mt-1 font-mono-figure text-sm text-ink-navy">{resolvedLocation?.postcode ?? "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-charcoal/45">Average price</p>
+                    <p className="mt-1 font-mono-figure text-sm text-ink-navy">
+                      {town?.medianPrice.value === null || !town ? "—" : `$${town.medianPrice.value.toLocaleString("en-AU")}`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {town ? <div className="mt-6 divide-y divide-faded-rule border-y border-faded-rule">
                 <DataRow label="Median price" value={money(town.medianPrice.value)} />
                 <DataRow label="Median rent (p.w.)" value={money(town.medianRent.value)} />
                 <DataRow
@@ -171,9 +207,39 @@ export function TownDetailPanel({
                   note={town.derivedYield ? "(derived)" : undefined}
                 />
                 <DataRow label="Vacancy rate" value={pct(town.vacancyRatePct.value)} />
-              </div>
+              </div> : <p className="mt-6 border-y border-faded-rule py-4 text-sm leading-relaxed text-charcoal/70">This point is outside a Cadacre town record. Nearby mapped buildings and amenities are shown below; property listings and valuations are not available from the public map layer.</p>}
 
-              <div className="mt-5 flex items-center gap-2">
+              {mapLocation && (
+                <NearbyContext
+                  lat={mapLocation.lat}
+                  lng={mapLocation.lng}
+                  onLocationResolved={setResolvedLocation}
+                  onContextResolved={setNearbyResearch}
+                />
+              )}
+
+              {mapLocation && (
+                <PropertyWorth
+                  address={resolvedLocation?.address ?? (town ? `${town.name}, ${town.state}` : "This selected map location")}
+                  areaMedian={town?.medianPrice.value ?? null}
+                  research={resolvedLocation && nearbyResearch ? {
+                    locationName: resolvedLocation.name,
+                    postcode: resolvedLocation.postcode,
+                    medianRent: town?.medianRent.value ?? null,
+                    grossYieldPct: town?.grossYieldPct.value ?? null,
+                    vacancyRatePct: town?.vacancyRatePct.value ?? null,
+                    buildings: nearbyResearch.buildings,
+                    addressedBuildings: nearbyResearch.addressedBuildings,
+                    amenities: nearbyResearch.places,
+                    latitude: mapLocation.lat,
+                    longitude: mapLocation.lng,
+                  } : undefined}
+                />
+              )}
+
+              {mapLocation && <PublicRecordLayers lat={mapLocation.lat} lng={mapLocation.lng} />}
+
+              {town && <div className="mt-5 flex items-center gap-2">
                 <span className="text-xs uppercase tracking-wide text-charcoal/50">
                   Hazards
                 </span>
@@ -181,9 +247,9 @@ export function TownDetailPanel({
                   bushfireRisk={town.bushfireRisk}
                   floodRisk={town.floodRisk}
                 />
-              </div>
+              </div>}
 
-              <div className="mt-6">
+              {town && <div className="mt-6">
                 <h3 className="font-display text-sm font-semibold text-ink-navy">
                   Infrastructure
                 </h3>
@@ -213,9 +279,9 @@ export function TownDetailPanel({
                     No publicly announced projects on file for this town.
                   </p>
                 )}
-              </div>
+              </div>}
 
-              {town.notes && (
+              {town?.notes && (
                 <p className="mt-4 text-xs leading-relaxed text-charcoal/50">
                   {town.notes}
                 </p>

@@ -44,18 +44,19 @@ export function ShortlistResults({
   return (
     <div className="mt-8">
       <div className="rounded-sm border border-faded-rule">
-        <div className="grid grid-cols-[1fr_repeat(3,minmax(0,0.7fr))_minmax(0,0.55fr)] gap-2 border-b border-ink-navy bg-ink-navy px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-parchment">
+        <div className="grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] gap-2 border-b border-ink-navy bg-ink-navy px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-parchment">
           <span>Town</span>
           <span>Median price</span>
           <span>Gross yield</span>
           <span>Vacancy rate</span>
+          <span>Value signal</span>
           <span>Hazards</span>
         </div>
 
         {rows.map((row) => (
           <div
             key={row.rank}
-            className={`ledger-row grid grid-cols-[1fr_repeat(3,minmax(0,0.7fr))_minmax(0,0.55fr)] items-center gap-2 px-5 py-4 ${
+            className={`ledger-row grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] items-center gap-2 px-5 py-4 ${
               row.locked ? "text-charcoal/30" : "text-charcoal"
             }`}
           >
@@ -67,6 +68,7 @@ export function ShortlistResults({
                   </span>
                   Locked
                 </span>
+                <span className="font-mono-figure text-sm">—</span>
                 <span className="font-mono-figure text-sm">—</span>
                 <span className="font-mono-figure text-sm">—</span>
                 <span className="font-mono-figure text-sm">—</span>
@@ -108,6 +110,9 @@ export function ShortlistResults({
                 >
                   {pct(row.vacancyRatePct)}
                 </span>
+                <span className="font-mono-figure text-sm text-deep-forest">
+                  {row.valueScore}/100
+                </span>
                 <HazardIcons
                   bushfireRisk={row.bushfireRisk}
                   floodRisk={row.floodRisk}
@@ -123,6 +128,11 @@ export function ShortlistResults({
         record match your criteria.
         {hasLocked &&
           ` The first ${freeCount} are shown in full; ${lockedCount} more are locked.`}
+      </p>
+      <p className="mt-1 text-xs text-charcoal/50">
+        Value signal is a relative screening measure across this record: lower
+        price, stronger gross yield, and lower vacancy score higher. It is not
+        an appraisal, prediction, or investment recommendation.
       </p>
       <p className="mt-1 text-xs text-charcoal/50">
         Bushfire/flood icons are a town-level indicator only (source: state

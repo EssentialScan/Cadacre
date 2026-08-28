@@ -30,18 +30,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <ClerkProvider>
-      <html
-        lang="en"
-        className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+    >
+      <body
+        className="min-h-full flex flex-col bg-parchment text-charcoal"
+        suppressHydrationWarning
       >
-        <body
-          className="min-h-full flex flex-col bg-parchment text-charcoal"
-          suppressHydrationWarning
-        >
+        <ClerkProvider>
           {children}
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

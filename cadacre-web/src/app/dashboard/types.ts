@@ -6,6 +6,7 @@ export type LedgerRow =
   | {
       locked: false;
       rank: number;
+      valueScore: number;
       town: string;
       state: string;
       medianPrice: number | null;

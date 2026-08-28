@@ -85,3 +85,60 @@ html {
 .leaflet-tooltip.town-map-tooltip::before {
   border-top-color: var(--faded-rule);
 }
+.leaflet-tooltip.town-map-tooltip {
+  margin-top: 4px;
+}
+.town-map-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.town-map-label strong {
+  color: var(--ink-navy);
+  font-size: 11px;
+}
+.town-map-label small {
+  color: var(--deep-forest);
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 9px;
+}
+.small-place-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--parchment);
+  border-radius: 50%;
+  background: var(--deep-forest);
+  box-shadow: 0 1px 4px rgba(18, 22, 28, 0.35);
+}
+.leaflet-tooltip.small-place-tooltip {
+  margin-left: 5px;
+  padding: 2px 5px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.small-place-tooltip::before {
+  display: none;
+}
+.small-place-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.small-place-label strong {
+  color: var(--charcoal);
+  font-size: 10px;
+  font-weight: 600;
+  text-shadow: 0 1px var(--parchment), 1px 0 var(--parchment), 0 -1px var(--parchment), -1px 0 var(--parchment);
+}
+.small-place-label small {
+  color: var(--charcoal);
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 8px;
+  opacity: 0.65;
+}

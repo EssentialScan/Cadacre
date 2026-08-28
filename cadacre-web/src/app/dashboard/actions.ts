@@ -32,7 +32,7 @@ export async function getShortlist(input: {
   const ranked = rankTowns({ budget, targetYieldPct });
   const unlocked = await isUnlocked(userId);
 
-  const rows: LedgerRow[] = ranked.map(({ rank, town }) => {
+  const rows: LedgerRow[] = ranked.map(({ rank, town, valueScore }) => {
     const visible = unlocked || rank <= FREE_COUNT;
     if (!visible) {
       return { locked: true, rank };
@@ -40,6 +40,7 @@ export async function getShortlist(input: {
     return {
       locked: false,
       rank,
+      valueScore,
       town: town.name,
       state: town.state,
       medianPrice: town.medianPrice.value,

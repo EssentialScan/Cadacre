@@ -47,7 +47,8 @@ export default async function DashboardPage({
             Welcome{user?.firstName ? `, ${user.firstName}` : ""}.
           </h1>
           <p className="mt-2 text-sm text-charcoal/70">
-            Enter your budget and target yield to generate your shortlist.
+            Search the current town record for areas with a stronger value
+            signal at your budget and target yield.
           </p>
 
           {justUnlocked && (
