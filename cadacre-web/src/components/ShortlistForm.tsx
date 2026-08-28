@@ -32,11 +32,13 @@ export function ShortlistForm({
   defaultBudget,
   defaultYieldPct,
   autoSubmit,
+  onBudgetChange,
 }: {
   clerkUserId: string;
   defaultBudget?: string;
   defaultYieldPct?: string;
   autoSubmit?: boolean;
+  onBudgetChange?: (budget: number | undefined) => void;
 }) {
   const [state, formAction, isPending] = useActionState(submitAction, initialState);
   const formRef = useRef<HTMLFormElement>(null);
@@ -64,11 +66,15 @@ export function ShortlistForm({
             id="budget"
             name="budget"
             type="number"
-            min={1}
+            min={0}
             step={1000}
             required
             defaultValue={defaultBudget}
             placeholder="650000"
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              onBudgetChange?.(e.target.value && !Number.isNaN(value) ? value : undefined);
+            }}
             className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-4 py-2 font-mono-figure text-sm outline-none focus:border-ink-navy"
           />
         </div>

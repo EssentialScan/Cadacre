@@ -68,32 +68,35 @@ export function Hero() {
           </FadeUp>
         </div>
 
-        <Stagger className="grid grid-cols-2 gap-6 border-t border-faded-rule py-6 font-mono-figure text-xs uppercase tracking-wide text-charcoal/55 sm:grid-cols-4">
-          <StaggerItem>
-            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
-              18
-            </span>
-            Towns on file
-          </StaggerItem>
-          <StaggerItem>
-            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
-              3 free
-            </span>
-            Results, no card
-          </StaggerItem>
-          <StaggerItem>
-            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
-              $39
-            </span>
-            Full record, once
-          </StaggerItem>
-          <StaggerItem>
-            <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
-              0
-            </span>
-            Sponsored placements
-          </StaggerItem>
-        </Stagger>
+        <div className="relative border-t border-faded-rule">
+          <div className="terminal-grid absolute inset-0 bg-parchment/75" aria-hidden />
+          <Stagger className="relative grid grid-cols-2 gap-6 py-6 font-mono-figure text-xs uppercase tracking-wide text-charcoal/55 sm:grid-cols-4">
+            <StaggerItem>
+              <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+                NSW
+              </span>
+              Regional towns on file
+            </StaggerItem>
+            <StaggerItem>
+              <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+                3 free
+              </span>
+              Results, no card
+            </StaggerItem>
+            <StaggerItem>
+              <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+                $39
+              </span>
+              Full record, once
+            </StaggerItem>
+            <StaggerItem>
+              <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
+                0
+              </span>
+              Sponsored placements
+            </StaggerItem>
+          </Stagger>
+        </div>
       </div>
     </section>
   );

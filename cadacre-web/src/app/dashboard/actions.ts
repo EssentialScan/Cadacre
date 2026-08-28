@@ -10,6 +10,37 @@ async function isUnlocked(userId: string): Promise<boolean> {
   return user.privateMetadata?.unlocked === true;
 }
 
+function readSavedTownIds(metadata: Record<string, unknown> | undefined): string[] {
+  const raw = metadata?.savedTownIds;
+  return Array.isArray(raw) ? raw.filter((id): id is string => typeof id === "string") : [];
+}
+
+export async function getSavedTownIds(): Promise<string[]> {
+  const { userId } = await auth();
+  if (!userId) return [];
+
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  return readSavedTownIds(user.privateMetadata);
+}
+
+export async function toggleSavedTown(townId: string): Promise<string[]> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Not authenticated.");
+  }
+
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  const current = readSavedTownIds(user.privateMetadata);
+  const next = current.includes(townId)
+    ? current.filter((id) => id !== townId)
+    : [...current, townId];
+
+  await client.users.updateUserMetadata(userId, { privateMetadata: { savedTownIds: next } });
+  return next;
+}
+
 export async function getShortlist(input: {
   budget: number;
   targetYieldPct: number;

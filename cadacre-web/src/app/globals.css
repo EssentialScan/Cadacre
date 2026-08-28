@@ -2,17 +2,23 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  /* Premium "land registry" palette — near-black ink, warm ivory canvas,
-     antique gold accent, deep teal secondary, soft stone hairlines. */
-  --ink-navy: #12161c;
-  --parchment: #f6f2e9;
-  --survey-brass: #c6992f;
-  --deep-forest: #1f4741;
-  --faded-rule: #d9d2c1;
-  --charcoal: #2b2a25;
+  /* Light-mode "market terminal" palette — crisp near-white canvas, near-
+     black ink, terminal-blue signal accent, terminal-green secondary, cool
+     hairline gridlines. Same token names as before (AGENTS.md §3), only
+     the hex values changed, so every component picks this up automatically.
+     Accent was amber/brass through 2026-08-28, moved to blue same day after
+     the amber read as "brown" — kept the `survey-brass`/`gold-bright` token
+     names stable per the "don't deviate token names" rule even though the
+     literal color is no longer brass. */
+  --ink-navy: #0e1015;
+  --parchment: #f7f8fa;
+  --survey-brass: #1d5fd6;
+  --deep-forest: #0f7a4a;
+  --faded-rule: #d7dbe1;
+  --charcoal: #1b1d21;
 
-  --gold-bright: #e0b64b;
-  --teal-bright: #2f6b62;
+  --gold-bright: #4c86f0;
+  --teal-bright: #12966b;
 
   --background: var(--parchment);
   --foreground: var(--charcoal);
@@ -61,6 +67,42 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Faint graph-paper grid, used behind a handful of sections for a "market
+   terminal" texture — deliberately subtle, light-mode only, no dark fills. */
+.terminal-grid {
+  background-image:
+    repeating-linear-gradient(to right, var(--faded-rule) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(to bottom, var(--faded-rule) 0 1px, transparent 1px 40px);
+  background-position: center;
+  opacity: 0.4;
+}
+
+/* Small HUD-style corner brackets, layered as a decorative frame on a
+   panel — pure decoration, not a data indicator. */
+.terminal-corners {
+  position: relative;
+}
+.terminal-corners::before,
+.terminal-corners::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+.terminal-corners::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--survey-brass);
+  border-left: 2px solid var(--survey-brass);
+}
+.terminal-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--survey-brass);
+  border-right: 2px solid var(--survey-brass);
 }
 
 ::selection {

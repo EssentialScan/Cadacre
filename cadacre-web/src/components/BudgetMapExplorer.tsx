@@ -63,7 +63,7 @@ export function BudgetMapExplorer({ towns }: { towns: Town[] }) {
           step={25000}
           value={budget}
           onChange={(event) => setBudget(Number(event.target.value))}
-          className="mt-6 w-full accent-[#e0b64b]"
+          className="mt-6 w-full accent-gold-bright"
         />
         <div className="mt-2 flex justify-between font-mono-figure text-xs text-parchment/60">
           <span>$250k</span><span>$1m</span>

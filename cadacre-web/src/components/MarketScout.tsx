@@ -44,7 +44,7 @@ export function MarketScout({ towns }: { towns: Town[] }) {
             step={25000}
             value={budget}
             onChange={(event) => setBudget(Number(event.target.value))}
-            className="mt-3 block w-full accent-[#c6992f]"
+            className="mt-3 block w-full accent-survey-brass"
           />
           <span className="font-mono-figure text-ink-navy">{money(budget)}</span>
         </label>
@@ -57,7 +57,7 @@ export function MarketScout({ towns }: { towns: Town[] }) {
             step={0.5}
             value={minimumYield}
             onChange={(event) => setMinimumYield(Number(event.target.value))}
-            className="mt-3 block w-full accent-[#c6992f]"
+            className="mt-3 block w-full accent-survey-brass"
           />
           <span className="font-mono-figure text-ink-navy">{minimumYield.toFixed(1)}%</span>
         </label>
@@ -79,7 +79,7 @@ export function MarketScout({ towns }: { towns: Town[] }) {
         {results.map((town) => (
           <article key={town.id} className="group overflow-hidden rounded-sm border border-faded-rule bg-white/50 transition hover:-translate-y-1 hover:border-survey-brass hover:shadow-[6px_6px_0_var(--faded-rule)]">
             <div className="relative flex h-32 items-end justify-between overflow-hidden bg-deep-forest p-4 text-parchment">
-              <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(135deg,transparent_45%,#e0b64b_46%,transparent_48%),linear-gradient(45deg,transparent_45%,#f6f2e9_46%,transparent_48%)] [background-size:28px_28px]" />
+              <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(135deg,transparent_45%,var(--gold-bright)_46%,transparent_48%),linear-gradient(45deg,transparent_45%,var(--parchment)_46%,transparent_48%)] [background-size:28px_28px]" />
               <span className="relative font-mono-figure text-[10px] uppercase tracking-[0.2em] text-gold-bright">{town.state} / public record</span>
               <span className="relative font-display text-3xl">{town.name.slice(0, 1)}</span>
             </div>

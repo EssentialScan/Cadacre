@@ -63,6 +63,22 @@ export type Town = {
   bushfireRisk: HazardFlag;
   floodRisk: HazardFlag;
   infrastructureProjects: InfrastructureProject[];
+  // Real, sourced multi-year median house price series where a credible
+  // public source states one (CoreLogic/YIP suburb profile, Domain/REA
+  // suburb profile, etc.) — omitted (undefined) rather than fabricated or
+  // interpolated when no such series was found. See AGENTS.md §5c.
+  priceHistory?: SourcedField<{ year: number; medianPrice: number }[]>;
+  // ABS Estimated Resident Population for the LGA the town centroid falls
+  // in (geo.abs.gov.au ArcGIS feature service, real government data —
+  // never fabricated). growthPct is the 2016→2021 change for that LGA.
+  population?: SourcedField<{ estimate: number; growthPct?: number }>;
+  // Open-Meteo climate normals (2021–2023 daily archive, averaged) for the
+  // town centroid — a real weather dataset, not a Cadacre estimate.
+  climate?: SourcedField<{ avgSummerMaxC: number; avgWinterMinC: number; annualRainfallMm: number }>;
+  // OpenStreetMap Overpass counts of schools/hospitals/supermarkets within
+  // radiusKm of the town centroid — a real snapshot count, not a
+  // property-level or address-level analysis (stays town-level per §5a).
+  amenities?: SourcedField<{ schools: number; hospitals: number; supermarkets: number; radiusKm: number }>;
   notes?: string;
 };
 
@@ -77,6 +93,24 @@ export const towns: Town[] = [
     name: "Bathurst",
     state: "NSW",
     coordinates: { lat: -33.4193, lng: 149.5775 },
+    population: {
+      value: { estimate: 43653, growthPct: 3.34 },
+      source: "ABS Estimated Resident Population (LGA: Bathurst Regional), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 24.9, avgWinterMinC: 2.1, annualRainfallMm: 792 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
+    amenities: {
+      value: { schools: 16, hospitals: 3, supermarkets: 9, radiusKm: 5 },
+      source: "OpenStreetMap Overpass API — count within 5km of town centroid",
+      sourceUrl: "https://overpass-api.de/api/interpreter",
+      asOf: "2026-08-28",
+    },
     medianPrice: {
       value: 665000,
       ...yip("12 months to May 2026"),
@@ -113,6 +147,18 @@ export const towns: Town[] = [
     name: "Orange",
     state: "NSW",
     coordinates: { lat: -33.2839, lng: 149.1000 },
+    population: {
+      value: { estimate: 43736, growthPct: 6.13 },
+      source: "ABS Estimated Resident Population (LGA: Orange), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 23.5, avgWinterMinC: 2.7, annualRainfallMm: 936 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 730000,
       source: "PRD Orange Property Market Update, 1st Half 2026 (Q4 2025 data)",
@@ -157,6 +203,24 @@ export const towns: Town[] = [
     name: "Dubbo",
     state: "NSW",
     coordinates: { lat: -32.2569, lng: 148.6011 },
+    population: {
+      value: { estimate: 55518, growthPct: 8.00 },
+      source: "ABS Estimated Resident Population (LGA: Dubbo Regional), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 29.6, avgWinterMinC: 5.1, annualRainfallMm: 827 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
+    amenities: {
+      value: { schools: 21, hospitals: 3, supermarkets: 6, radiusKm: 5 },
+      source: "OpenStreetMap Overpass API — count within 5km of town centroid",
+      sourceUrl: "https://overpass-api.de/api/interpreter",
+      asOf: "2026-08-28",
+    },
     medianPrice: {
       value: 665000,
       ...yip("12 months to May 2026"),
@@ -198,6 +262,18 @@ export const towns: Town[] = [
     name: "Wagga Wagga",
     state: "NSW",
     coordinates: { lat: -35.1082, lng: 147.3598 },
+    population: {
+      value: { estimate: 67860, growthPct: 6.19 },
+      source: "ABS Estimated Resident Population (LGA: Wagga Wagga), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 28.7, avgWinterMinC: 4.7, annualRainfallMm: 879 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 705000,
       source: "PRD Wagga Wagga Property Market Update, 1st Half 2026",
@@ -247,6 +323,18 @@ export const towns: Town[] = [
     name: "Tamworth",
     state: "NSW",
     coordinates: { lat: -31.0927, lng: 150.9294 },
+    population: {
+      value: { estimate: 63652, growthPct: 4.37 },
+      source: "ABS Estimated Resident Population (LGA: Tamworth Regional), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 28.9, avgWinterMinC: 4.3, annualRainfallMm: 920 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 650000,
       source: "PRD Tamworth Property Market Update, 1st Half 2026",
@@ -291,6 +379,18 @@ export const towns: Town[] = [
     name: "Armidale",
     state: "NSW",
     coordinates: { lat: -30.5106, lng: 151.6656 },
+    population: {
+      value: { estimate: 29332, growthPct: 0.08 },
+      source: "ABS Estimated Resident Population (LGA: Armidale Regional), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 23.2, avgWinterMinC: 2.7, annualRainfallMm: 907 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 625000,
       ...yip("12 months to May 2026"),
@@ -327,6 +427,18 @@ export const towns: Town[] = [
     name: "Albury",
     state: "NSW",
     coordinates: { lat: -36.0737, lng: 146.9135 },
+    population: {
+      value: { estimate: 56036, growthPct: 7.41 },
+      source: "ABS Estimated Resident Population (LGA: Albury), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 27.8, avgWinterMinC: 4.8, annualRainfallMm: 989 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 668000,
       source: "PRD Albury Property Market Update, 1st Half 2026",
@@ -371,6 +483,18 @@ export const towns: Town[] = [
     name: "Coffs Harbour",
     state: "NSW",
     coordinates: { lat: -30.2963, lng: 153.1157 },
+    population: {
+      value: { estimate: 78738, growthPct: 5.45 },
+      source: "ABS Estimated Resident Population (LGA: Coffs Harbour), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 25.9, avgWinterMinC: 10.3, annualRainfallMm: 1817 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 950000,
       source: "PRD Coffs Harbour Property Market Update, 1st Half 2026",
@@ -415,6 +539,18 @@ export const towns: Town[] = [
     name: "Lismore",
     state: "NSW",
     coordinates: { lat: -28.8135, lng: 153.2777 },
+    population: {
+      value: { estimate: 44344, growthPct: 0.50 },
+      source: "ABS Estimated Resident Population (LGA: Lismore), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 28.2, avgWinterMinC: 9.7, annualRainfallMm: 1462 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 695000,
       source: "PRD Lismore Property Market Update, 2nd Half 2025",
@@ -459,6 +595,18 @@ export const towns: Town[] = [
     name: "Tweed Heads",
     state: "NSW",
     coordinates: { lat: -28.1774, lng: 153.5468 },
+    population: {
+      value: { estimate: 97151, growthPct: 3.64 },
+      source: "ABS Estimated Resident Population (LGA: Tweed), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 26.8, avgWinterMinC: 11, annualRainfallMm: 1545 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 1333500,
       source: "PRD Tweed Heads Property Market Update, 1st Half 2026",
@@ -509,6 +657,18 @@ export const towns: Town[] = [
     name: "Goulburn",
     state: "NSW",
     coordinates: { lat: -34.7544, lng: 149.7166 },
+    population: {
+      value: { estimate: 32138, growthPct: 6.20 },
+      source: "ABS Estimated Resident Population (LGA: Goulburn Mulwaree), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 23.6, avgWinterMinC: 3.2, annualRainfallMm: 862 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 685000,
       ...yip("12 months to May 2026"),
@@ -526,6 +686,15 @@ export const towns: Town[] = [
     },
     derivedYield: false,
     vacancyRatePct: { value: null },
+    priceHistory: {
+      value: [
+        { year: 2022, medianPrice: 672500 },
+        { year: 2023, medianPrice: 665500 },
+      ],
+      source: "Ray White Goulburn (principal Justin Gay), quoted in About Regional",
+      sourceUrl: "https://aboutregional.com.au/goulburn-property-market-catches-its-breath-in-2023/441152/",
+      asOf: "2023",
+    },
     bushfireRisk: {
       level: "High",
       source: "Goulburn Mulwaree Council draft Bush Fire Prone Land map (NSW RFS-certified process) — reported almost all non-urban land in the LGA reclassified as bushfire prone",
@@ -550,6 +719,18 @@ export const towns: Town[] = [
     name: "Griffith",
     state: "NSW",
     coordinates: { lat: -34.2874, lng: 146.0537 },
+    population: {
+      value: { estimate: 27182, growthPct: 3.13 },
+      source: "ABS Estimated Resident Population (LGA: Griffith), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 30.6, avgWinterMinC: 6.1, annualRainfallMm: 665 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 660000,
       ...yip("12 months to May 2026"),
@@ -586,6 +767,18 @@ export const towns: Town[] = [
     name: "Queanbeyan",
     state: "NSW",
     coordinates: { lat: -35.3538, lng: 149.2331 },
+    population: {
+      value: { estimate: 63364, growthPct: 9.64 },
+      source: "ABS Estimated Resident Population (LGA: Queanbeyan-Palerang Regional), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 24.7, avgWinterMinC: 3, annualRainfallMm: 942 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 873500,
       source: "Your Investment Property Mag — CoreLogic suburb data",
@@ -626,6 +819,18 @@ export const towns: Town[] = [
     name: "Mudgee",
     state: "NSW",
     coordinates: { lat: -32.5946, lng: 149.5871 },
+    population: {
+      value: { estimate: 25704, growthPct: 4.72 },
+      source: "ABS Estimated Resident Population (LGA: Mid-Western Regional), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 26.6, avgWinterMinC: 3.5, annualRainfallMm: 833 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 737500,
       ...yip("12 months to May 2026"),
@@ -667,6 +872,18 @@ export const towns: Town[] = [
     name: "Maitland",
     state: "NSW",
     coordinates: { lat: -32.7326, lng: 151.5556 },
+    population: {
+      value: { estimate: 90553, growthPct: 14.53 },
+      source: "ABS Estimated Resident Population (LGA: Maitland), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 28.1, avgWinterMinC: 8.2, annualRainfallMm: 929 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 672500,
       ...yip("12 months to May 2026"),
@@ -703,6 +920,18 @@ export const towns: Town[] = [
     name: "Cessnock",
     state: "NSW",
     coordinates: { lat: -32.8337, lng: 151.3550 },
+    population: {
+      value: { estimate: 64082, growthPct: 12.98 },
+      source: "ABS Estimated Resident Population (LGA: Cessnock), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 26.9, avgWinterMinC: 7.3, annualRainfallMm: 974 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 720000,
       ...yip("12 months to May 2026"),
@@ -744,6 +973,18 @@ export const towns: Town[] = [
     name: "Cowra",
     state: "NSW",
     coordinates: { lat: -33.8362, lng: 148.6900 },
+    population: {
+      value: { estimate: 12753, growthPct: 0.74 },
+      source: "ABS Estimated Resident Population (LGA: Cowra), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 28.7, avgWinterMinC: 4.4, annualRainfallMm: 898 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 480000,
       ...yip("12 months to May 2026"),
@@ -780,6 +1021,18 @@ export const towns: Town[] = [
     name: "Port Macquarie",
     state: "NSW",
     coordinates: { lat: -31.4333, lng: 152.9094 },
+    population: {
+      value: { estimate: 86585, growthPct: 8.13 },
+      source: "ABS Estimated Resident Population (LGA: Port Macquarie-Hastings), 2016 vs 2021",
+      sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
+      asOf: "2021",
+    },
+    climate: {
+      value: { avgSummerMaxC: 25.2, avgWinterMinC: 9.9, annualRainfallMm: 1274 },
+      source: "Open-Meteo historical weather archive, 2021–2023 daily average",
+      sourceUrl: "https://open-meteo.com/en/docs/historical-weather-api",
+      asOf: "2021–2023",
+    },
     medianPrice: {
       value: 922000,
       ...yip("12 months to May 2026"),

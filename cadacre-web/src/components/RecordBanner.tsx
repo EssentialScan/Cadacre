@@ -1,9 +1,8 @@
 import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
-import { Counter } from "@/components/motion/Counter";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 
 const stats = [
-  { value: "towns", label: "Towns tracked, updated as sources refresh" },
+  { value: "NSW", label: "Regional towns tracked, updated as sources refresh" },
   { value: "$39", label: "To unlock the full ranked record — once" },
   { value: "0", label: "Sponsored placements in the rankings" },
 ];
@@ -19,6 +18,7 @@ export function RecordBanner() {
       />
       <div className="absolute inset-0 bg-parchment/88" />
       <div className="absolute inset-0 bg-linear-to-t from-parchment via-parchment/70 to-parchment/50" />
+      <div className="terminal-grid absolute inset-0" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-24 sm:px-8">
         <FadeUp className="max-w-xl">
@@ -34,7 +34,7 @@ export function RecordBanner() {
           {stats.map((stat) => (
             <StaggerItem key={stat.label}>
               <span className="font-display text-4xl font-semibold text-ink-navy">
-                {stat.value === "towns" ? <Counter to={18} /> : stat.value}
+                {stat.value}
               </span>
               <p className="mt-2 max-w-[16rem] font-mono-figure text-xs uppercase tracking-wide text-charcoal/60">
                 {stat.label}

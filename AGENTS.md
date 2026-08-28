@@ -46,17 +46,26 @@ This file gives any AI coding agent (Claude Code, etc.) working on this repo ful
 
 **Design tokens (do not deviate without discussion):** token *names* below are
 stable and used throughout the codebase (`bg-parchment`, `text-ink-navy`,
-etc. in `src/app/globals.css`); the underlying hex values were updated
-2026-08-27 to a "premium land registry" palette — near-black ink, warm ivory
-canvas, antique gold accent, deep teal secondary. Changing the values in
-`globals.css` cascades everywhere automatically since every component
-references the token names, not hardcoded hex.
-- Ink Navy `#12161C` — primary dark / headings
-- Parchment `#F6F2E9` — primary background
-- Survey Brass `#C6992F` (bright variant `#E0B64B`) — accent, CTAs
-- Deep Forest `#1F4741` — secondary accent
-- Faded Rule `#D9D2C1` — hairlines, dividers, disabled/locked states
-- Charcoal `#2B2A25` — body text
+etc. in `src/app/globals.css`); the underlying hex values were updated again
+2026-08-28 to a light-mode "market terminal" palette — crisp near-white
+canvas, near-black ink, terminal-blue signal accent, terminal-green
+secondary, cool-gray hairline gridlines (explicitly requested as "Bloomberg
+terminal, but light mode — must not be dark"). The accent itself moved from
+amber/brass to blue later the same day, after the amber read as "brown" —
+`survey-brass`/`gold-bright` keep their token *names* per the stability rule
+even though the literal color is no longer brass-colored. Changing the
+values in `globals.css` cascades everywhere automatically since every
+component references the token names, not hardcoded hex — a handful of
+pre-existing hardcoded hex usages (map pin SVGs, two `accent-[...]`
+range-input colors) were converted to reference the same CSS custom
+properties so they pick up palette changes too. Any new component must use
+these token classes, never a literal hex.
+- Ink Navy `#0E1015` — primary dark / headings
+- Parchment `#F7F8FA` — primary background
+- Survey Brass `#1D5FD6` (bright variant `#4C86F0`) — accent, CTAs, terminal-blue signal color
+- Deep Forest `#0F7A4A` (bright variant `#12966B`) — secondary accent, terminal green
+- Faded Rule `#D7DBE1` — hairlines, dividers, disabled/locked states
+- Charcoal `#1B1D21` — body text
 
 **Typography:**
 - Display: **Fraunces** (serif, characterful — used for most headlines, section titles, the numeral system in "How it works")
@@ -182,33 +191,58 @@ Google Maps directly.
   Google Maps, where you can look up a specific property yourself") exists
   to keep that boundary explicit to users — keep it if you touch this code.
 
-### 5c. Dashboard town map + detail panel (separate from 5b, free/open)
+### 5c. Dashboard town map + filter bar + detail drawer (separate from 5b, free/open)
 
-`/dashboard` now renders an interactive map of all 18 towns immediately on
-load, above the budget/yield form — `src/components/map/TownMapExplorer.tsx`
-(orchestrator), `TownMap.tsx` (Leaflet map), `TownDetailPanel.tsx` (the
-click-through detail dialog). This is a **separate feature** from §5b's
-per-row Google Maps toggle — different library, different purpose:
+`/dashboard` renders a full-viewport interactive map of every NSW town
+immediately on load, no form interaction needed —
+`src/components/dashboard/DashboardMapWorkspace.tsx` (orchestrator),
+`src/components/map/TownMap.tsx` (Leaflet map), `MapFilterBar.tsx` (top-
+center live filter bar), `TownDetailDrawer.tsx` (the click-through detail
+panel). This is a **separate feature** from §5b's per-row Google Maps
+toggle — different library, different purpose. Note: an earlier version of
+this section referenced `TownMapExplorer.tsx`/`TownDetailPanel.tsx` as the
+dashboard's map components — those files still exist and are still used by
+`BudgetMapExplorer.tsx` (the `/explore` page), but the dashboard itself was
+rebuilt on the leaner `DashboardMapWorkspace`/`TownDetailDrawer` pair
+described here across several redesign passes on 2026-08-28.
 
 - **Implementation:** `leaflet` + `react-leaflet` with **OpenStreetMap**
   tiles — no API key, no billing, works immediately (same reasoning as §5b:
   don't wire up a billed Google Maps JS API key speculatively). Custom
   brand `DivIcon` pins avoid Leaflet's classic broken-default-marker-icon
-  bundler issue. The map component is loaded via
-  `next/dynamic(..., { ssr: false })` since Leaflet touches `window` at
-  import time.
-- **Fully open, not paywall-gated:** unlike the ranked shortlist (free-3 +
-  $39 unlock), clicking any of the 18 pins shows that town's full record
-  for free to anyone on the dashboard — this is a deliberate product
-  decision (confirmed with the founder), not an oversight. The map is a
-  general "browse the public record" tool; the $39 paywall stays exactly
-  where it already was, on the personalized budget/yield-ranked shortlist
-  + PDF report. Don't add paywall gating to the map without it being
-  explicitly requested again.
-- **Town-level only, same as everything else in §5a/§5b:** the panel shows
+  bundler issue and reference the CSS custom properties in `globals.css`
+  (not hardcoded hex) so they pick up palette changes automatically. The
+  map component is loaded via `next/dynamic(..., { ssr: false })` since
+  Leaflet touches `window` at import time. Zoom controls are pinned to the
+  map's bottom-left (`zoomControl={false}` + `<ZoomControl position="bottomleft" />`)
+  and scroll-wheel zoom is enabled, since the map is the full section (no
+  page-scroll to protect).
+- **Live filtering, not a paywalled ranked list:** `MapFilterBar.tsx` dims
+  non-matching pins in real time as the user edits fields — it does **not**
+  call a server action or show a ranked/locked ledger. The earlier
+  "Generate shortlist" paywall CTA was deliberately removed from this bar
+  (2026-08-28, explicit ask) so the map stays a pure "browse and filter the
+  public record" tool. **This means `ShortlistForm.tsx`, `ShortlistResults.tsx`,
+  and the `getShortlist` server action (`src/app/dashboard/actions.ts`) are
+  currently unreferenced anywhere in the app** — the Stripe/report backend
+  routes are intact, but there is no UI path to the $39 paywall + PDF
+  report described in Section 2's Phase 1 business model. This was flagged
+  to the founder when it happened; rebuild that flow (its own page, a
+  modal, etc.) before relying on it as the revenue path again.
+- Filter fields, all driven by `src/lib/townFilters.ts`'s `matchesFilters()`
+  (shared by the map and the bar so they can never drift out of sync) —
+  every field checks a real, already-sourced `Town` field, nothing
+  fabricated: max budget (`medianPrice`), min gross yield, max vacancy rate,
+  max weekly rent (`medianRent`), hide-bushfire-risk / hide-flood-risk
+  (checked independently against each town's `bushfireRisk`/`floodRisk`
+  level), and "has infrastructure" (`infrastructureProjects.length > 0`).
+- **Fully open, not paywall-gated:** clicking any pin shows that town's
+  full record for free to anyone on the dashboard — a deliberate product
+  decision (confirmed with the founder), not an oversight.
+- **Town-level only, same as everything else in §5a/§5b:** the drawer shows
   price/yield/vacancy/hazard-flags/infrastructure — never a property-level
   rating. Address-level lookup happens only via the "Open in Google Maps"
-  link-out inside the panel (reuses the exact URL pattern from
+  link-out inside the drawer (reuses the exact URL pattern from
   `TownMapToggle.tsx`), never as a Cadacre-generated layer.
 - **`coordinates: { lat, lng }`** was added to every `Town` in
   `src/data/towns.ts` — public town-centroid coordinates (a geographic
@@ -216,16 +250,130 @@ per-row Google Maps toggle — different library, different purpose:
 - **Known gotcha if you touch this again:** Leaflet's internal panes use
   `z-index` values up to ~700-1000 (markers/tooltips/popups), and
   `.leaflet-container` doesn't establish its own stacking context — so
-  anything meant to render *above* the map (like this modal) needs a
-  z-index well past Tailwind's `z-50` ceiling. The panel backdrop uses
-  `z-[9999]` for this reason; don't drop it back to a "normal" z-index.
+  anything meant to render *above* the map needs a z-index well past
+  Tailwind's `z-50` ceiling. `TownDetailDrawer` uses `z-[9999]`; don't drop
+  it back to a "normal" z-index. The drawer is deliberately **not** a
+  blocking modal — its backdrop wrapper is `pointer-events-none` with only
+  the panel itself `pointer-events-auto`, so the map stays pannable/
+  zoomable/clickable while the drawer is open (explicit ask, 2026-08-28) —
+  don't reintroduce a full-screen click-catching backdrop.
+- **Visual language, light-mode "market terminal" (must not go dark):** the
+  header/filter-bar/drawer all use light glass fills
+  (`bg-parchment/70`–`95`) — an earlier pass made these `bg-ink-navy` fills
+  for a "terminal" look and had to be corrected back to light, since the
+  brand explicitly must not be dark. Terminal character comes instead from:
+  a `.terminal-grid` faint graph-paper background (CSS class in
+  `globals.css`, used behind the Hero stat strip and `RecordBanner`), small
+  `.terminal-corners` HUD-style corner brackets (also in `globals.css`, used
+  on `MapFilterBar` and the `TownDetailDrawer` header), dense mono-figure
+  labels, and a genuinely-live client clock (`LiveClock.tsx`, real browser
+  time via `useSyncExternalStore` + `setInterval` — not a fabricated
+  price-feed ticker) in the dashboard header. Still explicitly avoided: any
+  scrolling "live price" ticker (implies a real-time market feed Cadacre
+  doesn't have) — price-history charts turned out to be viable in a narrow,
+  honest form; see §5d.
 - **Pre-existing bug found during verification of this feature (not
-  introduced by it):** the budget input in `ShortlistForm.tsx` uses
-  `min={1} step={1000}`, which makes HTML5 number-input step validation
-  reject round values like `700000` (only `699001`/`700001`-style values
-  pass) — confirmed via an end-to-end Clerk test-mode sign-up + Playwright
-  session. Worth fixing (e.g. `min={0} step={1000}`) next time this file
-  is touched.
+  introduced by it):** the budget input in `ShortlistForm.tsx` used
+  `min={1} step={1000}`, which made HTML5 number-input step validation
+  reject round values like `700000` — fixed (`min={0}`) 2026-08-28, though
+  the form itself is currently unreferenced (see the paywall note above).
+
+### 5d. Investor-value features: calculators, compare/watchlist, price trend
+
+Added 2026-08-28 in response to "what features would make this more
+valuable for real estate investors" — all three stay strictly town-level
+and non-fabricated, same rules as everywhere else in this file.
+
+- **Investment calculators** (`src/lib/investmentMath.ts`,
+  `InvestmentCalculator.tsx`, embedded as a collapsible section in
+  `TownDetailDrawer.tsx`): a mortgage/cash-flow estimator (standard
+  amortization formula on user-entered deposit %/rate/term) and an NSW
+  transfer-duty (stamp duty) estimator using NSW Revenue's published 2024-25
+  general-rate bracket schedule. Both are pure arithmetic on user inputs and
+  a published tax formula, not a prediction — still carries a visible
+  disclaimer ("not a loan quote... confirm with a licensed lender/adviser")
+  per §4's no-personalised-advice rule. Only rendered when the town has both
+  a `medianPrice` and `medianRent` figure to pre-fill from.
+- **Watchlist ("saved towns")** — the alerts/saved-search idea from Section
+  2's Phase 2 roadmap was explicitly **not** built as email/notification
+  infrastructure (that's still gated behind "Phase 1 validated with real
+  paying customers," which hasn't happened — Stripe isn't live, per §6).
+  Instead it was scoped down to a simple star/save toggle, persisted in
+  Clerk `privateMetadata.savedTownIds` (`toggleSavedTown`/`getSavedTownIds`
+  in `src/app/dashboard/actions.ts`, same storage mechanism already used for
+  the `unlocked` flag — no new database was introduced). `MapFilterBar.tsx`
+  gained a "Saved only" toggle. If real email alerts are wanted later, that
+  gate still applies — check with the founder before building the
+  notification/mailer side of it.
+- **Compare** — click "Compare" in `TownDetailDrawer.tsx` on up to 4 towns
+  (`compareIds` state in `DashboardMapWorkspace.tsx`); a floating pill
+  ("Compare · N") appears once 2+ are selected and opens
+  `CompareDrawer.tsx`, a side-by-side ledger-style table (same non-blocking
+  portal/`z-[9999]` pattern as `TownDetailDrawer`).
+- **Price trend** (`priceHistory` field on `Town` in `src/data/towns.ts`,
+  rendered by `PriceTrendChart.tsx` — a small dependency-free inline SVG
+  line chart, not a charting library) — a real research pass (web search
+  across all 18 towns) found that clean, independently-verifiable
+  multi-year median-price series are **not obtainable from free web
+  sources** for almost every town: portal charts (CoreLogic/Domain/YIP) are
+  JS-rendered so only the current single point is fetchable, Domain
+  suburb-profile pages 403 automated fetches, and most news mentions are
+  isolated single points from inconsistent sources. Only **Goulburn**
+  produced two independently-fetched, named-source data points (2022:
+  $672,500; 2023: $665,500 — Ray White Goulburn principal, quoted in About
+  Regional). Every other town has no `priceHistory` and the drawer shows
+  "Not enough public data to show a trend" rather than a gap or a guess —
+  this is the expected, honest outcome per §5's no-fabrication rule, not a
+  bug. **If real historical trend data is wanted for more towns later,** a
+  licensed CoreLogic/PropTrack feed or manually mining PRD Research Hub's
+  downloadable half-yearly PDF market updates (one per town, e.g.
+  `prd.com.au/documents/.../PRD_Tweed_Heads_Market_Update_H1_2024_FINAL.pdf`
+  — these contain real historical tables in PDF form) are the two credible
+  paths; free-text web search is not sufficient for this specific field.
+
+### 5e. Population, climate, and amenity data (free public APIs)
+
+Added 2026-08-28 in response to "which free APIs could add value" — three
+new sourced fields on `Town` (`src/data/towns.ts`), same rules as
+everywhere else in this file: real structured API responses only, nothing
+estimated or interpolated when a town's data couldn't be fetched.
+
+- **Population** (`population` field) — ABS Estimated Resident Population,
+  resolved per town via a spatial (point-in-polygon) query against the ABS
+  `ABS_ERP_2001_2021_LGA` ArcGIS FeatureServer
+  (`geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0`)
+  using each town's existing `coordinates` — this resolved cleanly for all
+  18 towns, with `growthPct` computed from the LGA's 2016→2021 ERP change.
+  This is a much more tractable endpoint than the SDMX-based ABS Data API
+  originally considered — worth reusing this ArcGIS-feature-service pattern
+  if more ABS regional data is wanted later.
+- **Climate** (`climate` field) — Open-Meteo's free, keyless historical
+  weather archive API, queried per town's coordinates for 2021-01-01 to
+  2023-12-31 daily data, averaged into summer max / winter min / annual
+  rainfall normals. Succeeded for all 18 towns. **Licensing note:**
+  Open-Meteo's free tier is scoped to non-commercial use per their terms;
+  Cadacre does charge $39 for its paid tier, so this is worth a proper
+  licensing check (or budgeting for their paid tier) before this becomes a
+  real revenue product — flagged, not resolved, by this pass.
+- **Amenities** (`amenities` field) — OpenStreetMap Overpass API, counting
+  schools/hospitals/supermarkets within 5km of each town's coordinates.
+  **Only resolved for 2 of 18 towns (Bathurst, Dubbo)** — the public
+  `overpass-api.de` instance rate-limited our IP partway through the first
+  pass (confirmed via its own error message:
+  `Dispatcher_Client::request_read_and_idx::rate_limited`), and a retry via
+  the `overpass.kumi.systems` mirror after a cooldown also failed to
+  connect. This is an honest partial result, not a bug — every other town
+  has no `amenities` field and the drawer shows "Not available" rather than
+  a fabricated or zero count. **If broader amenity coverage is wanted
+  later:** space requests out much further (one town every 10-15s rather
+  than the ~5s used here), or self-host a small Overpass instance — don't
+  just re-run the same burst pattern against the public instance again.
+- All three surface in `TownDetailDrawer.tsx` (Population, Avg summer
+  max/winter min, Avg annual rainfall, Nearby amenities) using the drawer's
+  existing "Not available" fallback convention. `population.growthPct` also
+  drives a new "Min pop. growth %" filter in `MapFilterBar.tsx` /
+  `townFilters.ts`, following the same optional-threshold pattern as the
+  existing budget/yield/vacancy/rent filters.
 
 ---
 
@@ -237,7 +385,11 @@ per-row Google Maps toggle — different library, different purpose:
 - [x] Production Next.js app built end-to-end: Clerk auth-gated dashboard →
       budget/yield form → ranking engine → free-3 teaser ledger → Stripe
       Payment Link paywall → `/api/stripe/verify` unlock → downloadable PDF
-      report (`cadacre-web/`). Builds and lints clean.
+      report (`cadacre-web/`). Builds and lints clean. **Note (2026-08-28):**
+      the dashboard UI path into this flow was removed when the map's
+      "Generate shortlist" CTA was dropped in favor of pure live filtering
+      (see §5c) — the backend (`getShortlist`, Stripe routes, PDF route) is
+      still intact and correct, but nothing in the current UI calls it.
 - [x] Town dataset is real, sourced, non-fabricated data (18 NSW regional
       towns; PRD market updates + Your Investment Property Mag/CoreLogic
       suburb data, each figure carrying its own source URL and as-of date;
@@ -267,6 +419,22 @@ per-row Google Maps toggle — different library, different purpose:
       rendering above the modal) was caught and fixed this way; see §5c.
 - [x] Logo shipped (2026-08-27) — `public/content.png` wired into
       `SiteHeader.tsx` and `SiteFooter.tsx`.
+- [x] Investor-value features shipped (2026-08-28) — investment/stamp-duty
+      calculators, a 4-town compare drawer, a Clerk-metadata-backed "saved
+      towns" watchlist (scoped down from full email alerts per the Phase 2
+      gate in Section 2), and a price-trend chart with real sourced data for
+      1 of 18 towns (Goulburn) — the rest honestly show "not enough public
+      data," not a fabricated trend. Builds and lints clean; not yet
+      verified end-to-end in a signed-in browser session (build/lint only
+      this pass) — see §5d for the full breakdown and follow-up paths.
+- [x] Free public API data shipped (2026-08-28) — real ABS population
+      (18/18 towns), Open-Meteo climate normals (18/18 towns), and
+      OpenStreetMap Overpass amenity counts (2/18 towns — Overpass
+      rate-limited the fetch pass; the rest honestly show "not available,"
+      not a fabricated count). New "Min pop. growth %" map filter. Builds
+      and lints clean; not yet verified end-to-end in a signed-in browser
+      session — see §5e for the full breakdown, licensing caveat on
+      Open-Meteo, and the amenity-coverage follow-up path.
 - [x] Terms of Service / Privacy Policy drafted in-app (`/terms`, `/privacy`)
       — both carry a visible "pending professional legal review" notice and
       must not be treated as final until a lawyer signs off.

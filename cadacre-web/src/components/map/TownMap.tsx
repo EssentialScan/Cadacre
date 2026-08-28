@@ -1,9 +1,10 @@
 "use client";
 
 import L from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, ZoomControl, useMapEvents } from "react-leaflet";
 import type { Town } from "@/data/towns";
 import { SmallPlacesLayer } from "@/components/map/SmallPlacesLayer";
+import { matchesFilters } from "@/lib/townFilters";
 
 // Custom brand pin — avoids Leaflet's default marker icon, which breaks
 // under bundlers since its image paths are relative to the CSS file.
@@ -13,12 +14,12 @@ const pinIcon = L.divIcon({
     <svg width="28" height="28" viewBox="0 0 16 16" style="filter: drop-shadow(0 3px 4px rgba(18,22,28,0.35))">
       <path
         d="M8 14.5S13 9.8 13 6.3a5 5 0 1 0-10 0C3 9.8 8 14.5 8 14.5Z"
-        fill="#c6992f"
-        stroke="#12161c"
+        fill="var(--survey-brass)"
+        stroke="var(--ink-navy)"
         stroke-width="1"
         stroke-linejoin="round"
       />
-      <circle cx="8" cy="6.3" r="1.7" fill="#12161c" />
+      <circle cx="8" cy="6.3" r="1.7" fill="var(--ink-navy)" />
     </svg>
   `,
   iconSize: [28, 28],
@@ -28,7 +29,7 @@ const pinIcon = L.divIcon({
 
 const selectedPinIcon = L.divIcon({
   className: "",
-  html: '<div style="width:18px;height:18px;border:3px solid #f6f2e9;border-radius:50%;background:#1f4741;box-shadow:0 2px 8px rgba(18,22,28,.5)"></div>',
+  html: '<div style="width:18px;height:18px;border:3px solid var(--parchment);border-radius:50%;background:var(--deep-forest);box-shadow:0 2px 8px rgba(18,22,28,.5)"></div>',
   iconSize: [18, 18],
   iconAnchor: [9, 9],
 });
@@ -44,6 +45,15 @@ function MapClickHandler({ onMapClick }: { onMapClick?: (lat: number, lng: numbe
 export function TownMap({
   towns,
   budget,
+  minYieldPct,
+  maxVacancyPct,
+  maxRent,
+  hideBushfireRisk,
+  hideFloodRisk,
+  infrastructureOnly,
+  savedOnly,
+  savedTownIds,
+  minPopulationGrowthPct,
   onMapClick,
   selectedLocation,
   selectedContextTown,
@@ -52,19 +62,44 @@ export function TownMap({
 }: {
   towns: Town[];
   budget?: number;
+  minYieldPct?: number;
+  maxVacancyPct?: number;
+  maxRent?: number;
+  hideBushfireRisk?: boolean;
+  hideFloodRisk?: boolean;
+  infrastructureOnly?: boolean;
+  savedOnly?: boolean;
+  savedTownIds?: Set<string>;
+  minPopulationGrowthPct?: number;
   onMapClick?: (lat: number, lng: number) => void;
   selectedLocation?: { lat: number; lng: number } | null;
   selectedContextTown?: Town | null;
   fullScreen?: boolean;
   onSelectTown: (townId: string) => void;
 }) {
+  const filtersActive =
+    budget !== undefined ||
+    minYieldPct !== undefined ||
+    maxVacancyPct !== undefined ||
+    maxRent !== undefined ||
+    hideBushfireRisk ||
+    hideFloodRisk ||
+    infrastructureOnly ||
+    savedOnly ||
+    minPopulationGrowthPct !== undefined;
+
   return (
     <MapContainer
       center={NSW_CENTER}
       zoom={6}
-      scrollWheelZoom={false}
+      minZoom={5}
+      maxZoom={16}
+      scrollWheelZoom
+      zoomSnap={0.5}
+      zoomControl={false}
       className={fullScreen ? "h-full min-h-[620px] w-full" : "h-[420px] w-full md:h-[520px]"}
     >
+      <ZoomControl position="bottomleft" />
       <MapClickHandler onMapClick={onMapClick} />
       <SmallPlacesLayer towns={towns} />
       {selectedLocation && (
@@ -93,7 +128,12 @@ export function TownMap({
           key={town.id}
           position={[town.coordinates.lat, town.coordinates.lng]}
           icon={
-            budget === undefined || town.medianPrice.value === null || town.medianPrice.value <= budget
+            !filtersActive ||
+            matchesFilters(
+              town,
+              { budget, minYieldPct, maxVacancyPct, maxRent, hideBushfireRisk, hideFloodRisk, infrastructureOnly, savedOnly, minPopulationGrowthPct },
+              { savedTownIds }
+            )
               ? pinIcon
               : L.divIcon({
                   className: "opacity-40 grayscale",

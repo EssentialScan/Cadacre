@@ -43,84 +43,86 @@ export function ShortlistResults({
 
   return (
     <div className="mt-8">
-      <div className="rounded-sm border border-faded-rule">
-        <div className="grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] gap-2 border-b border-ink-navy bg-ink-navy px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-parchment">
-          <span>Town</span>
-          <span>Median price</span>
-          <span>Gross yield</span>
-          <span>Vacancy rate</span>
-          <span>Value signal</span>
-          <span>Hazards</span>
-        </div>
-
-        {rows.map((row) => (
-          <div
-            key={row.rank}
-            className={`ledger-row grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] items-center gap-2 px-5 py-4 ${
-              row.locked ? "text-charcoal/30" : "text-charcoal"
-            }`}
-          >
-            {row.locked ? (
-              <>
-                <span className="flex items-center gap-2">
-                  <span className="font-mono-figure text-xs">
-                    {String(row.rank).padStart(2, "0")}
-                  </span>
-                  Locked
-                </span>
-                <span className="font-mono-figure text-sm">—</span>
-                <span className="font-mono-figure text-sm">—</span>
-                <span className="font-mono-figure text-sm">—</span>
-                <span className="font-mono-figure text-sm">—</span>
-                <span className="font-mono-figure text-sm">—</span>
-              </>
-            ) : (
-              <>
-                <span className="flex items-center gap-2 font-medium text-ink-navy">
-                  <span className="font-mono-figure text-xs text-survey-brass">
-                    {String(row.rank).padStart(2, "0")}
-                  </span>
-                  {row.town}, {row.state}
-                  <TownMapToggle town={row.town} state={row.state} />
-                </span>
-                <span
-                  className={
-                    row.medianPrice === null
-                      ? "text-xs text-charcoal/50"
-                      : "font-mono-figure text-sm"
-                  }
-                >
-                  {money(row.medianPrice)}
-                </span>
-                <span
-                  className={
-                    row.grossYieldPct === null
-                      ? "text-xs text-charcoal/50"
-                      : "font-mono-figure text-sm"
-                  }
-                >
-                  {pct(row.grossYieldPct)}
-                </span>
-                <span
-                  className={
-                    row.vacancyRatePct === null
-                      ? "text-xs text-charcoal/50"
-                      : "font-mono-figure text-sm"
-                  }
-                >
-                  {pct(row.vacancyRatePct)}
-                </span>
-                <span className="font-mono-figure text-sm text-deep-forest">
-                  {row.valueScore}/100
-                </span>
-                <HazardIcons
-                  bushfireRisk={row.bushfireRisk}
-                  floodRisk={row.floodRisk}
-                />
-              </>
-            )}
+      <div className="overflow-x-auto rounded-sm border border-faded-rule">
+        <div className="min-w-[560px]">
+          <div className="grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] gap-2 border-b border-ink-navy bg-ink-navy px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-parchment">
+            <span>Town</span>
+            <span>Median price</span>
+            <span>Gross yield</span>
+            <span>Vacancy rate</span>
+            <span>Value signal</span>
+            <span>Hazards</span>
           </div>
-        ))}
+
+          {rows.map((row) => (
+            <div
+              key={row.rank}
+              className={`ledger-row grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] items-center gap-2 px-5 py-4 ${
+                row.locked ? "text-charcoal/30" : "text-charcoal"
+              }`}
+            >
+              {row.locked ? (
+                <>
+                  <span className="flex items-center gap-2">
+                    <span className="font-mono-figure text-xs">
+                      {String(row.rank).padStart(2, "0")}
+                    </span>
+                    Locked
+                  </span>
+                  <span className="font-mono-figure text-sm">—</span>
+                  <span className="font-mono-figure text-sm">—</span>
+                  <span className="font-mono-figure text-sm">—</span>
+                  <span className="font-mono-figure text-sm">—</span>
+                  <span className="font-mono-figure text-sm">—</span>
+                </>
+              ) : (
+                <>
+                  <span className="flex items-center gap-2 font-medium text-ink-navy">
+                    <span className="font-mono-figure text-xs text-survey-brass">
+                      {String(row.rank).padStart(2, "0")}
+                    </span>
+                    {row.town}, {row.state}
+                    <TownMapToggle town={row.town} state={row.state} />
+                  </span>
+                  <span
+                    className={
+                      row.medianPrice === null
+                        ? "text-xs text-charcoal/50"
+                        : "font-mono-figure text-sm"
+                    }
+                  >
+                    {money(row.medianPrice)}
+                  </span>
+                  <span
+                    className={
+                      row.grossYieldPct === null
+                        ? "text-xs text-charcoal/50"
+                        : "font-mono-figure text-sm"
+                    }
+                  >
+                    {pct(row.grossYieldPct)}
+                  </span>
+                  <span
+                    className={
+                      row.vacancyRatePct === null
+                        ? "text-xs text-charcoal/50"
+                        : "font-mono-figure text-sm"
+                    }
+                  >
+                    {pct(row.vacancyRatePct)}
+                  </span>
+                  <span className="font-mono-figure text-sm text-deep-forest">
+                    {row.valueScore}/100
+                  </span>
+                  <HazardIcons
+                    bushfireRisk={row.bushfireRisk}
+                    floodRisk={row.floodRisk}
+                  />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <p className="mt-3 text-xs text-charcoal/50">
