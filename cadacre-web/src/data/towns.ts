@@ -79,6 +79,18 @@ export type Town = {
   // radiusKm of the town centroid — a real snapshot count, not a
   // property-level or address-level analysis (stays town-level per §5a).
   amenities?: SourcedField<{ schools: number; hospitals: number; supermarkets: number; radiusKm: number }>;
+  // NSW Bureau of Crime Statistics and Research (BOCSAR), LGA-level —
+  // sum of six property-crime offence rates per 100,000 population (break
+  // and enter dwelling/non-dwelling, motor vehicle theft, steal from motor
+  // vehicle, steal from dwelling, malicious damage to property), the most
+  // investor-relevant subset rather than a blanket "total crime" figure.
+  // LGA-level aggregate only — never a suburb- or property-specific claim.
+  crimeRate?: SourcedField<{ propertyOffencesPer100k: number; period: string }>;
+  // ABS Education and Employment by LGA (ArcGIS feature service, same
+  // point-in-polygon lookup as `population`) — census labour-force figures,
+  // 2016 (the most recent year this particular layer publishes; noted
+  // explicitly rather than implied as current).
+  employment?: SourcedField<{ unemploymentRatePct: number; participationRatePct: number }>;
   notes?: string;
 };
 
@@ -98,6 +110,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Bathurst Regional), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 787, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Bathurst)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.0, participationRatePct: 58.3 },
+      source: "ABS Education and Employment by LGA (LGA: Bathurst Regional)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 24.9, avgWinterMinC: 2.1, annualRainfallMm: 792 },
@@ -152,6 +176,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Orange), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1178, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Orange)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.3, participationRatePct: 59.8 },
+      source: "ABS Education and Employment by LGA (LGA: Orange)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 23.5, avgWinterMinC: 2.7, annualRainfallMm: 936 },
@@ -208,6 +244,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Dubbo Regional), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1671, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Dubbo)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 5.9, participationRatePct: 59.3 },
+      source: "ABS Education and Employment by LGA (LGA: Dubbo Regional)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 29.6, avgWinterMinC: 5.1, annualRainfallMm: 827 },
@@ -267,6 +315,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Wagga Wagga), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1995, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Wagga Wagga)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 5.5, participationRatePct: 63.5 },
+      source: "ABS Education and Employment by LGA (LGA: Wagga Wagga)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 28.7, avgWinterMinC: 4.7, annualRainfallMm: 879 },
@@ -329,6 +389,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 2338, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Tamworth)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 5.8, participationRatePct: 58.1 },
+      source: "ABS Education and Employment by LGA (LGA: Tamworth Regional)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 28.9, avgWinterMinC: 4.3, annualRainfallMm: 920 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -385,6 +457,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 810, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Armidale)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 7.6, participationRatePct: 55.8 },
+      source: "ABS Education and Employment by LGA (LGA: Armidale Regional)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 23.2, avgWinterMinC: 2.7, annualRainfallMm: 907 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -432,6 +516,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Albury), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1921, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Albury)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.8, participationRatePct: 59.3 },
+      source: "ABS Education and Employment by LGA (LGA: Albury)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 27.8, avgWinterMinC: 4.8, annualRainfallMm: 989 },
@@ -489,6 +585,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1803, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Coffs Harbour)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 7.3, participationRatePct: 53.6 },
+      source: "ABS Education and Employment by LGA (LGA: Coffs Harbour)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 25.9, avgWinterMinC: 10.3, annualRainfallMm: 1817 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -545,6 +653,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1000, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Lismore)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 7.8, participationRatePct: 55.6 },
+      source: "ABS Education and Employment by LGA (LGA: Lismore)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 28.2, avgWinterMinC: 9.7, annualRainfallMm: 1462 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -600,6 +720,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Tweed), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1648, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Tweed)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 7.1, participationRatePct: 50.6 },
+      source: "ABS Education and Employment by LGA (LGA: Tweed)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 26.8, avgWinterMinC: 11, annualRainfallMm: 1545 },
@@ -663,6 +795,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 583, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Goulburn Mulwaree)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.3, participationRatePct: 56.0 },
+      source: "ABS Education and Employment by LGA (LGA: Goulburn Mulwaree)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 23.6, avgWinterMinC: 3.2, annualRainfallMm: 862 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -725,6 +869,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 566, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Griffith)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 4.7, participationRatePct: 60.6 },
+      source: "ABS Education and Employment by LGA (LGA: Griffith)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 30.6, avgWinterMinC: 6.1, annualRainfallMm: 665 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -772,6 +928,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Queanbeyan-Palerang Regional), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 751, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Queanbeyan-Palerang)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 4.0, participationRatePct: 67.9 },
+      source: "ABS Education and Employment by LGA (LGA: Queanbeyan-Palerang Regional)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 24.7, avgWinterMinC: 3, annualRainfallMm: 942 },
@@ -824,6 +992,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Mid-Western Regional), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 406, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Mid-Western)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.6, participationRatePct: 54.1 },
+      source: "ABS Education and Employment by LGA (LGA: Mid-Western Regional)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 26.6, avgWinterMinC: 3.5, annualRainfallMm: 833 },
@@ -878,6 +1058,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 2017, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Maitland)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 7.3, participationRatePct: 62.0 },
+      source: "ABS Education and Employment by LGA (LGA: Maitland)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 28.1, avgWinterMinC: 8.2, annualRainfallMm: 929 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -925,6 +1117,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Cessnock), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1758, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Cessnock)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 8.7, participationRatePct: 53.6 },
+      source: "ABS Education and Employment by LGA (LGA: Cessnock)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 26.9, avgWinterMinC: 7.3, annualRainfallMm: 974 },
@@ -979,6 +1183,18 @@ export const towns: Town[] = [
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
     },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 343, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Cowra)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.6, participationRatePct: 50.0 },
+      source: "ABS Education and Employment by LGA (LGA: Cowra)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
+    },
     climate: {
       value: { avgSummerMaxC: 28.7, avgWinterMinC: 4.4, annualRainfallMm: 898 },
       source: "Open-Meteo historical weather archive, 2021–2023 daily average",
@@ -1026,6 +1242,18 @@ export const towns: Town[] = [
       source: "ABS Estimated Resident Population (LGA: Port Macquarie-Hastings), 2016 vs 2021",
       sourceUrl: "https://geo.abs.gov.au/arcgis/rest/services/Hosted/ABS_ERP_2001_2021_LGA/FeatureServer/0",
       asOf: "2021",
+    },
+    crimeRate: {
+      value: { propertyOffencesPer100k: 1571, period: "Apr 2025 – Mar 2026" },
+      source: "NSW BOCSAR — LGA property-crime rate (LGA: Port Macquarie-Hastings)",
+      sourceUrl: "https://bocsar.nsw.gov.au/content/dam/dcj/bocsar/documents/open-datasets/LGA_trends.xlsx",
+      asOf: "Apr 2025 – Mar 2026",
+    },
+    employment: {
+      value: { unemploymentRatePct: 6.7, participationRatePct: 48.6 },
+      source: "ABS Education and Employment by LGA (LGA: Port Macquarie-Hastings)",
+      sourceUrl: "https://services-ap1.arcgis.com/ypkPEy1AmwPKGNNv/ArcGIS/rest/services/ABS_Education_and_employment_by_2021_LGA/FeatureServer/0",
+      asOf: "2016",
     },
     climate: {
       value: { avgSummerMaxC: 25.2, avgWinterMinC: 9.9, annualRainfallMm: 1274 },

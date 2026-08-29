@@ -30,7 +30,7 @@ export function Faq() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
           <FadeUp className="md:col-span-4">
             <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-              05 — Questions
+              06 — Questions
             </p>
             <h2 className="mt-4 font-display text-3xl font-semibold text-ink-navy">
               Frequently asked

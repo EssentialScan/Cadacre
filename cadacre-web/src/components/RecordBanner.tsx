@@ -23,7 +23,7 @@ export function RecordBanner() {
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-24 sm:px-8">
         <FadeUp className="max-w-xl">
           <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-            03 — The record
+            04 — The record
           </p>
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink-navy sm:text-4xl">
             Not a hot take. A record — sourced, dated, ranked.

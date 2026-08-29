@@ -208,6 +208,16 @@ export function TownDetailDrawer({
                       label="Avg annual rainfall"
                       value={town.climate?.value ? `${town.climate.value.annualRainfallMm.toLocaleString("en-AU")} mm` : "Not available"}
                     />
+                    <DataRow
+                      label="Property crime (LGA, per 100k)"
+                      value={town.crimeRate?.value ? town.crimeRate.value.propertyOffencesPer100k.toLocaleString("en-AU") : "Not available"}
+                      note={town.crimeRate?.value ? town.crimeRate.value.period : undefined}
+                    />
+                    <DataRow
+                      label="Unemployment rate (LGA)"
+                      value={town.employment?.value ? pct(town.employment.value.unemploymentRatePct) : "Not available"}
+                      note={town.employment?.value ? `as of ${town.employment?.asOf}` : undefined}
+                    />
                   </div>
 
                   <div className="mt-4">

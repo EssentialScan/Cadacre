@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
 import { ProblemSection } from "@/components/ProblemSection";
 import { HowItWorks } from "@/components/HowItWorks";
+import { DataSources } from "@/components/DataSources";
 import { RecordBanner } from "@/components/RecordBanner";
 import { SampleLedger } from "@/components/SampleLedger";
 import { Pricing } from "@/components/Pricing";
@@ -20,6 +21,7 @@ export default function Home() {
           <Hero />
           <ProblemSection />
           <HowItWorks />
+          <DataSources />
           <RecordBanner />
           <SampleLedger />
           <Pricing />

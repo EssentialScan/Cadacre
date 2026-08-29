@@ -5,6 +5,18 @@
 // illustrative calculators, not a loan quote or financial advice — see the
 // disclaimer rendered alongside them in InvestmentCalculator.tsx.
 
+// Real RBA-published rate, used only as the calculator's starting point
+// (still user-editable) — not the cash rate itself (4.35% as of the same
+// date), which would understate what an investor actually pays. This is
+// the "discounted" investor variable housing rate — closer to what banks
+// actually offer than the "standard" headline rate few borrowers pay.
+export const RBA_INVESTOR_VARIABLE_RATE = {
+  ratePct: 7.13,
+  asOf: "31 July 2026",
+  source: "RBA Statistical Table F5 — Indicator Lending Rates (Housing loans; Banks; Variable; Discounted; Investor)",
+  sourceUrl: "https://www.rba.gov.au/statistics/tables/csv/f5-data.csv",
+};
+
 export function estimateWeeklyRepayment({
   price,
   depositPct,

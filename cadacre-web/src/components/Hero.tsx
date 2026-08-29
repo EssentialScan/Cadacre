@@ -27,23 +27,22 @@ export function Hero() {
         <div className="flex flex-1 flex-col justify-center py-16 sm:py-20">
           <FadeUp>
             <p className="font-mono-figure text-xs uppercase tracking-[0.3em] text-survey-brass">
-              For Sydney renters priced out of Sydney
+              For Sydney renters priced out of the market
             </p>
           </FadeUp>
           <FadeUp delay={0.08}>
             <h1 className="mt-5 max-w-3xl font-sans text-[2.5rem] font-bold leading-[1.12] tracking-tight text-ink-navy sm:text-6xl md:text-[3.9rem]">
               Sydney closed the door.
               <br />
-              The record found{" "}
-              <span className="text-survey-brass">eighteen more.</span>
+              <span className="text-survey-brass">The record stayed open.</span>
             </h1>
           </FadeUp>
           <FadeUp delay={0.16}>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-charcoal/75 sm:text-lg">
               Enter your budget and target yield. Cadacre checks it against
-              public housing records for regional Australia and hands back a
-              ranked shortlist — median price, rental yield, vacancy rate.
-              Sourced, dated, and never sponsored.
+              public housing records for regional Australia and returns a
+              ranked shortlist — median price, rental yield, vacancy rate —
+              in under two minutes. Sourced, dated, and never sponsored.
             </p>
           </FadeUp>
 

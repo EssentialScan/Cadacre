@@ -17,7 +17,7 @@ export function Pricing() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:items-start">
           <FadeUp className="md:col-span-5">
             <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-              04 — Access
+              05 — Access
             </p>
             <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink-navy">
               One number. No subscription. No catch.
@@ -64,7 +64,8 @@ export function Pricing() {
               </SignUpButton>
             </Magnetic>
             <p className="mt-4 text-xs text-charcoal/50">
-              No subscription. No recurring charge.
+              No subscription, no recurring charge. Run the free shortlist
+              first — you only pay to unlock the full ranked list.
             </p>
           </FadeUp>
         </div>

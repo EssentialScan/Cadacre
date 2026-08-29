@@ -17,7 +17,7 @@ export function FinalCta() {
       <div className="relative z-10 mx-auto max-w-3xl px-6 py-28 text-center sm:px-8">
         <FadeUp>
           <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-            05 — Get started
+            07 — Get started
           </p>
           <h2 className="mt-4 font-display text-3xl font-semibold text-ink-navy sm:text-5xl">
             You already have enough for a deposit.
@@ -25,8 +25,8 @@ export function FinalCta() {
             Just not here.
           </h2>
           <p className="mt-5 text-sm text-charcoal/70 sm:text-base">
-            Run the numbers on eighteen towns that might actually work —
-            free, in under two minutes, no card required.
+            Run the numbers against the record — free, in under two minutes,
+            no card required.
           </p>
         </FadeUp>
         <FadeUp delay={0.15} className="mt-10">
@@ -38,6 +38,9 @@ export function FinalCta() {
               </button>
             </SignUpButton>
           </Magnetic>
+          <p className="mt-4 text-xs text-charcoal/50">
+            Free to run. Pay $39 only if you want the full ranked list.
+          </p>
         </FadeUp>
       </div>
     </section>

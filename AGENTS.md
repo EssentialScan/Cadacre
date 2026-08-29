@@ -67,16 +67,43 @@ these token classes, never a literal hex.
 - Faded Rule `#D7DBE1` — hairlines, dividers, disabled/locked states
 - Charcoal `#1B1D21` — body text
 
-**Typography:**
-- Display: **Fraunces** (serif, characterful — used for most headlines, section titles, the numeral system in "How it works")
-- Body/UI: **IBM Plex Sans** — also used bold/tight-tracked for the homepage Hero headline specifically, for a more corporate/professional feel than the serif elsewhere
-- Data/figures: **IBM Plex Mono** — all numbers (prices, yields, percentages) should render in mono to reinforce the "recorded, not decorated" feel
+**Typography:** switched 2026-08-28 from Fraunces/IBM Plex Sans to the pairing
+below — the founder wanted something that would read as institutional/
+corporate enough for professional buyers, not a characterful editorial
+startup font. Same `next/font/google` loading pattern in `layout.tsx`,
+mapped through `--font-display`/`--font-sans` in `globals.css` so the
+Tailwind class names (`font-display`, `font-sans`) didn't need to change
+anywhere else in the codebase.
+- Display: **Source Serif 4** (serious, legal/editorial-adjacent serif — used for headlines, section titles)
+- Body/UI: **Public Sans** — the US federal government's own design-system typeface; chosen deliberately for the "official public record" association, which fits the cadastre/land-registry concept better than a generic startup sans
+- Data/figures: **IBM Plex Mono** (unchanged) — all numbers (prices, yields, percentages) should render in mono to reinforce the "recorded, not decorated" feel
 
 **Logo:** `public/content.png` (1254×1254, square lockup — "CA" monogram over "CADACRE" wordmark, ivory background) — used in `SiteHeader.tsx` and `SiteFooter.tsx`. Keep it square-cropped as-is; don't stretch or reflow the lockup.
 
 **Signature UI element:** Results are displayed as a "ledger" — ruled rows, monospace figures, a check-mark per qualifying entry — not a generic dashboard card grid. Preserve this pattern when adding new result types.
 
 **Voice:** Plain, factual, quietly confident. Never salesy or hype-driven. Copy should read like a land record, not a marketing page. Avoid superlatives ("the best," "amazing") — prefer specific, checkable claims.
+
+**Homepage persuasion boundary (set 2026-08-28):** the founder asked for
+"sales techniques" and "human psychology" on the homepage. Honest techniques
+are fair game and now in use — loss aversion (Hero/FinalCta), anchoring
+($39 vs. a week of Sydney rent, without inventing a specific buyer's-agent
+fee figure), risk reversal (free-first framing surfaced next to the primary
+CTA in `Pricing.tsx`/`FinalCta.tsx`, not just buried in the FAQ), and
+authority-transfer via `DataSources.tsx` — a new section naming the real
+institutions Cadacre's data actually comes from (ABS, PRD/YIP, NSW RFS, NSW
+SES, Open-Meteo). **Fabricated social proof, testimonials, user counts, or
+false urgency/scarcity are explicitly off the table** — the §6 snapshot
+still shows zero real users/revenue, and AGENTS.md's no-fabrication rule
+applies to marketing copy exactly as much as it applies to town data. If a
+future request asks for a testimonial, a live user counter, or a countdown
+timer, treat it the same as a request to fabricate a town's median price:
+flag it rather than build it. `SampleLedger.tsx` on the homepage now pulls
+three real, pinned towns (Orange, Wagga Wagga, Tamworth — chosen because all
+three have a complete price/rent/yield/vacancy record) straight from
+`getAllTowns()` instead of a hand-written "illustrative placeholder" — more
+credible for an institutional audience, and it can never drift out of sync
+with the real dataset.
 
 **Existing prototype:** `cadacre.html` — a single-file static prototype with working client-side filtering logic on sample data. This is the reference implementation for visual style and interaction pattern; production build should preserve the design language exactly.
 
@@ -375,6 +402,60 @@ estimated or interpolated when a town's data couldn't be fetched.
   `townFilters.ts`, following the same optional-threshold pattern as the
   existing budget/yield/vacancy/rent filters.
 
+### 5f. Crime, employment, and a real RBA mortgage rate (free public APIs, round 2)
+
+Added 2026-08-29 after another "what free APIs could add value" pass. The
+user also proposed a buyer's-agent/real-estate-agent directory and local
+news headlines — outcomes below, both handled differently than the four
+data fields, worth reading before touching either area again.
+
+- **Buyer's-agent/real-estate-agent directory — explicitly declined by the
+  founder**, not silently dropped. This is functionally the "Concierge"
+  referral service Section 2 Phase 3 already gates behind legal review; when
+  asked, the founder chose to skip it entirely rather than override the gate
+  or build a lighter link-out version. Don't resurrect this without the
+  founder raising it again.
+- **Local news headlines — NOT built, real licensing blocker found.**
+  Google News RSS (`news.google.com/rss/search`) works technically (free,
+  keyless, real headlines), but the feed's own copyright notice says it is
+  "made available solely for... personal, non-commercial use. Any other use
+  of the feed is expressly prohibited." Cadacre charges $39 for its paid
+  tier, so embedding this feed in the product is a real ToS conflict, not a
+  vibe — flagged to the founder rather than built and glossed over. If news
+  headlines are wanted later, the credible paths are a licensed news API
+  (e.g. NewsAPI.org's paid tier, Bing News Search) or an RSS source whose
+  terms actually permit commercial embedding — re-check terms before
+  reusing the Google News approach.
+- **RBA mortgage rate** (`RBA_INVESTOR_VARIABLE_RATE` in
+  `src/lib/investmentMath.ts`) — real data from RBA Statistical Table F5
+  (Indicator Lending Rates), specifically "Housing loans; Banks; Variable;
+  Discounted; Investor" (7.13% as of 31 July 2026), **not** the RBA cash
+  rate (4.35% same period) — the cash rate alone would have understated
+  what an investor actually pays and made the calculator's numbers look
+  better than reality. `InvestmentCalculator.tsx`'s rate field now defaults
+  from this real figure (still user-editable) instead of a guessed 6.0%.
+- **Crime** (`crimeRate` field on `Town`) — NSW BOCSAR's free, directly
+  downloadable `LGA_trends.xlsx` (no API, just a real spreadsheet — fetched
+  and parsed once, not a live dependency). Rather than one blanket "total
+  crime" number, it's the sum of six property-crime offence rates per
+  100,000 population (break and enter dwelling/non-dwelling, motor vehicle
+  theft, steal from motor vehicle, steal from dwelling, malicious damage to
+  property) — the subset actually relevant to a property investor, not
+  violent crime or drug offences. Resolved cleanly for all 18 towns.
+  LGA-level aggregate only, per §5a's town-level rule.
+- **Employment** (`employment` field on `Town`) — same ArcGIS
+  point-in-polygon pattern as `population`, against
+  `ABS_Education_and_employment_by_2021_LGA`. Unlike the population layer's
+  earlier-assumed "cryptic DBR codes" risk, this layer's fields turned out
+  to have clear, human-readable aliases (e.g. `lf_42016` = "Unemployment
+  rate (%) (Data year: 2016)") — fully resolved for all 18 towns, no
+  guessing needed. **Data year is 2016** (the most recent this specific
+  layer publishes) — the UI states this explicitly rather than implying
+  it's current.
+- All new fields surface in `TownDetailDrawer.tsx` using the existing
+  "Not available" fallback convention (moot here since coverage is 18/18 on
+  both, but kept for consistency with every other field in the dataset).
+
 ---
 
 ## 6. Current Status Snapshot
@@ -435,6 +516,16 @@ estimated or interpolated when a town's data couldn't be fetched.
       and lints clean; not yet verified end-to-end in a signed-in browser
       session — see §5e for the full breakdown, licensing caveat on
       Open-Meteo, and the amenity-coverage follow-up path.
+- [x] Crime, employment, and a real RBA rate shipped (2026-08-29) — NSW
+      BOCSAR property-crime rate and ABS unemployment/participation rate,
+      both real and resolved for all 18 towns; the investment calculator's
+      rate field now defaults from a real RBA investor mortgage rate instead
+      of a guess. A buyer's-agent-directory idea was explicitly declined by
+      the founder (Concierge gate, §2 Phase 3); a local-news-headlines idea
+      was researched but not built — Google News RSS's own terms restrict it
+      to personal, non-commercial use, which conflicts with Cadacre's paid
+      tier. See §5f for the full breakdown. Builds and lints clean; not yet
+      verified end-to-end in a signed-in browser session.
 - [x] Terms of Service / Privacy Policy drafted in-app (`/terms`, `/privacy`)
       — both carry a visible "pending professional legal review" notice and
       must not be treated as final until a lawyer signs off.

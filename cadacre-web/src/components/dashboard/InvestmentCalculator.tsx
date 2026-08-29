@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { estimateNswStampDuty, estimateWeeklyRepayment } from "@/lib/investmentMath";
+import { RBA_INVESTOR_VARIABLE_RATE, estimateNswStampDuty, estimateWeeklyRepayment } from "@/lib/investmentMath";
 
 function money(value: number): string {
   return `$${Math.round(value).toLocaleString("en-AU")}`;
@@ -16,7 +16,7 @@ export function InvestmentCalculator({
 }) {
   const [open, setOpen] = useState(false);
   const [depositPct, setDepositPct] = useState(20);
-  const [ratePct, setRatePct] = useState(6.0);
+  const [ratePct, setRatePct] = useState(RBA_INVESTOR_VARIABLE_RATE.ratePct);
   const [termYears, setTermYears] = useState(30);
 
   const weeklyRepayment = estimateWeeklyRepayment({ price: medianPrice, depositPct, ratePct, termYears });
@@ -114,11 +114,14 @@ export function InvestmentCalculator({
           </div>
 
           <p className="mt-3 text-[11px] leading-relaxed text-charcoal/50">
-            Illustrative estimate from your inputs and published NSW transfer-duty
-            rates — not a loan quote, pre-approval, or financial advice. Ignores
-            LMI, ongoing costs (rates, strata, maintenance, insurance, agent
-            fees), and tax. Confirm actual figures with a licensed lender or
-            adviser before acting.
+            Rate pre-filled from the average investor variable rate banks were
+            offering as of {RBA_INVESTOR_VARIABLE_RATE.asOf} (source: RBA Table
+            F5) — actual rates vary by lender and borrower. Illustrative
+            estimate from your inputs and published NSW transfer-duty rates —
+            not a loan quote, pre-approval, or financial advice. Ignores LMI,
+            ongoing costs (rates, strata, maintenance, insurance, agent fees),
+            and tax. Confirm actual figures with a licensed lender or adviser
+            before acting.
           </p>
         </div>
       )}
