@@ -11,7 +11,12 @@ export type RankedTown = {
   valueScore: number;
 };
 
-export function rankTowns(input: RankInput, towns: Town[] = getAllTowns()): RankedTown[] {
+export function rankTowns(input: RankInput, allTowns: Town[] = getAllTowns()): RankedTown[] {
+  // Cadacre's paid shortlist/report is explicitly a *regional* rentvesting
+  // product (see AGENTS.md §1/§2) — Sydney Metro suburbs are shown on the
+  // free dashboard map for browsing/comparison only and must never surface
+  // in the ranked shortlist, regardless of how budget/yield inputs are set.
+  const towns = allTowns.filter((town) => (town.region ?? "Regional NSW") === "Regional NSW");
   const comparableTowns = towns.filter(
     (town) => town.medianPrice.value !== null && town.grossYieldPct.value !== null
   );

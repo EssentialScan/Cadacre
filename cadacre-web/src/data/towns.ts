@@ -51,6 +51,13 @@ export type Town = {
   id: string;
   name: string;
   state: "NSW";
+  // Distinguishes Sydney metro suburbs (added later, alongside the original
+  // regional dataset) from the original regional-NSW towns, since the
+  // product's core pitch is a regional rentvesting shortlist — the map/filter
+  // bar and copy need to be able to tell them apart. `undefined` means
+  // "Regional NSW" (every town added before this field existed); new Sydney
+  // entries set it explicitly.
+  region?: "Sydney Metro" | "Regional NSW";
   // Public town-centroid coordinates, used only for map pin placement — a
   // geographic fact, not a sourced dataset figure like price/yield. Never
   // an address-level or property-level location (see AGENTS.md §5a/§5b).
@@ -1296,5 +1303,483 @@ export const towns: Town[] = [
         sourceUrl: "https://www.nsw.gov.au/ministerial-releases/first-look-at-265-million-port-macquarie-base-hospital-upgrade",
       },
     ],
+  },
+
+  // --- Sydney Metro suburbs (added 2026-08-29) ---
+  // A separate cohort from the regional-NSW towns above: the product's core
+  // pitch (AGENTS.md §1/§2) is a *regional* rentvesting shortlist, so these
+  // carry `region: "Sydney Metro"` and are excluded from the paid ranked
+  // shortlist (see the region filter in src/lib/rankTowns.ts) — they exist
+  // for free browsing/comparison on the dashboard map only, e.g. so a user
+  // can see how a regional town stacks up against the Sydney suburb they're
+  // currently priced out of. Same sourcing rules as every other town: real,
+  // sourced figures only, `null`/omitted where no credible source was found.
+  // House medians (not units) from Your Investment Property Mag — CoreLogic
+  // suburb data, 12 months to May 2026, same source pattern as the existing
+  // dataset. Vacancy rate wasn't published on any of these suburb pages
+  // (null across the board, matching most of the regional YIP-sourced towns
+  // per §6's caveat); no credible per-suburb NSW RFS/SES bushfire/flood
+  // source was quickly found for these established metro suburbs either.
+  {
+    id: "parramatta-nsw",
+    name: "Parramatta",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.8151, lng: 151.0011 },
+    medianPrice: {
+      value: 1582500,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2150-parramatta",
+    },
+    medianRent: {
+      value: 720,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2150-parramatta",
+    },
+    grossYieldPct: {
+      value: 2.36,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2150-parramatta",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [
+      {
+        text: "Sydney Metro West — Parramatta station, tunnelling complete 2026, line targeted to open 2032 (source: Sydney Metro / NSW Government)",
+        sourceUrl: "https://www.sydneymetro.info/",
+      },
+    ],
+  },
+  {
+    id: "blacktown-nsw",
+    name: "Blacktown",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.7688, lng: 150.9061 },
+    medianPrice: {
+      value: 1175000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2148-blacktown",
+    },
+    medianRent: {
+      value: 650,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2148-blacktown",
+    },
+    grossYieldPct: {
+      value: 3.06,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2148-blacktown",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "liverpool-nsw",
+    name: "Liverpool",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.92, lng: 150.9236 },
+    medianPrice: {
+      value: 1300000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2170-liverpool",
+    },
+    medianRent: {
+      value: 650,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2170-liverpool",
+    },
+    grossYieldPct: {
+      value: 3.03,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2170-liverpool",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [
+      {
+        text: "Liverpool Health and Academic Precinct — $830 million Liverpool Hospital redevelopment, Stage 2 (Integrated Services Building, expanded Emergency Department) under construction (source: NSW Government / Health Infrastructure)",
+        sourceUrl: "https://www.health.nsw.gov.au/",
+      },
+    ],
+  },
+  {
+    id: "penrith-nsw",
+    name: "Penrith",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.7507, lng: 150.6877 },
+    medianPrice: {
+      value: 1110500,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2750-penrith",
+    },
+    medianRent: {
+      value: 630,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2750-penrith",
+    },
+    grossYieldPct: {
+      value: 3.12,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2750-penrith",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [
+      {
+        text: "Sydney Metro — Western Sydney Airport Line (St Marys–Orchard Hills–Luddenham–Bradfield–Airport Terminal–Airport Business Park), targeted to open 2027; Orchard Hills station near Penrith under construction (source: Sydney Metro / NSW Government)",
+        sourceUrl: "https://www.sydneymetro.info/western-sydney-airport",
+      },
+    ],
+  },
+  {
+    id: "campbelltown-nsw",
+    name: "Campbelltown",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -34.0634, lng: 150.8143 },
+    medianPrice: {
+      value: 1017000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2560-campbelltown",
+    },
+    medianRent: {
+      value: 620,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2560-campbelltown",
+    },
+    grossYieldPct: {
+      value: 3.33,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2560-campbelltown",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "mount-druitt-nsw",
+    name: "Mount Druitt",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.7667, lng: 150.8167 },
+    medianPrice: {
+      value: 1082000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2770-mount-druitt",
+    },
+    medianRent: {
+      value: 620,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2770-mount-druitt",
+    },
+    grossYieldPct: {
+      value: 3.02,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2770-mount-druitt",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [
+      {
+        text: "Sydney Metro — Western Sydney Airport Line, St Marys station (interchange with T1 line) under construction, targeted to open 2027; new bus network linking Mount Druitt to the airport line (source: Sydney Metro / NSW Government)",
+        sourceUrl: "https://www.sydneymetro.info/western-sydney-airport",
+      },
+    ],
+  },
+  {
+    id: "bankstown-nsw",
+    name: "Bankstown",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.9171, lng: 151.0345 },
+    medianPrice: {
+      value: 1600000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2200-bankstown",
+    },
+    medianRent: {
+      value: 810,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2200-bankstown",
+    },
+    grossYieldPct: {
+      value: 2.78,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2200-bankstown",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [
+      {
+        text: "Sydney Metro City & Southwest — conversion of the T3 Bankstown Line to metro standard; Bankstown Station becoming the 'central station of the southwest,' new Southwest Metro targeted to open second half of 2026 (source: Sydney Metro / NSW Government)",
+        sourceUrl: "https://www.sydneymetro.info/city-southwest",
+      },
+    ],
+  },
+  {
+    id: "chatswood-nsw",
+    name: "Chatswood",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.7969, lng: 151.1806 },
+    medianPrice: {
+      value: 3590000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2067-chatswood",
+    },
+    medianRent: {
+      value: 1450,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2067-chatswood",
+    },
+    grossYieldPct: {
+      value: 2.1,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2067-chatswood",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "fairfield-nsw",
+    name: "Fairfield",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.872, lng: 150.9553 },
+    medianPrice: {
+      value: 1328000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2165-fairfield",
+    },
+    medianRent: {
+      value: 680,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2165-fairfield",
+    },
+    grossYieldPct: {
+      value: 3.11,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2165-fairfield",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "auburn-nsw",
+    name: "Auburn",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.8497, lng: 151.0328 },
+    medianPrice: {
+      value: 1580000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2144-auburn",
+    },
+    medianRent: {
+      value: 750,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2144-auburn",
+    },
+    grossYieldPct: {
+      value: 2.68,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2144-auburn",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "merrylands-nsw",
+    name: "Merrylands",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.8347, lng: 150.9878 },
+    medianPrice: {
+      value: 1425000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2160-merrylands",
+    },
+    medianRent: {
+      value: 750,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2160-merrylands",
+    },
+    grossYieldPct: {
+      value: 2.9,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2160-merrylands",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "hurstville-nsw",
+    name: "Hurstville",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.9673, lng: 151.1023 },
+    medianPrice: {
+      value: 2276000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2220-hurstville",
+    },
+    medianRent: {
+      value: 850,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2220-hurstville",
+    },
+    grossYieldPct: {
+      value: 2.39,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2220-hurstville",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "st-marys-nsw",
+    name: "St Marys",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.7657, lng: 150.7757 },
+    medianPrice: {
+      value: 1200000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2760-st-marys",
+    },
+    medianRent: {
+      value: 580,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2760-st-marys",
+    },
+    grossYieldPct: {
+      value: 2.88,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2760-st-marys",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [
+      {
+        text: "Sydney Metro — Western Sydney Airport Line — St Marys becomes a major interchange connecting the new metro to the existing suburban rail network; target opening April 2027 (source: NSW Government / Sydney Metro)",
+        sourceUrl: "https://www.sydneymetro.info/western-sydney-airport",
+      },
+    ],
+  },
+  {
+    id: "bondi-nsw",
+    name: "Bondi",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.8915, lng: 151.2767 },
+    medianPrice: {
+      value: 4905000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2026-bondi",
+    },
+    medianRent: {
+      value: 1972,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2026-bondi",
+    },
+    grossYieldPct: {
+      value: 2.08,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2026-bondi",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "manly-nsw",
+    name: "Manly",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.7969, lng: 151.2879 },
+    medianPrice: {
+      value: 5180000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2095-manly",
+    },
+    medianRent: {
+      value: 2100,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2095-manly",
+    },
+    grossYieldPct: {
+      value: 1.69,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2095-manly",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
+  },
+  {
+    id: "mosman-nsw",
+    name: "Mosman",
+    state: "NSW",
+    region: "Sydney Metro",
+    coordinates: { lat: -33.8281, lng: 151.2413 },
+    medianPrice: {
+      value: 5325000,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2088-mosman",
+    },
+    medianRent: {
+      value: 2200,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2088-mosman",
+    },
+    grossYieldPct: {
+      value: 1.81,
+      ...yip("12 months to May 2026"),
+      sourceUrl: "https://www.yourinvestmentpropertymag.com.au/top-suburbs/nsw/2088-mosman",
+    },
+    derivedYield: false,
+    vacancyRatePct: { value: null },
+    bushfireRisk: { level: null },
+    floodRisk: { level: null },
+    infrastructureProjects: [],
   },
 ];

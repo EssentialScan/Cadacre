@@ -54,6 +54,7 @@ export function TownMap({
   savedOnly,
   savedTownIds,
   minPopulationGrowthPct,
+  region,
   onMapClick,
   selectedLocation,
   selectedContextTown,
@@ -71,6 +72,7 @@ export function TownMap({
   savedOnly?: boolean;
   savedTownIds?: Set<string>;
   minPopulationGrowthPct?: number;
+  region?: "Sydney Metro" | "Regional NSW";
   onMapClick?: (lat: number, lng: number) => void;
   selectedLocation?: { lat: number; lng: number } | null;
   selectedContextTown?: Town | null;
@@ -86,7 +88,8 @@ export function TownMap({
     hideFloodRisk ||
     infrastructureOnly ||
     savedOnly ||
-    minPopulationGrowthPct !== undefined;
+    minPopulationGrowthPct !== undefined ||
+    region !== undefined;
 
   return (
     <MapContainer
@@ -131,7 +134,7 @@ export function TownMap({
             !filtersActive ||
             matchesFilters(
               town,
-              { budget, minYieldPct, maxVacancyPct, maxRent, hideBushfireRisk, hideFloodRisk, infrastructureOnly, savedOnly, minPopulationGrowthPct },
+              { budget, minYieldPct, maxVacancyPct, maxRent, hideBushfireRisk, hideFloodRisk, infrastructureOnly, savedOnly, minPopulationGrowthPct, region },
               { savedTownIds }
             )
               ? pinIcon

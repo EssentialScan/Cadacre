@@ -125,7 +125,7 @@ export function TownDetailDrawer({
               <div className="terminal-corners flex items-start justify-between gap-4 border border-faded-rule bg-white/50 p-4">
                 <div>
                   <p className="font-mono-figure text-xs uppercase tracking-[0.2em] text-survey-brass">
-                    {town?.state}
+                    {town?.state} · {town?.region ?? "Regional NSW"}
                   </p>
                   <h2 id="town-drawer-heading" className="mt-1 font-display text-2xl font-semibold text-ink-navy">
                     {town?.name}

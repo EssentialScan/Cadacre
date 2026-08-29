@@ -86,6 +86,7 @@ export function DashboardMapWorkspace({
         savedOnly={filters.savedOnly}
         savedTownIds={savedTownIds}
         minPopulationGrowthPct={filters.minPopulationGrowthPct}
+        region={filters.region}
         fullScreen
         onSelectTown={setSelectedTownId}
       />

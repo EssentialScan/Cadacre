@@ -10,6 +10,7 @@ export type TownMapFilters = {
   infrastructureOnly?: boolean;
   savedOnly?: boolean;
   minPopulationGrowthPct?: number;
+  region?: "Sydney Metro" | "Regional NSW";
 };
 
 export type TownFilterContext = {
@@ -23,9 +24,12 @@ const HIGH_HAZARD_LEVELS = new Set(["High", "Very High", "Extreme"]);
 
 export function matchesFilters(
   town: Town,
-  { budget, minYieldPct, maxVacancyPct, maxRent, hideBushfireRisk, hideFloodRisk, infrastructureOnly, savedOnly, minPopulationGrowthPct }: TownMapFilters,
+  { budget, minYieldPct, maxVacancyPct, maxRent, hideBushfireRisk, hideFloodRisk, infrastructureOnly, savedOnly, minPopulationGrowthPct, region }: TownMapFilters,
   context: TownFilterContext = {}
 ): boolean {
+  if (region !== undefined && (town.region ?? "Regional NSW") !== region) {
+    return false;
+  }
   if (budget !== undefined && town.medianPrice.value !== null && town.medianPrice.value > budget) {
     return false;
   }

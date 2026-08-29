@@ -456,6 +456,49 @@ data fields, worth reading before touching either area again.
   "Not available" fallback convention (moot here since coverage is 18/18 on
   both, but kept for consistency with every other field in the dataset).
 
+### 5g. Sydney Metro suburbs (dashboard-only, excluded from the paid shortlist)
+
+Added 2026-08-29 in response to "add more towns/suburbs in Sydney, does not
+have to be regional." This is a deliberate departure from the rest of the
+dataset (regional NSW only), so it's kept clearly tagged and scoped down
+rather than silently blended in.
+
+- **16 real Sydney suburbs** added to `src/data/towns.ts`, spanning outer
+  (Mount Druitt, St Marys, Campbelltown, Penrith, Liverpool, Blacktown,
+  Fairfield), middle-ring (Parramatta, Bankstown, Auburn, Merrylands,
+  Hurstville) and inner/expensive (Chatswood, Bondi, Manly, Mosman) price
+  points — sourced the same way as the existing regional dataset (Your
+  Investment Property Mag / CoreLogic suburb pages, 12 months to May 2026;
+  house medians, not units). Gross yield is each page's own published
+  figure (`derivedYield: false`). Vacancy rate is `null` for all 16 (not
+  published on any of the source pages — an honest gap, not a bug, matching
+  the existing regional towns' vacancy coverage). No credible per-suburb
+  NSW RFS/SES bushfire/flood source was found for these established metro
+  suburbs, so those fields are `null` throughout too. A handful carry a real
+  sourced infrastructure project (Sydney Metro West/City & Southwest/Western
+  Sydney Airport Line, the Liverpool Hospital redevelopment); the rest have
+  none because nothing current and well-sourced surfaced quickly.
+- **New `region?: "Sydney Metro" | "Regional NSW"` field on `Town`**
+  (`src/data/towns.ts`) — `undefined` means "Regional NSW" (every town added
+  before this field existed), so none of the original 18 needed touching.
+  New Sydney entries set it explicitly.
+- **Filterable and visually tagged, not hidden:** `MapFilterBar.tsx` gained
+  an All / Regional NSW / Sydney Metro toggle, wired through
+  `TownMapFilters.region` → `matchesFilters()` in `src/lib/townFilters.ts` →
+  `TownMap.tsx`'s pin dimming, same plumbing pattern as every other filter.
+  `TownDetailDrawer.tsx`'s header now shows the region next to the state
+  code.
+- **Deliberately excluded from the paid ranked shortlist:** Cadacre's core
+  pitch (§1/§2) is a *regional* rentvesting product — `rankTowns()` in
+  `src/lib/rankTowns.ts` now filters to `region !== "Sydney Metro"` before
+  scoring/ranking, regardless of what budget/yield the user enters, so a
+  Sydney suburb can never appear in the $39 report. (This ranking path is
+  still unreferenced by any current UI per §5c's paywall note — the filter
+  is there so the positioning holds if/when that flow is rebuilt.) Sydney
+  suburbs remain fully visible and browsable on the free dashboard map,
+  purely for comparison (e.g. "what does the Sydney suburb I'm priced out of
+  look like next to this regional town").
+
 ---
 
 ## 6. Current Status Snapshot
@@ -478,6 +521,14 @@ data fields, worth reading before touching either area again.
       from PRD/YIP, not literally ABS/SQM as Section 5 specifies; revisit if
       ABS/SQM-specific sourcing is required, and vacancy rate is missing for
       most YIP-sourced towns.
+- [x] 16 Sydney Metro suburbs added (2026-08-29), tagged
+      `region: "Sydney Metro"` and excluded from the paid ranked shortlist
+      (regional-only positioning preserved) — free-browse/compare only on
+      the dashboard map. See §5g. Same YIP/CoreLogic sourcing, same
+      `null`-not-guessed rule; vacancy rate and bushfire/flood risk are
+      `null` for all 16 (not published/found). Builds, type-checks, and
+      lints clean; not yet verified end-to-end in a signed-in browser
+      session.
 - [x] Hazard flags & infrastructure projects shipped (2026-08-27) — all 18
       towns now carry sourced `bushfireRisk`/`floodRisk` (NSW RFS/SES,
       disaster-declaration history; `null` where no credible source was

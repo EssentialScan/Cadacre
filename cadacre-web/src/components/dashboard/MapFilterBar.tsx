@@ -87,7 +87,8 @@ export function MapFilterBar({
     filters.hideFloodRisk ||
     filters.infrastructureOnly ||
     filters.savedOnly ||
-    filters.minPopulationGrowthPct !== undefined;
+    filters.minPopulationGrowthPct !== undefined ||
+    filters.region !== undefined;
 
   return (
     <div className="pointer-events-none absolute inset-x-0 top-4 z-[900] flex justify-center">
@@ -102,6 +103,32 @@ export function MapFilterBar({
         </div>
 
         <div className="flex flex-wrap items-end gap-3">
+          <Field label="Region" htmlFor="bar-region">
+            <div className="flex h-[30px] items-center gap-0.5 rounded-sm border border-faded-rule bg-white/80 p-0.5">
+              {(
+                [
+                  { label: "All", value: undefined },
+                  { label: "Regional NSW", value: "Regional NSW" as const },
+                  { label: "Sydney Metro", value: "Sydney Metro" as const },
+                ]
+              ).map((opt) => (
+                <button
+                  key={opt.label}
+                  type="button"
+                  id={opt.value ? undefined : "bar-region"}
+                  onClick={() => onFiltersChange({ ...filters, region: opt.value })}
+                  className={`h-full rounded-sm px-2 text-[11px] font-medium transition ${
+                    filters.region === opt.value
+                      ? "bg-survey-brass text-white"
+                      : "text-charcoal/60 hover:text-ink-navy"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </Field>
+
           <Field label="Budget" htmlFor="bar-budget">
             <input
               id="bar-budget"
