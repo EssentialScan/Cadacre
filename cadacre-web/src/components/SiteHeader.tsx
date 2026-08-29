@@ -40,18 +40,24 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-3">
           <Show when="signed-out">
-            <SignInButton mode="modal" forceRedirectUrl="/dashboard">
+            <SignInButton mode="modal" forceRedirectUrl="/shortlist">
               <button className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy">
                 Log in
               </button>
             </SignInButton>
-            <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+            <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
               <button className="rounded-sm bg-ink-navy px-4 py-2 text-sm font-medium text-parchment transition hover:bg-ink-navy/90">
                 Sign up
               </button>
             </SignUpButton>
           </Show>
           <Show when="signed-in">
+            <Link
+              href="/shortlist"
+              className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"
+            >
+              Shortlist
+            </Link>
             <Link
               href="/dashboard"
               className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"

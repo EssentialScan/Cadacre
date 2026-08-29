@@ -79,7 +79,9 @@
     --container-sm: 24rem;
     --container-md: 28rem;
     --container-xl: 36rem;
+    --container-2xl: 42rem;
     --container-3xl: 48rem;
+    --container-4xl: 56rem;
     --container-6xl: 72rem;
     --text-xs: .75rem;
     --text-xs--line-height: calc(1 / .75);
@@ -630,6 +632,10 @@
     height: calc(var(--spacing) * 8);
   }
 
+  .h-9 {
+    height: calc(var(--spacing) * 9);
+  }
+
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
@@ -714,6 +720,10 @@
     width: calc(var(--spacing) * 8);
   }
 
+  .w-9 {
+    width: calc(var(--spacing) * 9);
+  }
+
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
@@ -738,8 +748,16 @@
     width: 100vw;
   }
 
+  .max-w-2xl {
+    max-width: var(--container-2xl);
+  }
+
   .max-w-3xl {
     max-width: var(--container-3xl);
+  }
+
+  .max-w-4xl {
+    max-width: var(--container-4xl);
   }
 
   .max-w-6xl {
@@ -1029,6 +1047,10 @@
     border-left-width: 1px;
   }
 
+  .border-deep-forest {
+    border-color: var(--deep-forest);
+  }
+
   .border-deep-forest\/30 {
     border-color: var(--deep-forest);
   }
@@ -1055,6 +1077,10 @@
     .border-parchment\/20 {
       border-color: color-mix(in oklab, var(--parchment) 20%, transparent);
     }
+  }
+
+  .border-red-700 {
+    border-color: var(--color-red-700);
   }
 
   .border-survey-brass {
@@ -1086,6 +1112,16 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-deep-forest\/5 {
       background-color: color-mix(in oklab, var(--deep-forest) 5%, transparent);
+    }
+  }
+
+  .bg-deep-forest\/10 {
+    background-color: var(--deep-forest);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-deep-forest\/10 {
+      background-color: color-mix(in oklab, var(--deep-forest) 10%, transparent);
     }
   }
 
@@ -1168,6 +1204,16 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-parchment\/95 {
       background-color: color-mix(in oklab, var(--parchment) 95%, transparent);
+    }
+  }
+
+  .bg-red-700\/10 {
+    background-color: #bf000f1a;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-red-700\/10 {
+      background-color: color-mix(in oklab, var(--color-red-700) 10%, transparent);
     }
   }
 
@@ -1908,6 +1954,10 @@
     font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
   }
 
+  .underline {
+    text-decoration-line: underline;
+  }
+
   .antialiased {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -2205,6 +2255,10 @@
   @media (min-width: 40rem) {
     .sm\:inline {
       display: inline;
+    }
+
+    .sm\:inline-block {
+      display: inline-block;
     }
 
     .sm\:grid-cols-2 {

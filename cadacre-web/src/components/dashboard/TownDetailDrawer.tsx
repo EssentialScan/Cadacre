@@ -247,13 +247,35 @@ export function TownDetailDrawer({
                   <div className="mt-4">
                     <h3 className="font-display text-sm font-semibold text-ink-navy">Price trend</h3>
                     {town.priceHistory?.value ? (
-                      <PriceTrendChart history={town.priceHistory.value} />
+                      <PriceTrendChart
+                        history={town.priceHistory.value.map((h) => ({ year: h.year, value: h.medianPrice }))}
+                        valueLabel="Median house price"
+                      />
                     ) : (
                       <p className="mt-2 text-xs text-charcoal/50">
                         Not enough public data to show a trend.
                       </p>
                     )}
                   </div>
+
+                  {town.psiGrowthHistory && town.psiGrowthHistory.length >= 2 && (
+                    <div className="mt-4">
+                      <h3 className="font-display text-sm font-semibold text-ink-navy">
+                        Median sale price trend
+                      </h3>
+                      <PriceTrendChart
+                        history={town.psiGrowthHistory.map((h) => ({ year: h.year, value: h.medianSalePrice }))}
+                        valueLabel="Median sale price"
+                      />
+                      <p className="mt-1 text-[10px] text-charcoal/40">
+                        NSW Valuer General bulk sale-price records — all residential dwelling sales
+                        (houses, units, and townhouses combined), not directly comparable to the
+                        house-only median price shown above. Shown here on the free dashboard only —
+                        this data source&apos;s licence terms are non-commercial, so it&apos;s never
+                        included in the paid report.
+                      </p>
+                    </div>
+                  )}
 
                   {town.medianPrice.value !== null && town.medianRent.value !== null && (
                     <InvestmentCalculator medianPrice={town.medianPrice.value} medianRent={town.medianRent.value} />

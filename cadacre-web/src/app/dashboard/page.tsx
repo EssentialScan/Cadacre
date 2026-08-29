@@ -37,6 +37,12 @@ export default async function DashboardPage({
             <span className="hidden font-mono-figure text-[10px] uppercase tracking-[0.2em] text-survey-brass md:inline">
               NSW · Regional towns
             </span>
+            <Link
+              href="/shortlist"
+              className="hidden rounded-sm bg-survey-brass px-3 py-1.5 text-[11px] font-semibold text-ink-navy transition hover:bg-survey-brass/90 sm:inline-block"
+            >
+              Get your ranked shortlist
+            </Link>
             <span className="hidden gap-3 text-[10px] text-charcoal/40 md:flex">
               <Link href="/terms" className="hover:text-ink-navy">
                 Terms

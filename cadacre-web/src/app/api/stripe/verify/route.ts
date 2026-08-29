@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const targetYield = searchParams.get("yield");
   const sessionId = searchParams.get("session_id");
 
-  const redirectBase = new URL("/dashboard", request.url);
+  const redirectBase = new URL("/shortlist", request.url);
   if (budget) redirectBase.searchParams.set("budget", budget);
   if (targetYield) redirectBase.searchParams.set("yield", targetYield);
 

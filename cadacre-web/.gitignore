@@ -41,3 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .clerk/
+
+# scratch working directory for scripts/fetch-*.sh (raw downloads, not committed —
+# only the generated src/data/generated/*.json output is checked in)
+/tmp/

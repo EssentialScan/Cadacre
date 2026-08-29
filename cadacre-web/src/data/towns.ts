@@ -98,6 +98,18 @@ export type Town = {
   // 2016 (the most recent year this particular layer publishes; noted
   // explicitly rather than implied as current).
   employment?: SourcedField<{ unemploymentRatePct: number; participationRatePct: number }>;
+  // NSW Valuer General Bulk Property Sales Information (PSI) — real median
+  // *sale price* per year, aggregated from individual sale records (see
+  // AGENTS.md §5h for the full pipeline). LICENCE WARNING: PSI is
+  // CC BY-NC-ND 4.0 (Non-Commercial, No-Derivatives) — this conflicts with
+  // Cadacre's $39 paid report, so per an explicit founder decision this
+  // field must render ONLY on the free dashboard map and must NEVER be
+  // read by `src/app/api/report/route.tsx` or any other paid-report path.
+  // Treat any new consumer of this field the same way — dashboard-only,
+  // no exceptions — until the founder has it legally reviewed or replaces
+  // it with the CC BY-licensed Bulk Land Value data (not yet obtained; it
+  // requires an email request to the Valuer General, see AGENTS.md §5h).
+  psiGrowthHistory?: { year: number; medianSalePrice: number; saleCount: number }[];
   notes?: string;
 };
 

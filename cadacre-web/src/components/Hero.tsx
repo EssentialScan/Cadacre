@@ -48,7 +48,7 @@ export function Hero() {
 
           <FadeUp delay={0.24} className="mt-10 flex flex-wrap items-center gap-5">
             <Magnetic>
-              <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+              <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
                 <button className="group relative overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment">
                   <span className="relative z-10">
                     Run your free shortlist

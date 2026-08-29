@@ -249,13 +249,11 @@ described here across several redesign passes on 2026-08-28.
   call a server action or show a ranked/locked ledger. The earlier
   "Generate shortlist" paywall CTA was deliberately removed from this bar
   (2026-08-28, explicit ask) so the map stays a pure "browse and filter the
-  public record" tool. **This means `ShortlistForm.tsx`, `ShortlistResults.tsx`,
-  and the `getShortlist` server action (`src/app/dashboard/actions.ts`) are
-  currently unreferenced anywhere in the app** — the Stripe/report backend
-  routes are intact, but there is no UI path to the $39 paywall + PDF
-  report described in Section 2's Phase 1 business model. This was flagged
-  to the founder when it happened; rebuild that flow (its own page, a
-  modal, etc.) before relying on it as the revenue path again.
+  public record" tool. **Update (2026-08-29): the paywall flow is
+  reconnected as its own page — `/shortlist` (`src/app/shortlist/page.tsx`)
+  — not rebuilt into this bar.** See §5i for the full rationale and details;
+  `ShortlistForm.tsx`/`ShortlistResults.tsx`/`getShortlist` are no longer
+  unreferenced.
 - Filter fields, all driven by `src/lib/townFilters.ts`'s `matchesFilters()`
   (shared by the map and the bar so they can never drift out of sync) —
   every field checks a real, already-sourced `Town` field, nothing
@@ -302,8 +300,8 @@ described here across several redesign passes on 2026-08-28.
 - **Pre-existing bug found during verification of this feature (not
   introduced by it):** the budget input in `ShortlistForm.tsx` used
   `min={1} step={1000}`, which made HTML5 number-input step validation
-  reject round values like `700000` — fixed (`min={0}`) 2026-08-28, though
-  the form itself is currently unreferenced (see the paywall note above).
+  reject round values like `700000` — fixed (`min={0}`) 2026-08-28. The form
+  is no longer unreferenced — see §5i.
 
 ### 5d. Investor-value features: calculators, compare/watchlist, price trend
 
@@ -499,6 +497,142 @@ rather than silently blended in.
   purely for comparison (e.g. "what does the Sydney suburb I'm priced out of
   look like next to this regional town").
 
+### 5h. Full NSW suburb coverage + sale-price growth chart (dashboard-only)
+
+Added 2026-08-29 in response to "add every single suburb in NSW" — infeasible
+via per-suburb manual research (no free bulk price/rent/yield source exists
+for ~3,000+ localities), so the founder pointed to specific bulk/official
+datasets to use instead and asked for a per-suburb growth line graph. Two
+new data pipelines, both one-time scripts under `cadacre-web/scripts/`, not
+live dependencies of the running app:
+
+- **`scripts/fetch-abs-sal.sh` → ABS Digital Boundary Files, Suburbs and
+  Localities (SAL), CC BY 4.0.** Paginates
+  `geo.abs.gov.au/arcgis/rest/services/ASGS2021/SAL/FeatureServer/0`
+  (2,000-record page limit) filtered to NSW, pulling real name + centroid
+  for every gazetted NSW suburb/locality — **4,542 real records**, no
+  fabrication, no manual research needed. This is the same ArcGIS
+  FeatureServer pattern already used for `population`/`employment` (§5e/§5f),
+  against a different layer.
+- **`scripts/fetch-valuer-general-psi.sh` + `scripts/aggregate-nsw-
+  suburbs.js` → NSW Valuer General Bulk Property Sales Information (PSI).**
+  **LICENCE WARNING: PSI is CC BY-NC-ND 4.0 (Non-Commercial, No-
+  Derivatives)** — conflicts with Cadacre's $39 paid report. Per an
+  explicit founder decision, PSI-derived data is **dashboard-only, never
+  read by `src/app/api/report/route.tsx` or any paid-report path** — treat
+  any new consumer of `psiGrowthHistory` (on `Town`) or `growthHistory` (on
+  `NswSuburb`) the same way. This is flagged as an unresolved legal
+  question pending the founder's own review, the same treatment as the
+  Concierge feature gate (§2 Phase 3) — not a silent workaround assumed
+  safe. **Research note:** NSW Valuer General's *other* bulk dataset, Bulk
+  Land Value, is genuinely CC BY 4.0 with no such conflict — but unlike PSI
+  it is **not self-service**; the download page states access requires
+  emailing the Valuer General directly ("to ensure compliance with
+  licensing terms"). If the founder does that and obtains it, prefer Land
+  Value over PSI and retire the PSI pipeline. PSI itself, by contrast, is
+  freely downloadable with no registration — real statewide sale records
+  back to 1990 at `valuergeneral.nsw.gov.au/__psi/yearly/<year>.zip`
+  (fixed-format `;`-delimited "B" sale records; Nature of Property `R` =
+  residential dwelling — houses, units, and townhouses are **not**
+  separable from this field alone, so `psiGrowthHistory`/`growthHistory`
+  is explicitly labeled "median sale price" or "residential dwellings
+  combined," never "house price," in every UI surface — see the disclosure
+  copy in `TownDetailDrawer.tsx` and `NswSuburbsLayer.tsx`). Pulled years
+  2016–2025, aggregated to median sale price per suburb per year, only kept
+  where a suburb had **≥5 sales in that year** (avoids noisy medians on tiny
+  localities) and **≥2 qualifying years** (so a trend line is possible) —
+  **2,184 of the 4,542 suburbs** ended up with a real growth series; the
+  rest show "Not enough public sale-price data for a trend," same
+  null-not-guessed convention as everywhere else.
+- **Generated output:** `src/data/generated/nswSuburbs.json` (checked into
+  the repo, ~1.4MB — not re-fetched live; re-run the three scripts in order
+  to refresh it), loaded via `src/data/nswSuburbs.ts`, which exposes
+  `getUncuratedNswSuburbs()` (everything except the 34 curated `Town`
+  entries, name-matched and excluded to avoid duplicate pins) and
+  `findPsiGrowthHistory(townName)` (used by `getAllTowns()` in
+  `src/data/index.ts` to attach a real growth chart onto curated towns too,
+  where one exists).
+- **Map rendering:** `src/components/map/NswSuburbsLayer.tsx`, following
+  the exact viewport-bounds + zoom-level cap pattern `SmallPlacesLayer.tsx`
+  already uses for OSM-sourced places (not a marker-clustering library —
+  simpler, and consistent with the codebase's existing "smallest working
+  version" convention) — small dot pins, only rendered above zoom 9, capped
+  at 80/250/600 depending on zoom, so ~4,500 markers never render at once.
+  Clicking one opens a popup with the suburb's name and growth chart (if
+  it has one) — not the full `TownDetailDrawer` (these suburbs don't have
+  the curated dataset's price/yield/hazard fields, so a lighter popup is
+  honest about what's actually known). The generated JSON is imported
+  inside this client-only, `next/dynamic(ssr:false)`-loaded module rather
+  than passed down as page props, so its ~1.4MB doesn't bloat the
+  dashboard's server-rendered payload.
+- **Not done this pass:** the `/explore` page's separate map component
+  (`TownMapExplorer.tsx`, see §5c) does not have this layer — only the
+  `/dashboard` map does.
+
+### 5i. Ranked shortlist reconnected as `/shortlist` (the $39 paid flow)
+
+Added 2026-08-29, in response to a competitive-strategy question ("how do
+we stand out from data-browsing sites like OpenStats/Heatmaps.com.au/
+OnTheHouse/SQM Research when we can't compete on raw data breadth?"). The
+answer: those sites are all data terminals — you still have to do the
+analysis yourself. Cadacre's actual wedge is turning two inputs into a
+*decision* (a scored, ranked shortlist + a "before you proceed" checklist),
+not another map to browse. That flow was fully built (§5c/§6) but had been
+completely unreferenced since the map's paywall CTA was removed — meaning
+**there was no UI path to Cadacre's $39 product at all**, and worse, the
+homepage's own copy (`Hero.tsx`: "Enter your budget and target yield... a
+ranked shortlist... in under two minutes"; `Pricing.tsx`: "Run the free
+shortlist first") was actively promising a flow that didn't exist behind
+the sign-up button. This was a real product gap, not just a marketing one.
+
+- **New page: `src/app/shortlist/page.tsx`.** Server component, auth-gated
+  (added to `isProtectedRoute` in `src/proxy.ts` alongside `/dashboard`),
+  reads `userId` via Clerk `auth()` and renders the existing, already-
+  polished `ShortlistForm.tsx` → `ShortlistResults.tsx` → `getShortlist`
+  server action (`src/app/dashboard/actions.ts`) → `rankTowns.ts` chain
+  completely unchanged — none of that code needed modification, it was
+  correct and just needed a page to live on. Also unchanged: the free-3/
+  locked-rest split, the Stripe Payment Link unlock CTA, and the
+  `/api/report` PDF link, all already wired inside `ShortlistResults.tsx`.
+- **Stripe redirect updated:** `src/app/api/stripe/verify/route.ts` redirected
+  to `/dashboard?budget=...&yield=...&unlocked=1` on a successful payment —
+  changed to `/shortlist` (same query-param contract), since that's where
+  the form/results now live. `ShortlistPage` reads `unlocked`/`unlock_error`
+  and auto-resubmits the form (`autoSubmit` prop, already existed on
+  `ShortlistForm`) so a paying user lands straight on their now-unlocked
+  full report instead of an empty form.
+- **Every sign-up/sign-in entry point on the homepage updated:**
+  `Hero.tsx`, `Pricing.tsx`, `FinalCta.tsx`, and `SiteHeader.tsx`'s
+  `SignUpButton`/`SignInButton` `forceRedirectUrl` all changed from
+  `/dashboard` to `/shortlist` — these are exactly the buttons whose
+  surrounding copy promises the shortlist experience, so they now land
+  users on the page that actually delivers it. `SiteHeader.tsx`'s
+  signed-in nav gained a "Shortlist" link alongside the existing
+  "Dashboard" link.
+- **Two-way link between the two surfaces, not a replacement:** the free
+  `/dashboard` map and the paid `/shortlist` decision page are positioned
+  as complementary, not competing — `/shortlist`'s header links back to
+  "Browse the free map," and `/dashboard`'s header gained a "Get your
+  ranked shortlist" CTA linking to `/shortlist`. Browsing stays free and
+  open (§5c); the shortlist stays the paid decision product.
+- **Nothing in `rankTowns.ts`/`ShortlistResults.tsx`/the PDF report route
+  needed to change for the Sydney Metro exclusion (§5g) or the PSI
+  dashboard-only restriction (§5h)** — both were already scoped correctly
+  (region-filtered ranking; PSI data was never plumbed into the report
+  route in the first place), so reconnecting this flow didn't reopen either
+  of those constraints.
+- **Pre-existing anomaly found, not touched:** a nested, tracked
+  `cadacre-web/cadacre-web/.next/` directory exists in the repo (committed
+  in a same-day commit titled "Refactor code structure for improved
+  readability and maintainability" — not from this work, and not something
+  this pass created or committed). It makes bare `npm run lint` report ~200
+  problems from bundled `.next` chunk files, since ESLint's flat-config
+  `.next/**` ignore doesn't match nested at that depth. Verification this
+  pass used `npx eslint src` instead to confirm the actual source changes
+  are clean. Flagged for the founder to decide whether to `git rm` it —
+  not removed unilaterally since it's already-committed history, not
+  uncommitted working-tree cruft.
+
 ---
 
 ## 6. Current Status Snapshot
@@ -512,8 +646,12 @@ rather than silently blended in.
       report (`cadacre-web/`). Builds and lints clean. **Note (2026-08-28):**
       the dashboard UI path into this flow was removed when the map's
       "Generate shortlist" CTA was dropped in favor of pure live filtering
-      (see §5c) — the backend (`getShortlist`, Stripe routes, PDF route) is
-      still intact and correct, but nothing in the current UI calls it.
+      (see §5c). **Update (2026-08-29):** reconnected as its own page,
+      `/shortlist` — see §5i. Every homepage sign-up CTA now lands there
+      instead of `/dashboard`. Builds and type-checks clean (verified via
+      `npx eslint src`, not bare `npm run lint` — see §5i's note on a
+      pre-existing, unrelated nested `.next` directory in the repo); not
+      yet verified end-to-end with a real Stripe test payment.
 - [x] Town dataset is real, sourced, non-fabricated data (18 NSW regional
       towns; PRD market updates + Your Investment Property Mag/CoreLogic
       suburb data, each figure carrying its own source URL and as-of date;
@@ -529,6 +667,15 @@ rather than silently blended in.
       `null` for all 16 (not published/found). Builds, type-checks, and
       lints clean; not yet verified end-to-end in a signed-in browser
       session.
+- [x] Full NSW suburb coverage + sale-price growth chart shipped
+      (2026-08-29) — 4,542 real NSW suburbs (ABS SAL boundaries, CC BY 4.0)
+      rendered on the dashboard map beyond the 34 curated towns; 2,184 of
+      them have a real multi-year growth chart from NSW Valuer General Bulk
+      PSI sale records. See §5h — **PSI is CC BY-NC-ND 4.0, dashboard-only,
+      flagged pending founder legal review**, never in the paid report.
+      Builds, type-checks, and lints clean; map performance (viewport+zoom
+      capped rendering) and a handful of generated records spot-checked
+      manually, not yet verified end-to-end in a signed-in browser session.
 - [x] Hazard flags & infrastructure projects shipped (2026-08-27) — all 18
       towns now carry sourced `bushfireRisk`/`floodRisk` (NSW RFS/SES,
       disaster-declaration history; `null` where no credible source was

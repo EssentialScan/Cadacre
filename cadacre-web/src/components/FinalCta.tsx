@@ -31,7 +31,7 @@ export function FinalCta() {
         </FadeUp>
         <FadeUp delay={0.15} className="mt-10">
           <Magnetic>
-            <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+            <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
               <button className="group relative overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment">
                 <span className="relative z-10">Run your free shortlist</span>
                 <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />

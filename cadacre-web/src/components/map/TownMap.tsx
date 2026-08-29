@@ -4,7 +4,15 @@ import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, ZoomControl, useMapEvents } from "react-leaflet";
 import type { Town } from "@/data/towns";
 import { SmallPlacesLayer } from "@/components/map/SmallPlacesLayer";
+import { NswSuburbsLayer } from "@/components/map/NswSuburbsLayer";
+import { getUncuratedNswSuburbs } from "@/data";
 import { matchesFilters } from "@/lib/townFilters";
+
+// Client-bundle-only, loaded lazily alongside this dynamically-imported
+// (ssr:false) map component rather than passed down as page props — the
+// generated dataset is ~1.4MB and would otherwise bloat the dashboard's
+// server-rendered payload. Computed once per module load, not per render.
+const nswSuburbs = getUncuratedNswSuburbs();
 
 // Custom brand pin — avoids Leaflet's default marker icon, which breaks
 // under bundlers since its image paths are relative to the CSS file.
@@ -105,6 +113,7 @@ export function TownMap({
       <ZoomControl position="bottomleft" />
       <MapClickHandler onMapClick={onMapClick} />
       <SmallPlacesLayer towns={towns} />
+      <NswSuburbsLayer suburbs={nswSuburbs} />
       {selectedLocation && (
         <Marker position={[selectedLocation.lat, selectedLocation.lng]} icon={selectedPinIcon}>
           <Popup>

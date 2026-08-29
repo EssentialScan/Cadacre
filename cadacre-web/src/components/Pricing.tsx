@@ -56,7 +56,7 @@ export function Pricing() {
             </Stagger>
 
             <Magnetic strength={0.15} className="mt-10 block w-full">
-              <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+              <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
                 <button className="group relative w-full overflow-hidden rounded-sm bg-ink-navy px-6 py-3 text-sm font-semibold text-parchment">
                   <span className="relative z-10">Unlock the full record</span>
                   <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/30 transition-transform duration-300 ease-out group-hover:translate-x-0" />
