@@ -11,3 +11,7 @@ export function getAllTowns(): Town[] {
     return psiGrowthHistory ? { ...town, psiGrowthHistory } : town;
   });
 }
+
+export function getSydneyMetroTowns(): Town[] {
+  return getAllTowns().filter((town) => town.region === "Sydney Metro");
+}

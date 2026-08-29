@@ -1,11 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { RBA_INVESTOR_VARIABLE_RATE, estimateNswStampDuty, estimateWeeklyRepayment } from "@/lib/investmentMath";
-
-function money(value: number): string {
-  return `$${Math.round(value).toLocaleString("en-AU")}`;
-}
+import { RBA_INVESTOR_VARIABLE_RATE, computeCashFlowEstimate, formatMoney as money } from "@/lib/investmentMath";
 
 export function InvestmentCalculator({
   medianPrice,
@@ -19,11 +15,13 @@ export function InvestmentCalculator({
   const [ratePct, setRatePct] = useState(RBA_INVESTOR_VARIABLE_RATE.ratePct);
   const [termYears, setTermYears] = useState(30);
 
-  const weeklyRepayment = estimateWeeklyRepayment({ price: medianPrice, depositPct, ratePct, termYears });
-  const stampDuty = estimateNswStampDuty(medianPrice);
-  const deposit = medianPrice * (depositPct / 100);
-  const upfrontCost = deposit + stampDuty;
-  const netWeeklyCashFlow = medianRent - weeklyRepayment;
+  const { weeklyRepayment, stampDuty, upfrontCost, netWeeklyCashFlow } = computeCashFlowEstimate({
+    price: medianPrice,
+    rent: medianRent,
+    depositPct,
+    ratePct,
+    termYears,
+  });
 
   return (
     <div className="mt-6 border border-faded-rule">

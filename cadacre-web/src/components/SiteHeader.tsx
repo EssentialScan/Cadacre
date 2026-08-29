@@ -18,6 +18,9 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-charcoal/80 md:flex">
+          <Link href="/rent-vs-rentvest" className="hover:text-ink-navy">
+            Rent vs rentvest
+          </Link>
           <Link href="/explore" className="hover:text-ink-navy">
             Explore map
           </Link>

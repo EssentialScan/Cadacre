@@ -57,3 +57,70 @@ export function estimateNswStampDuty(price: number): number {
   const bracket = NSW_DUTY_BRACKETS.find((b) => price <= b.upTo) ?? NSW_DUTY_BRACKETS[NSW_DUTY_BRACKETS.length - 1];
   return bracket.base + (price - bracket.from) * bracket.rate;
 }
+
+// Inverse of estimateWeeklyRepayment: given a weekly repayment budget, solve
+// for the loan amount the standard amortization formula supports, then back
+// out the equivalent purchase price from depositPct. Used to convert "what a
+// renter currently pays per week" into an equivalent purchase budget.
+export function estimateAffordablePrice({
+  weeklyBudget,
+  depositPct,
+  ratePct,
+  termYears,
+}: {
+  weeklyBudget: number;
+  depositPct: number;
+  ratePct: number;
+  termYears: number;
+}): number {
+  if (weeklyBudget <= 0 || depositPct >= 100) return 0;
+
+  const monthlyRepayment = (weeklyBudget * 52) / 12;
+  const monthlyRate = ratePct / 100 / 12;
+  const totalPayments = termYears * 12;
+
+  if (totalPayments <= 0) return 0;
+
+  const loanAmount =
+    monthlyRate === 0
+      ? monthlyRepayment * totalPayments
+      : (monthlyRepayment * (1 - Math.pow(1 + monthlyRate, -totalPayments))) / monthlyRate;
+
+  return loanAmount / (1 - depositPct / 100);
+}
+
+export interface CashFlowEstimate {
+  weeklyRepayment: number;
+  stampDuty: number;
+  deposit: number;
+  upfrontCost: number;
+  netWeeklyCashFlow: number;
+}
+
+// Shared by InvestmentCalculator.tsx and the rent-vs-rentvest comparison page
+// so both render identical numbers from identical logic.
+export function computeCashFlowEstimate({
+  price,
+  rent,
+  depositPct,
+  ratePct,
+  termYears,
+}: {
+  price: number;
+  rent: number;
+  depositPct: number;
+  ratePct: number;
+  termYears: number;
+}): CashFlowEstimate {
+  const weeklyRepayment = estimateWeeklyRepayment({ price, depositPct, ratePct, termYears });
+  const stampDuty = estimateNswStampDuty(price);
+  const deposit = price * (depositPct / 100);
+  const upfrontCost = deposit + stampDuty;
+  const netWeeklyCashFlow = rent - weeklyRepayment;
+
+  return { weeklyRepayment, stampDuty, deposit, upfrontCost, netWeeklyCashFlow };
+}
+
+export function formatMoney(value: number): string {
+  return `$${Math.round(value).toLocaleString("en-AU")}`;
+}
