@@ -1,4 +1,4 @@
-import { SignUpButton } from "@clerk/nextjs";
+import Link from "next/link";
 import { FadeUp } from "@/components/motion/FadeIn";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
@@ -31,15 +31,17 @@ export function FinalCta() {
         </FadeUp>
         <FadeUp delay={0.15} className="mt-10">
           <Magnetic>
-            <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
-              <button className="group relative overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment">
-                <span className="relative z-10">Run your free shortlist</span>
-                <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />
-              </button>
-            </SignUpButton>
+            <Link
+              href="/sign-up?redirect_url=/shortlist"
+              className="group relative inline-flex overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment"
+            >
+              <span className="relative z-10">Run your free shortlist</span>
+              <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />
+            </Link>
           </Magnetic>
           <p className="mt-4 text-xs text-charcoal/50">
-            Free to run. Pay $39 only if you want the full ranked list.
+            Free to browse and run the teaser. Subscribe only if you want the full ranked list
+            and every other tool.
           </p>
         </FadeUp>
       </div>

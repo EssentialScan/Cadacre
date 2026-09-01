@@ -46,16 +46,16 @@ export default function TermsPage() {
                 3. Payment
               </h2>
               <p className="mt-2">
-                The full ranked report is a one-time payment of $39 AUD. There
-                is no subscription and no recurring charge. Payments are
-                processed by Stripe; Cadacre does not see or store your card
-                details.
+                The full ranked report, and every other Cadacre tool beyond the free dashboard
+                map, top-3 teaser, and single-suburb rent comparison, requires an active monthly
+                subscription. You can cancel at any time from your account page; access continues
+                until the end of the current billing period. Payments are processed by Stripe;
+                Cadacre does not see or store your card details.
               </p>
               <p className="mt-2">
-                Refunds: because the report is generated instantly from
-                public data at the time of purchase, we don&apos;t offer
-                refunds once a report has been generated. If something went
-                wrong with your payment or report, contact
+                Refunds: because reports and tools are generated instantly from public data at
+                the time of use, we don&apos;t offer refunds for a billing period already used.
+                If something went wrong with your payment or subscription, contact
                 support@cadacre.com and we&apos;ll make it right.
               </p>
             </section>

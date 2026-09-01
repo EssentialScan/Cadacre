@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { Show, UserButton } from "@clerk/nextjs";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-faded-rule bg-parchment/95 backdrop-blur supports-[backdrop-filter]:bg-parchment/80">
+    <header className="sticky top-0 z-[9998] border-b border-faded-rule bg-parchment/95 backdrop-blur supports-[backdrop-filter]:bg-parchment/80">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center">
           <Image
@@ -27,32 +27,34 @@ export function SiteHeader() {
           <Link href="/listings" className="hover:text-ink-navy">
             Market scout
           </Link>
-          <a href="#how-it-works" className="hover:text-ink-navy">
+          <Link href="/#how-it-works" className="hover:text-ink-navy">
             How it works
-          </a>
-          <a href="#sample" className="hover:text-ink-navy">
+          </Link>
+          <Link href="/#sample" className="hover:text-ink-navy">
             Sample record
-          </a>
-          <a href="#pricing" className="hover:text-ink-navy">
+          </Link>
+          <Link href="/#pricing" className="hover:text-ink-navy">
             Pricing
-          </a>
-          <a href="#faq" className="hover:text-ink-navy">
+          </Link>
+          <Link href="/#faq" className="hover:text-ink-navy">
             FAQ
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">
           <Show when="signed-out">
-            <SignInButton mode="modal" forceRedirectUrl="/shortlist">
-              <button className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy">
-                Log in
-              </button>
-            </SignInButton>
-            <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
-              <button className="rounded-sm bg-ink-navy px-4 py-2 text-sm font-medium text-parchment transition hover:bg-ink-navy/90">
-                Sign up
-              </button>
-            </SignUpButton>
+            <Link
+              href="/sign-in?redirect_url=/shortlist"
+              className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/sign-up?redirect_url=/shortlist"
+              className="rounded-sm bg-ink-navy px-4 py-2 text-sm font-medium text-parchment transition hover:bg-ink-navy/90"
+            >
+              Sign up
+            </Link>
           </Show>
           <Show when="signed-in">
             <Link
@@ -66,6 +68,12 @@ export function SiteHeader() {
               className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"
             >
               Dashboard
+            </Link>
+            <Link
+              href="/account"
+              className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"
+            >
+              Account
             </Link>
             <UserButton />
           </Show>

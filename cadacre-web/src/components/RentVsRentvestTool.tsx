@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { Town } from "@/data";
 import { rankTowns } from "@/lib/rankTowns";
@@ -10,6 +10,8 @@ import {
   estimateAffordablePrice,
   formatMoney,
 } from "@/lib/investmentMath";
+import { getRentTrackerBaseline, saveRentTrackerBaseline } from "@/app/dashboard/actions";
+import type { RentTrackerBaseline } from "@/app/dashboard/types";
 
 function money(value: number | null): string {
   if (value === null) return "Not available";
@@ -23,12 +25,23 @@ export function RentVsRentvestTool({
   sydneySuburbs,
   regionalTowns,
   resultCount = 3,
+  isSubscriber,
 }: {
   sydneySuburbs: Town[];
   regionalTowns: Town[];
   resultCount?: number;
+  isSubscriber?: boolean;
 }) {
   const [suburbId, setSuburbId] = useState(sydneySuburbs[0]?.id ?? "");
+  const [baseline, setBaseline] = useState<RentTrackerBaseline | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!isSubscriber) return;
+    getRentTrackerBaseline()
+      .then(setBaseline)
+      .catch(() => {});
+  }, [isSubscriber]);
 
   const suburb = sydneySuburbs.find((t) => t.id === suburbId) ?? null;
 
@@ -167,6 +180,45 @@ export function RentVsRentvestTool({
               >
                 See the full ranked shortlist →
               </Link>
+              {isSubscriber && (
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => {
+                    setSaving(true);
+                    saveRentTrackerBaseline({
+                      suburbId: suburb.id,
+                      suburbName: suburb.name,
+                      asOf: new Date().toLocaleDateString("en-AU", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }),
+                      affordablePrice,
+                      matchedTownIds: matches.map((m) => m.town.id),
+                    })
+                      .then(setBaseline)
+                      .finally(() => setSaving(false));
+                  }}
+                  className="rounded-sm border border-deep-forest px-4 py-2 text-sm font-medium text-deep-forest transition hover:bg-deep-forest/10 disabled:opacity-50"
+                >
+                  {saving ? "Saving…" : "Track this (Subscriber)"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {isSubscriber && baseline && baseline.suburbId === suburb.id && affordablePrice !== null && (
+            <div className="mt-4 rounded-sm border border-survey-brass/40 bg-survey-brass/5 p-4 text-sm text-charcoal/75">
+              Since you tracked {baseline.suburbName} on {baseline.asOf}, the equivalent budget
+              moved from {money(baseline.affordablePrice)} to {money(affordablePrice)}
+              {matches.length !== baseline.matchedTownIds.length && (
+                <>
+                  , newly matching {Math.max(matches.length - baseline.matchedTownIds.length, 0)}{" "}
+                  more regional town{Math.abs(matches.length - baseline.matchedTownIds.length) === 1 ? "" : "s"}
+                </>
+              )}
+              .
             </div>
           )}
         </div>

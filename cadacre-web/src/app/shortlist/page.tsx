@@ -4,6 +4,8 @@ import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ShortlistForm } from "@/components/ShortlistForm";
+import { RentvestorLab } from "@/components/RentvestorLab";
+import { isSubscriber } from "@/lib/entitlements";
 
 export default async function ShortlistPage({
   searchParams,
@@ -16,8 +18,9 @@ export default async function ShortlistPage({
   const params = await searchParams;
   const budgetParam = typeof params.budget === "string" ? params.budget : undefined;
   const yieldParam = typeof params.yield === "string" ? params.yield : undefined;
-  const justUnlocked = params.unlocked === "1";
-  const unlockError = params.unlock_error === "1";
+  const justSubscribed = params.subscribed === "1";
+  const subscribeError = params.subscribe_error === "1";
+  const subscribed = await isSubscriber(userId);
 
   return (
     <div className="min-h-screen bg-parchment">
@@ -49,19 +52,19 @@ export default async function ShortlistPage({
           The free dashboard map is for browsing every town on the record at your own pace.
           This is the other half of Cadacre: two numbers in, and public housing data — median
           price, gross yield, vacancy rate — gets checked against every regional town and
-          scored for you. First 3 results are always free. Unlock the full ranked list and a
-          downloadable PDF report for a one-time $39.
+          scored for you. First 3 results are always free. Subscribe to unlock the full ranked
+          list and a downloadable PDF report.
         </p>
 
-        {justUnlocked && (
+        {justSubscribed && (
           <div className="mt-6 rounded-sm border border-deep-forest bg-deep-forest/10 px-5 py-3 text-sm text-deep-forest">
-            Payment confirmed — your full ranked report is unlocked below.
+            Subscription confirmed — your full ranked report is unlocked below.
           </div>
         )}
-        {unlockError && (
+        {subscribeError && (
           <div className="mt-6 rounded-sm border border-red-700 bg-red-700/10 px-5 py-3 text-sm text-red-700">
-            We couldn&apos;t confirm that payment. If you were charged, contact support and
-            we&apos;ll unlock your report manually.
+            We couldn&apos;t confirm that subscription. If you were charged, contact support and
+            we&apos;ll unlock your account manually.
           </div>
         )}
 
@@ -70,8 +73,21 @@ export default async function ShortlistPage({
             clerkUserId={userId}
             defaultBudget={budgetParam}
             defaultYieldPct={yieldParam}
-            autoSubmit={justUnlocked && Boolean(budgetParam && yieldParam)}
+            autoSubmit={justSubscribed && Boolean(budgetParam && yieldParam)}
+            isSubscriber={subscribed}
           />
+        </div>
+
+        <div className="mt-16 space-y-6 border-t border-faded-rule pt-10">
+          <div>
+            <h2 className="font-display text-2xl text-ink-navy">Or test your scenario first</h2>
+            <p className="mt-2 text-sm leading-relaxed text-charcoal/70">
+              Not sure if regional rentvesting makes sense for your Sydney rent? Run a stress test:
+              compare staying in Sydney against investing regionally, side by side. Adjust your own assumptions
+              to see when the decision tips.
+            </p>
+          </div>
+          <RentvestorLab />
         </div>
 
         <p className="mt-10 text-xs leading-relaxed text-charcoal/45">

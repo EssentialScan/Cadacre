@@ -3,7 +3,7 @@ import { ParallaxImage } from "@/components/motion/ParallaxImage";
 
 const stats = [
   { value: "NSW", label: "Regional towns tracked, updated as sources refresh" },
-  { value: "$39", label: "To unlock the full ranked record — once" },
+  { value: "Monthly", label: "One subscription to unlock the full ranked record" },
   { value: "0", label: "Sponsored placements in the rankings" },
 ];
 

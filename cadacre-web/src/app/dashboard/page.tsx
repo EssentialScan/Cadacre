@@ -1,9 +1,11 @@
 import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import { DashboardMapWorkspace } from "@/components/dashboard/DashboardMapWorkspace";
 import { LiveClock } from "@/components/dashboard/LiveClock";
 import { getAllTowns } from "@/data";
+import { isSubscriber } from "@/lib/entitlements";
 
 export default async function DashboardPage({
   searchParams,
@@ -14,6 +16,9 @@ export default async function DashboardPage({
 
   const budgetParam = typeof params.budget === "string" ? params.budget : undefined;
   const yieldParam = typeof params.yield === "string" ? params.yield : undefined;
+
+  const { userId } = await auth();
+  const proSubscriber = userId ? await isSubscriber(userId) : false;
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-parchment">
@@ -65,6 +70,7 @@ export default async function DashboardPage({
           towns={getAllTowns()}
           defaultBudget={budgetParam}
           defaultYieldPct={yieldParam}
+          isSubscriber={proSubscriber}
         />
       </section>
     </div>

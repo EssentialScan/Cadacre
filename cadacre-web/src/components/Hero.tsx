@@ -1,4 +1,4 @@
-import { SignUpButton } from "@clerk/nextjs";
+import Link from "next/link";
 import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { HeroMapLoader } from "@/components/map/HeroMapLoader";
@@ -40,22 +40,21 @@ export function Hero({ towns }: { towns: Town[] }) {
 
             <FadeUp delay={0.24} className="mt-10 flex flex-wrap items-center gap-5">
               <Magnetic>
-                <SignUpButton mode="modal" forceRedirectUrl="/shortlist">
-                  <button className="group relative overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment">
-                    <span className="relative z-10">
-                      Run your free shortlist
-                    </span>
-                    <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />
-                  </button>
-                </SignUpButton>
+                <Link
+                  href="/sign-up?redirect_url=/shortlist"
+                  className="group relative inline-flex overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment"
+                >
+                  <span className="relative z-10">Run your free shortlist</span>
+                  <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />
+                </Link>
               </Magnetic>
-              <a
-                href="#sample"
+              <Link
+                href="/#sample"
                 className="group relative text-sm font-medium text-ink-navy"
               >
                 See a sample record
                 <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink-navy transition-transform duration-300 ease-out group-hover:scale-x-100" />
-              </a>
+              </Link>
             </FadeUp>
           </div>
 
@@ -89,9 +88,9 @@ export function Hero({ towns }: { towns: Town[] }) {
             </StaggerItem>
             <StaggerItem>
               <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">
-                $39
+                Monthly
               </span>
-              Full record, once
+              One subscription, everything
             </StaggerItem>
             <StaggerItem>
               <span className="block text-lg font-semibold text-ink-navy normal-case tracking-normal">

@@ -3,8 +3,10 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { getSavedTownIds, toggleSavedTown } from "@/app/dashboard/actions";
+import { AiConciergeChat } from "@/components/dashboard/AiConciergeChat";
 import { CompareDrawer } from "@/components/dashboard/CompareDrawer";
 import { MapFilterBar } from "@/components/dashboard/MapFilterBar";
+import { ScenarioSimulator } from "@/components/dashboard/ScenarioSimulator";
 import { TownDetailDrawer } from "@/components/dashboard/TownDetailDrawer";
 import type { Town } from "@/data/towns";
 import type { TownMapFilters } from "@/lib/townFilters";
@@ -29,10 +31,12 @@ export function DashboardMapWorkspace({
   towns,
   defaultBudget,
   defaultYieldPct,
+  isSubscriber,
 }: {
   towns: Town[];
   defaultBudget?: string;
   defaultYieldPct?: string;
+  isSubscriber?: boolean;
 }) {
   const [filters, setFilters] = useState<TownMapFilters>({
     budget: defaultBudget && !Number.isNaN(Number(defaultBudget)) ? Number(defaultBudget) : undefined,
@@ -42,6 +46,9 @@ export function DashboardMapWorkspace({
   const [savedTownIds, setSavedTownIds] = useState<Set<string>>(new Set());
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [simulatorOpen, setSimulatorOpen] = useState(false);
+  const [conciergeOpen, setConciergeOpen] = useState(false);
+  const savedTowns = towns.filter((t) => savedTownIds.has(t.id));
   const selectedTown = towns.find((t) => t.id === selectedTownId) ?? null;
   const compareTowns = towns.filter((t) => compareIds.includes(t.id));
 
@@ -110,6 +117,26 @@ export function DashboardMapWorkspace({
         </button>
       )}
 
+      {isSubscriber && (
+        <button
+          type="button"
+          onClick={() => setSimulatorOpen(true)}
+          className="pointer-events-auto absolute bottom-24 left-32 z-[900] rounded-sm border border-deep-forest bg-parchment/90 px-3 py-2 font-mono-figure text-[11px] font-semibold uppercase tracking-wide text-deep-forest shadow-[0_12px_30px_-15px_rgba(18,22,28,0.4)] backdrop-blur-md transition hover:bg-white"
+        >
+          Scenario simulator
+        </button>
+      )}
+
+      {isSubscriber && (
+        <button
+          type="button"
+          onClick={() => setConciergeOpen(true)}
+          className="pointer-events-auto absolute bottom-24 left-64 z-[900] rounded-sm border border-survey-brass bg-parchment/90 px-3 py-2 font-mono-figure text-[11px] font-semibold uppercase tracking-wide text-survey-brass shadow-[0_12px_30px_-15px_rgba(18,22,28,0.4)] backdrop-blur-md transition hover:bg-white"
+        >
+          Ask AI concierge
+        </button>
+      )}
+
       <p className="pointer-events-none absolute bottom-3 right-3 z-[900] max-w-xs rounded-sm border border-faded-rule bg-parchment/80 px-3 py-1.5 text-right font-mono-figure text-[9px] leading-relaxed text-charcoal/55 backdrop-blur-md">
         General public-data information, not personalised financial or investment advice.
       </p>
@@ -122,6 +149,7 @@ export function DashboardMapWorkspace({
         canAddToCompare={compareIds.length < MAX_COMPARE}
         onToggleCompare={handleToggleCompare}
         onClose={() => setSelectedTownId(null)}
+        isSubscriber={isSubscriber}
       />
 
       <CompareDrawer
@@ -130,6 +158,18 @@ export function DashboardMapWorkspace({
         onRemove={handleRemoveFromCompare}
         onClose={() => setCompareOpen(false)}
       />
+
+      {isSubscriber && (
+        <ScenarioSimulator
+          towns={savedTowns}
+          open={simulatorOpen}
+          onClose={() => setSimulatorOpen(false)}
+        />
+      )}
+
+      {isSubscriber && (
+        <AiConciergeChat open={conciergeOpen} onClose={() => setConciergeOpen(false)} />
+      )}
     </div>
   );
 }

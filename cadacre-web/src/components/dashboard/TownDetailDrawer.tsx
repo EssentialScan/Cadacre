@@ -7,6 +7,9 @@ import type { Town } from "@/data/towns";
 import { HazardIcons } from "@/components/HazardIcons";
 import { InvestmentCalculator } from "@/components/dashboard/InvestmentCalculator";
 import { PriceTrendChart } from "@/components/dashboard/PriceTrendChart";
+import { RelocationReadinessPack } from "@/components/dashboard/RelocationReadinessPack";
+import { TownDriftPanel } from "@/components/dashboard/TownDriftPanel";
+import { getSnapshotAsOf } from "@/data/townSnapshot";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -46,6 +49,7 @@ export function TownDetailDrawer({
   canAddToCompare,
   onToggleCompare,
   onClose,
+  isSubscriber,
 }: {
   town: Town | null;
   isSaved?: boolean;
@@ -54,6 +58,7 @@ export function TownDetailDrawer({
   canAddToCompare?: boolean;
   onToggleCompare?: () => void;
   onClose: () => void;
+  isSubscriber?: boolean;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -178,7 +183,10 @@ export function TownDetailDrawer({
 
               {town && (
                 <>
-                  <div className="mt-6 divide-y divide-faded-rule border-y border-faded-rule">
+                  <p className="mt-3 font-mono-figure text-[10px] uppercase tracking-widest text-charcoal/40">
+                    Record last updated {getSnapshotAsOf()}
+                  </p>
+                  <div className="mt-3 divide-y divide-faded-rule border-y border-faded-rule">
                     <DataRow label="Median price" value={money(town.medianPrice.value)} />
                     <DataRow label="Median rent (p.w.)" value={money(town.medianRent.value)} />
                     <DataRow
@@ -238,6 +246,52 @@ export function TownDetailDrawer({
                           <p className="font-mono-figure text-lg text-ink-navy">{town.amenities.value.supermarkets}</p>
                           <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Supermarkets</p>
                         </div>
+                        <div className="rounded-sm border border-faded-rule bg-white/50 py-2">
+                          <p className="font-mono-figure text-lg text-ink-navy">{town.amenities.value.gyms}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Gyms</p>
+                        </div>
+                        <div className="rounded-sm border border-faded-rule bg-white/50 py-2">
+                          <p className="font-mono-figure text-lg text-ink-navy">{town.amenities.value.parks}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Parks</p>
+                        </div>
+                        <div className="rounded-sm border border-faded-rule bg-white/50 py-2">
+                          <p className="font-mono-figure text-lg text-ink-navy">{town.amenities.value.pharmacies}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Pharmacies</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="mt-2 text-sm text-charcoal/50">Not available.</p>
+                    )}
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="font-display text-sm font-semibold text-ink-navy">Transport proximity</h3>
+                    {town.transportProximity?.value ? (
+                      <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+                        <div className="rounded-sm border border-faded-rule bg-white/50 py-2">
+                          <p className="font-mono-figure text-lg text-ink-navy">
+                            {town.transportProximity.value.nearestMainRoadKm !== null
+                              ? `${town.transportProximity.value.nearestMainRoadKm}km`
+                              : "Not available"}
+                          </p>
+                          <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Main road</p>
+                        </div>
+                        <div className="rounded-sm border border-faded-rule bg-white/50 py-2">
+                          <p className="font-mono-figure text-lg text-ink-navy">
+                            {town.transportProximity.value.nearestRailStationKm !== null
+                              ? `${town.transportProximity.value.nearestRailStationKm}km`
+                              : "Not available"}
+                          </p>
+                          <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Rail station</p>
+                        </div>
+                        <div className="rounded-sm border border-faded-rule bg-white/50 py-2">
+                          <p className="font-mono-figure text-lg text-ink-navy">
+                            {town.transportProximity.value.nearestAirportKm !== null
+                              ? `${town.transportProximity.value.nearestAirportKm}km`
+                              : "Not available"}
+                          </p>
+                          <p className="text-[10px] uppercase tracking-wide text-charcoal/50">Airport</p>
+                        </div>
                       </div>
                     ) : (
                       <p className="mt-2 text-sm text-charcoal/50">Not available.</p>
@@ -280,6 +334,9 @@ export function TownDetailDrawer({
                   {town.medianPrice.value !== null && town.medianRent.value !== null && (
                     <InvestmentCalculator medianPrice={town.medianPrice.value} medianRent={town.medianRent.value} />
                   )}
+
+                  {isSubscriber && <RelocationReadinessPack town={town} />}
+                  {isSubscriber && <TownDriftPanel town={town} />}
 
                   <div className="mt-5 flex items-center gap-2">
                     <span className="text-xs uppercase tracking-wide text-charcoal/50">Hazards</span>

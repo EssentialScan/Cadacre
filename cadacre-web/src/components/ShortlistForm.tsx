@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { getShortlist } from "@/app/dashboard/actions";
 import type { ShortlistResult } from "@/app/dashboard/types";
+import { DEFAULT_RANK_WEIGHTS, type RankWeights } from "@/lib/rankTowns";
 import { ShortlistResults } from "@/components/ShortlistResults";
 
 type FormState = { result: ShortlistResult | null; error: string | null };
@@ -15,9 +16,14 @@ async function submitAction(
 ): Promise<FormState> {
   const budget = Number(formData.get("budget"));
   const targetYieldPct = Number(formData.get("targetYieldPct"));
+  const weights: RankWeights = {
+    affordability: Number(formData.get("weightAffordability")),
+    yield: Number(formData.get("weightYield")),
+    vacancy: Number(formData.get("weightVacancy")),
+  };
 
   try {
-    const result = await getShortlist({ budget, targetYieldPct });
+    const result = await getShortlist({ budget, targetYieldPct, weights });
     return { result, error: null };
   } catch (err) {
     return {
@@ -33,15 +39,18 @@ export function ShortlistForm({
   defaultYieldPct,
   autoSubmit,
   onBudgetChange,
+  isSubscriber,
 }: {
   clerkUserId: string;
   defaultBudget?: string;
   defaultYieldPct?: string;
   autoSubmit?: boolean;
   onBudgetChange?: (budget: number | undefined) => void;
+  isSubscriber?: boolean;
 }) {
   const [state, formAction, isPending] = useActionState(submitAction, initialState);
   const formRef = useRef<HTMLFormElement>(null);
+  const [weights, setWeights] = useState<RankWeights>(DEFAULT_RANK_WEIGHTS);
 
   useEffect(() => {
     if (autoSubmit) {
@@ -98,6 +107,49 @@ export function ShortlistForm({
             className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-4 py-2 font-mono-figure text-sm outline-none focus:border-ink-navy"
           />
         </div>
+
+        {isSubscriber ? (
+          <div>
+            <p className="text-sm font-medium text-ink-navy">
+              Ranking weights <span className="text-charcoal/40">(Subscriber)</span>
+            </p>
+            <div className="mt-3 space-y-3">
+              {(
+                [
+                  { key: "affordability" as const, label: "Affordability" },
+                  { key: "yield" as const, label: "Gross yield" },
+                  { key: "vacancy" as const, label: "Vacancy rate" },
+                ]
+              ).map(({ key, label }) => (
+                <div key={key} className="flex items-center gap-3">
+                  <span className="w-28 shrink-0 text-xs text-charcoal/60">{label}</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={weights[key]}
+                    onChange={(e) => setWeights((w) => ({ ...w, [key]: Number(e.target.value) }))}
+                    className="flex-1 accent-survey-brass"
+                  />
+                  <span className="w-10 shrink-0 text-right font-mono-figure text-xs text-ink-navy">
+                    {weights[key]}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <input type="hidden" name="weightAffordability" value={weights.affordability} />
+            <input type="hidden" name="weightYield" value={weights.yield} />
+            <input type="hidden" name="weightVacancy" value={weights.vacancy} />
+          </div>
+        ) : (
+          <>
+            <input type="hidden" name="weightAffordability" value={DEFAULT_RANK_WEIGHTS.affordability} />
+            <input type="hidden" name="weightYield" value={DEFAULT_RANK_WEIGHTS.yield} />
+            <input type="hidden" name="weightVacancy" value={DEFAULT_RANK_WEIGHTS.vacancy} />
+          </>
+        )}
+
         <button
           type="submit"
           disabled={isPending}

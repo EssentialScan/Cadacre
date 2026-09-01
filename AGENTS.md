@@ -6,13 +6,32 @@ This file gives any AI coding agent (Claude Code, etc.) working on this repo ful
 
 ## 1. What Cadacre Is
 
-**One-line pitch:** A web tool that gives Sydney buyers priced out of the local market a plain, data-backed shortlist of regional Australian towns to rentvest in — free of sponsored placements or sales pressure.
+**One-line pitch (revised 2026-08-30):** A monthly subscription that gives Sydney renters and
+investors priced out of the local market continuous, data-backed intelligence on regional
+Australian towns — where to rentvest, how your own rent compares, and an AI concierge to ask both
+in plain English — free of sponsored placements or sales pressure.
 
-**The problem:** Sydney's median house price has pushed home ownership out of reach for most first-time buyers. The common workaround — rentvesting (buying an investment property elsewhere while renting where you live) — is well known, but choosing *where* to invest is guesswork. People currently rely on scattered spreadsheets, outdated blog posts, or advice from buyer's agents who have a financial incentive to point them somewhere specific.
+**The problem:** Sydney's median house price has pushed home ownership out of reach for most
+first-time buyers, and the rental market itself is in its own crisis — renters have no
+data-backed way to know if their own rent is reasonable, let alone whether "rentvesting"
+somewhere regional would leave them better off. The common workaround — rentvesting (buying an
+investment property elsewhere while renting where you live) — is well known, but choosing *where*
+to invest is guesswork. People currently rely on scattered spreadsheets, outdated blog posts, or
+advice from buyer's agents who have a financial incentive to point them somewhere specific.
 
-**The solution:** User enters budget and target yield → Cadacre filters/ranks regional towns using public data (median price, gross rental yield, vacancy rate) → first 3 results free, full ranked report + downloadable PDF behind a one-time $39 payment.
+**The solution:** A single monthly subscription unlocks the full ranked shortlist of regional
+towns (median price, gross rental yield, vacancy rate, and more), a rent-vs-rentvest comparison
+and tracker, portfolio and scenario tools, and an AI concierge that answers plain-English
+questions strictly from Cadacre's own sourced data. The free tier (dashboard map browsing, a
+top-3 teaser ledger, and a single-suburb rent comparison) stays free indefinitely as the
+top-of-funnel hook — the subscription is what turns browsing into acting. **This replaces the
+original one-time-$39-report model** (see §2) — the founder found the one-time-purchase framing
+didn't match the amount of ongoing value the product actually delivers.
 
-**Target user:** Sydney-based renters/buyers, priced out of the local market, considering rentvesting or regional investing for the first time. Not sophisticated investors — assume limited property jargon knowledge.
+**Target user:** Sydney-based renters *and* investors, priced out of the local market — renters
+who want to know if their own rent is fair and whether relocating regionally makes sense, and
+first-time or early rentvestors choosing where to invest. Not sophisticated investors — assume
+limited property jargon knowledge.
 
 **Explicitly NOT:** a licensed financial advice service, a real estate agency, a lending platform, or a marketplace connecting buyers to specific off-market deals. Do not build features that blur these lines without explicit legal review first (see Section 4).
 
@@ -20,16 +39,45 @@ This file gives any AI coding agent (Claude Code, etc.) working on this repo ful
 
 ## 2. Business Model & Roadmap
 
-### Phase 1 (Current — Month 1 / MVP)
-- Single paid tool, one-time $39 payment via Stripe Payment Link (no subscription)
-- Free teaser (top 3 results) to drive top-of-funnel interest
-- Manual/semi-manual report delivery is acceptable at this stage
-- Free monthly "Rentvestor Index" content post (ungated, shareable) for brand-building and SEO — this is NOT a paid feature, keep it free indefinitely
-- Small manually-curated community (WhatsApp/Discord) of first 20-50 users, traded free tool access for honest feedback and real outcome data
+**Revised 2026-08-30 — single subscription tier, $39 report retired.** The model below supersedes
+every earlier "$39 one-time" / "Phase 1 vs Phase 2 gate" framing in this file's history. **Update
+(2026-08-30, same day):** the code migration this section originally described as pending has now
+been done — see §5l for what shipped. This section now describes the live model, not just
+direction.
 
-### Phase 2 (Month 2+, only after Phase 1 is validated with real paying customers)
-- Consider recurring subscription tier (e.g. alerts on new towns entering budget range, a "deal screener" tool) — do not build until Phase 1's core loop (visit → survey → paywall → purchase) is proven to convert
-- Consider expanding data sources beyond ABS/SQM
+### Current model: one subscription, one price, both audiences
+- **Single monthly subscription** (name/price TBD) is the only paid product — no one-time $39
+  report as a separate purchase. It unlocks: the full ranked shortlist + downloadable PDF, custom
+  ranking weights, the multi-town scenario simulator, the portfolio tracker, CSV export, the
+  relocation-readiness pack, rank-drift/hazard-and-infrastructure change alerts, the rent tracker,
+  the rent-increase negotiation-letter generator, and the AI concierge chat (see new §5k) — i.e.
+  everything currently split across the retired $39 report and this session's additive "Pro"
+  layer, merged into one thing a subscriber gets.
+- **Free tier, free indefinitely, no card required:** the dashboard map (browse every town's full
+  public record), the top-3 teaser ledger, and the single-suburb rent-vs-rentvest comparison. This
+  is the top-of-funnel hook — deliberately still generous, since the subscription's job is to
+  convert engaged browsers, not to gate basic information.
+- Free monthly "Rentvestor Index" content post (ungated, shareable) for brand-building and SEO —
+  still NOT a paid feature, still free indefinitely.
+- Manual/semi-manual delivery for anything not yet automated is still acceptable at this stage —
+  unchanged working-principle from the original Phase 1.
+- Small manually-curated community (WhatsApp/Discord) of first 20-50 users, traded free tool
+  access for honest feedback and real outcome data — unchanged.
+
+### Done (2026-08-30, same day) — see §5l for full detail
+- Retired `api/stripe/verify-pro` and merged one-time-$39/Pro entitlement checks into a single
+  `isSubscriber()` (`src/lib/entitlements.ts`); `api/stripe/verify` now verifies the (single)
+  subscription checkout.
+- Free-3/locked-rest ledger split unchanged in practice — only the paid side's copy changed from
+  "$39 unlocks the rest" to "subscribe to unlock the rest, plus everything else."
+- Built the AI concierge chat (§5k design → §5l implementation).
+
+### Phase 3 (Not in scope yet — requires legal review before any code is written)
+- "Concierge" referral service connecting buyers to vetted buyer's agents/conveyancers/property managers for a fee (~$500-1,000 flat fee, referral commission from providers)
+- **DO NOT BUILD THIS WITHOUT EXPLICIT INSTRUCTION.** Conveyancing and buyer's-agent referral fee arrangements are regulated at the state level in Australia and require proper legal advice before implementation. This is a business-model decision, not a coding task — flag it back to the founder if asked to build referral/commission logic.
+- Community "Trust Score" / reputation algorithms — treat as aspirational, not a near-term build
+- Consider expanding data sources beyond ABS/SQM once the subscription model above is validated
+  with real paying customers
 
 ### Phase 3 (Not in scope yet — requires legal review before any code is written)
 - "Concierge" referral service connecting buyers to vetted buyer's agents/conveyancers/property managers for a fee (~$500-1,000 flat fee, referral commission from providers)
@@ -37,6 +85,13 @@ This file gives any AI coding agent (Claude Code, etc.) working on this repo ful
 - Community "Trust Score" / reputation algorithms — treat as aspirational, not a near-term build
 
 **Do not treat any hypothetical future revenue model (Concierge fees, crowd-sourced proprietary data, subscription LTV) as validated or committed. Only build what's explicitly requested for the current phase.**
+
+**Second feature area added 2026-08-30 — council/planning monitoring.** Alongside the core
+rentvesting subscription described above, the founder has scoped a second major feature: tracking
+DAs/rezonings/planning decisions for a user-chosen address, suburb, or LGA, with its own
+free/Pro/Team pricing tiers. This is additive, not a replacement for the rentvesting product — see
+new §5m for the full design direction and §6 for build status. How its tiers reconcile with the
+single `isSubscriber()` entitlement model (§5l) is an open decision, not yet resolved.
 
 ---
 
@@ -120,6 +175,17 @@ These apply to every feature, every piece of copy, and every code change. If a r
 5. **Any future referral link or sponsored content must be clearly disclosed** per Australian Consumer Law — no exceptions, no "soft" disclosure.
 6. **Required legal documents before any real payment is taken:** Terms of Service (must state general-information-only positioning) and Privacy Policy (required given email/personal data collection). Do not enable live Stripe payments in any environment before these are live on the site.
 7. **Do not build the Concierge/referral commission feature** without the founder confirming legal review has happened (see Section 2, Phase 3).
+8. **AI features (concierge chat, narrated summaries) must never originate a fact.** (Added
+   2026-08-30 alongside the AI concierge design direction in §5k.) The model's role is strictly to
+   phrase, filter, or summarize Cadacre's own already-sourced data — never to state a price, rate,
+   risk level, or any other figure it wasn't handed. Every AI response carries the same "general
+   information, not advice" framing as the rest of the product. If the AI provider is down or
+   unconfigured, the feature must visibly degrade (a plain "AI concierge unavailable" state),
+   never silently fall back to an invented answer. Only free or self-serve, pay-as-you-go API
+   providers are permitted anywhere in the product — no API that requires a sales conversation or
+   an enterprise contract to obtain a key (this was already true in practice — ABS, BOM/Open-Meteo,
+   OSM Overpass, NSW BOCSAR, RBA, Groq are all self-serve — this makes it an explicit rule rather
+   than an unstated convention).
 
 ---
 
@@ -633,6 +699,226 @@ the sign-up button. This was a real product gap, not just a marketing one.
   not removed unilaterally since it's already-committed history, not
   uncommitted working-tree cruft.
 
+### 5j. Strategic positioning: competition strategy and experimental directions
+
+Added 2026-08-31 as an explicit operating principle for future product decisions. The repo must not try to out-compete data-browsing platforms on raw breadth of market listings or chart count. Cadacre's real wedge is to turn user inputs into a decision: a ranked shortlist, a rent-vs-rentvest comparison, a before-you-proceed checklist, and a grounded AI explanation of what matters.
+
+- **Core strategic rule:** do not compete on “we have more data than the big property research sites.” Compete on “we make the decision easier to trust and easier to act on.” This is the product position already reflected in §5i's shortlist flow: a scored, ranked shortlist + decision checklist is materially different from a data terminal.
+- **Position Cadacre as a decision lab, not a data portal.** Use language like “test your rentvesting hypothesis,” “run a regional experiment,” “stress-test your Sydney rent against a regional alternative,” and “compare the decision, not just the numbers.” This is more distinctive and easier to explain than generic real-estate portal language.
+- **Prefer experiments over static dashboards.** The product should embody user-driven decision experiments, not just charts and filters. Good examples include: Sydney-to-regional stress test, reverse “stay-in-Sydney” comparison, risk-and-tradeoff assessment, and “what changes the decision?” views.
+- **Own the trade-off layer, not the raw data layer.** The most defensible product value is to surface the tension between affordability, yield, risk, lifestyle fit, and operational friction. The user need is not “more numbers”; it is “what does this actually mean for my life and finances?”
+- **Grounded AI is a moat when used as a decision partner.** The AI concierge should translate natural-language questions into real filters, run them against Cadacre's actual dataset, and answer only from that data. It should feel like an analyst or research partner, not a general property chatbot. Good prompt patterns include: “Is this town realistic for my current Sydney rent?”, “Which towns preserve cash flow without creating lifestyle strain?”, and “What are the real downside trade-offs here?”
+- **Build decision artifacts, not just data surfaces.** Generate outputs users can act on: a shortlist, a rent-vs-rentvest summary, a risk summary, a decision memo, a before-you-proceed checklist, or a PDF report. These outputs make Cadacre feel like a tool for action rather than a generic portal.
+- **Keep the user in a narrow niche.** The product should be purpose-built for Sydney renters and first-time investors priced out of the local market, not a general market database for every buyer, landlord, and property professional. The niche is more defensible than trying to cover every suburb and every dataset on earth.
+- **Experimental direction to test in product:**
+  - “Rentvestor Lab” flow: user enters Sydney rent + budget + target yield + risk tolerance; product ranks towns and explains the trade-offs.
+  - “Sydney vs regional” comparison mode: show the user what would happen if they keep renting in Sydney versus buying in another town.
+  - “Town personality” cards: each town is described as affordable-but-risks, yield-heavy-but-fragile, or lifestyle-fit-but-low-margin.
+  - “Decision summary” cards: highlight best fit, best risk-adjusted fit, and towns that seem cheap but require additional due diligence.
+- **Do not build a generic portal with more charts than competitors.** If the product cannot explain why a user should trust Cadacre over a data site, then it is not achieving the real wedge. The wedge is decision support, not market coverage.
+- **Risk-aware framing remains non-negotiable.** Every feature must explain that results are general information based on public data and not a recommendation or personalized financial advice. Cadacre should make trade-offs visible, not prescriptive.
+- **Product principle:** the best future experiments are the ones that answer a real human question in plain English while staying grounded in the dataset. The product should feel like an evidence-backed decision engine for people who are priced out of their local market and need a practical next move.
+
+### 5j. Cadacre Pro — monthly subscription tier (2026-08-30, Phase 2 pulled forward)
+
+**Superseded same-day, and since merged — see §5l.** Later on 2026-08-30 the founder decided to
+retire the $39 report entirely and merge it with this "Pro" layer into one single subscription
+tier, and that merge was completed the same day (§5l): `isReportUnlocked`/`isProSubscriber` no
+longer exist, replaced by one `isSubscriber`. The bullets below describe the code *as originally
+built* in this entry — read them alongside §5l for the current state, not as the live design.
+
+Added at the founder's explicit request, consciously overriding the Phase 1→2 gate in §2 (real
+paying customers on the $39 flow still hasn't happened — see §6). Built entirely on the repo's
+existing infrastructure — Clerk `privateMetadata` for all per-user state, a checked-in generated
+JSON snapshot for history, no new database/cron/email provider — same "smallest working version"
+convention as the rest of the codebase.
+
+- **Entitlement (superseded, see §5l):** `src/lib/entitlements.ts` — `isReportUnlocked`/`isProSubscriber`, two
+  independent Clerk `privateMetadata` booleans (`unlocked` vs `subscriptionStatus`). Pro is
+  additive, not a replacement for the $39 one-time report unlock.
+- **Billing:** `src/app/api/stripe/verify-pro/route.ts` (redirect-based initial-checkout
+  verification, same pattern as the existing `$39` `verify` route) plus a new
+  `src/app/api/stripe/webhook/route.ts` (the first real Stripe webhook in this repo — needed
+  because, unlike a one-time payment, a subscription has a lifecycle: renewals, failed payments,
+  cancellations, none of which a redirect alone can observe) and
+  `src/app/api/stripe/portal/route.ts` (Stripe billing portal hand-off). New
+  `src/app/account/page.tsx` is the repo's first account/settings surface. Requires a real
+  recurring Stripe Price + Payment Link + registered webhook endpoint before it's live — same
+  not-yet-configured status the $39 Payment Link already has (see §6); `NEXT_PUBLIC_STRIPE_PRO_PAYMENT_LINK_URL`
+  and `STRIPE_WEBHOOK_SECRET` are documented in `.env.local.example` but unset.
+- **Custom ranking weights** — `rankTowns.ts`'s previously-hardcoded 40/40/20 affordability/yield/
+  vacancy split is now a `weights` field on `RankInput` (default unchanged), exposed as sliders in
+  `ShortlistForm.tsx` only for Pro subscribers; free users always get the original default.
+- **Multi-town scenario simulator** (`ScenarioSimulator.tsx`, dashboard-only) — same-day cash-flow
+  comparison across a user's saved towns. Deliberately **no appreciation/breakeven-year
+  projection** — that would require fabricating future price data, which this file prohibits.
+- **Portfolio tracker** (`src/app/portfolio`) — user-entered properties (price paid, purchase
+  date, weekly rent) stored in Clerk `privateMetadata.portfolioProperties`, same read-modify-write
+  pattern as the existing saved-towns watchlist. User's own numbers, not town-linked, so no
+  fabricated-data concern.
+- **CSV export** (`src/app/api/export/shortlist`) — Pro-gated, re-runs `rankTowns` server-side.
+- **Relocation-readiness pack** (`RelocationReadinessPack.tsx`, dashboard drawer) — composes
+  already-sourced employment/amenities/climate/population/crime fields into one panel. No new
+  data, no scoring/recommendation framing (§4) — plain descriptive sentences only.
+- **Rank-drift + hazard/infrastructure change tracking** — `scripts/generate-town-snapshot.ts`
+  (new devDependency: `tsx`, so the script can import the real `rankTowns`/`getAllTowns` logic
+  directly instead of reimplementing the scoring formula) writes a checked-in
+  `src/data/generated/townSnapshot.json` at a fixed reference `{budget, targetYieldPct}` (rank/
+  valueScore only exist per-input, not as a stored `Town` property). `src/lib/townDrift.ts` diffs
+  the live data against it; `TownDriftPanel.tsx` (Pro-gated) shows only real changes, no noise for
+  unchanged towns. A free, ungated "record last updated {date}" line also appears in the drawer
+  for everyone. **Manually rerun, same convention as `aggregate-nsw-suburbs.js`** — not wired into
+  `npm run`, not a live cron.
+- **Rent tracker** (Pro perk layered on the existing free `/rent-vs-rentvest` tool, §5i) — a
+  signed-in Pro subscriber can save a baseline for a suburb (`privateMetadata.rentTrackerBaseline`)
+  and see an in-app "since you tracked this" delta banner on a later visit. **No email is
+  sent** — no email provider exists in this repo — this is an honest "since your last visit"
+  mechanism, not a fabricated monthly-cadence promise.
+- **Rent-increase negotiation letter** (`src/app/tools/negotiation-letter`) — compares a proposed
+  rent increase against a Sydney suburb's real sourced median rent, generates a downloadable PDF
+  via the same `@react-pdf/renderer` pattern as the shortlist report. Carries its own "not legal
+  advice, not a tenants' advocate or law firm" disclaimer, distinct from the financial-advice
+  disclaimer family used elsewhere.
+- **Not done this pass:** a buyer's-agent-directory-style feature was never on this list (already
+  declined in §5f); nothing here touches the Concierge gate in §2 Phase 3.
+
+### 5k. AI concierge chat (design direction, 2026-08-30 — built same day, see §5l)
+
+The flagship AI feature for the new single subscription (§2), chosen specifically because it's
+buildable on infrastructure this repo already has: `GROQ_API_KEY`/`GROQ_MODEL` are already
+configured (`.env.local.example`), and `src/app/api/ai/research/route.ts` already establishes the
+exact anti-hallucination pattern this feature reuses rather than reinvents. Groq is a free/
+pay-as-you-go, self-serve API (no sales contact) — satisfies the new §4 rule 8 by construction,
+not by exception.
+
+- **Grounding pattern (reused, not new):** `api/ai/research/route.ts`'s system prompt already
+  instructs the model to summarize only supplied facts, never invent a value, and say
+  "unavailable" for nulls — the concierge's system prompt should be the same family of instruction,
+  just generalized from one location's facts to the full `getAllTowns()` record.
+- **Query pattern (the "complex algorithm" angle):** a natural-language question ("coastal towns
+  under $600k with low bushfire risk") is sent to the model with instructions to output a
+  **structured filter object** matching `TownMapFilters`/`RankInput` shapes (`src/lib/
+  townFilters.ts`, `src/lib/rankTowns.ts`) — the model's only job is translating language into
+  real filter parameters. The app then runs that filter through the existing, deterministic
+  `matchesFilters`/`rankTowns` functions and only *then* asks the model to phrase a short answer
+  from the real filtered results. The model never computes a number or asserts a fact outside
+  what those deterministic functions returned — this is what makes it a genuinely more
+  sophisticated feature without reopening any fabrication risk.
+- **Failure mode:** if `GROQ_API_KEY` is unset or Groq errors, show a plain "AI concierge
+  unavailable" state (same graceful-degradation convention `api/ai/research/route.ts` already
+  uses for a missing key) — never a fallback invented answer.
+- **Gating:** subscriber-only, per the single-tier model in §2.
+- **Built same day — see §5l** for the actual route/component/schema that shipped.
+
+### 5l. Entitlement merge + AI concierge shipped (2026-08-30, same day as §5j/§5k)
+
+Both follow-ups flagged at the end of the §2 revision were implemented immediately after, per
+the founder's request.
+
+- **Entitlement merge:** `src/lib/entitlements.ts` now exports a single `isSubscriber(userId)` —
+  `subscriptionStatus === "active"` OR the legacy `unlocked === true` (grandfathers anyone who
+  already paid the retired one-time $39 report so they stay entitled without resubscribing).
+  `isReportUnlocked`/`isProSubscriber` are gone; every caller (`dashboard/actions.ts`,
+  `api/report`, `api/export/shortlist`, `api/negotiation-letter`, `ShortlistForm`,
+  `DashboardMapWorkspace`, `TownDetailDrawer`, `RentVsRentvestTool`, and the account/portfolio/
+  negotiation-letter pages) now calls/accepts `isSubscriber` instead.
+- **Billing consolidated:** `api/stripe/verify-pro/route.ts` was deleted; `api/stripe/verify/
+  route.ts` now does subscription verification directly (mode `"subscription"`, tags the Stripe
+  subscription with `metadata.clerkUserId` for webhook attribution, sets `subscriptionStatus`/
+  `stripeCustomerId`) and redirects to `/shortlist?subscribed=1` (same budget/yield-passthrough
+  and auto-resubmit UX the old $39 flow had). `.env.local.example` now documents a single
+  `NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL` (recurring Price) instead of two separate links.
+  `ShortlistResults.tsx`, `shortlist/page.tsx`, and `account/page.tsx` all reuse this one link.
+  Still not live — same not-yet-configured status as before, now for one Payment Link instead of
+  two.
+  **Not part of this migration, flagged for a human decision instead of auto-resolved:** existing
+  users who set up the *old* two-Payment-Link config (a real `NEXT_PUBLIC_STRIPE_PRO_PAYMENT_LINK_URL`)
+  before this merge would need to reconfigure — moot today since neither was ever live (§6), but
+  worth knowing if this reads oddly against a future Stripe dashboard snapshot.
+- **Marketing/legal copy updated to match:** every "$39"/"one-time payment"/"no subscription"
+  reference in `Hero.tsx`, `Pricing.tsx`, `FinalCta.tsx`, `HowItWorks.tsx`, `Faq.tsx`,
+  `RecordBanner.tsx`, and `terms/page.tsx` was rewritten for the subscription model (including the
+  Terms' payment/refund clauses — cancel-anytime language replacing the old one-time-refund
+  policy). This is a real legal-copy change; **still pending professional legal review**, same
+  caveat the Terms page already carries.
+- **AI concierge, built:** `api/ai/concierge/route.ts` (POST, subscriber-gated) — two Groq calls,
+  exactly as designed in §5k: (1) translates the question into a JSON filter object matching
+  `TownMapFilters`, sanitized field-by-field (never trusts the model's JSON shape blindly), (2)
+  runs it through `matchesFilters` over `getAllTowns()`, sorts matches by median price, caps at 8,
+  and only then asks the model to phrase a short answer strictly from those real matched towns'
+  fields. Degrades to `{configured: false}` if `GROQ_API_KEY` is unset — no invented fallback.
+  `AiConciergeChat.tsx` (dashboard-only, subscriber-gated bottom-sheet, same portal/z-index
+  pattern as `ScenarioSimulator`/`CompareDrawer`) is the UI, wired into
+  `DashboardMapWorkspace.tsx` alongside the Scenario Simulator toggle.
+- **Branding cleanup:** "Cadacre Pro" as a named tier is retired from all UI copy/comments (single
+  tier now) — replaced with plain "Subscriber"/"Cadacre subscriber feature" wording throughout.
+- Builds, type-checks, and lints clean (`npx eslint src` / `npx tsc --noEmit`); dev-server
+  route smoke-test only this pass (protected routes redirect, public routes 200, concierge POST
+  returns 401 unauthenticated, `/api/stripe/verify` redirects to `/shortlist?subscribe_error=1`
+  without a session) — **not yet verified end-to-end with a real signed-in subscriber or a real
+  Groq-backed concierge answer** (no Stripe Payment Link/webhook registered, and this pass didn't
+  exercise the concierge with a real `GROQ_API_KEY` set).
+
+### 5m. Council/planning monitoring — new feature area (design direction, 2026-08-30, not yet built)
+
+Added at the founder's request as a **second major feature alongside** the rentvesting product
+described in §1-§5l — not a replacement for it. Nothing in this section changes any existing
+rentvesting flow, dataset, or entitlement check; everything here is net-new surface area.
+
+- **What it does:** a user tracks any address, suburb, or LGA. The system pulls new development
+  applications (DAs), planning permit decisions, rezoning proposals, and council meeting minutes
+  for that area and generates plain-English AI alert summaries (email/SMS/push), e.g. "A DA was
+  lodged for a 6-storey apartment block 200m from your address; council votes 15 March" or "Your
+  suburb was rezoned from low-density to medium-density." Each alert carries an **opportunity
+  score** (zoning change, proximity to infrastructure projects, density bonuses). Users define
+  saved-search watchlists (e.g. "any DA within 500m of my investment property"). A historical view
+  shows past planning decisions alongside free state sales data, to build trust in the scoring.
+- **Grounding pattern — reuse, don't reinvent:** apply the exact same rule §4 item 8 already
+  states for the AI concierge (§5k/§5l): the model's role is strictly to phrase/summarize
+  already-scraped source documents (address, application type, date, decision) — it must never
+  invent a fact, a date, or a decision. If the AI provider is down or unconfigured, degrade to a
+  plain "unavailable" state, same convention as `api/ai/concierge/route.ts`. Opportunity scoring
+  and any historical price-correlation classifier are **descriptive/statistical only** — never
+  phrased as a recommendation, a "buy signal," or "hot pick" language, per §4's existing
+  no-spruiking rule. This is the same legal posture the rest of the product already follows,
+  applied to a new data type — not a new open question.
+- **Data sources — all free, self-serve** (same §4 item 8 "no sales-contact-gated API" rule
+  applies): council websites/RSS feeds (scraped), NSW ePlanning API for DAs, Planning Victoria
+  open data for scheme amendments, Queensland's DA Tracker, data.nsw.gov.au/data.vic.gov.au open
+  data portals for property sales and zoning, state gazette notices for rezoning announcements,
+  OSM Nominatim for geocoding. Same non-fabrication rule as the town dataset (§5): if no credible
+  source exists for a given council/area, say "not mapped" rather than guess — never estimate a
+  plausible-looking value.
+- **Infrastructure gap — explicit, nothing below exists in this repo today:**
+  - **No scheduler/cron.** `scripts/` (top-level) contains only manual one-off data-prep scripts
+    run by hand to regenerate static JSON (`aggregate-nsw-suburbs.js`,
+    `generate-town-snapshot.ts`, etc.) — none of them are scheduled jobs. Periodic council-source
+    polling needs new infrastructure (e.g. Cloudflare Workers Cron Triggers, consistent with the
+    Cloudflare-adjacent tooling already available to this project).
+  - **No database.** Every existing feature persists through Clerk `privateMetadata` (entitlement
+    flags, saved towns, portfolio properties) or checked-in static/generated JSON
+    (`src/data/generated/`) — there is no Postgres/Supabase/Prisma/Drizzle anywhere in this repo.
+    Watchlists, tracked addresses/LGAs, a scraped-document store, and alert history cannot
+    reasonably live in Clerk metadata the way the current features do — this needs real
+    relational storage (Postgres via Neon or Supabase's free tier is the natural fit, matching the
+    "migrate to Supabase once data needs grow" note already in §5's intended stack). Don't attempt
+    to shoehorn this feature's state into `privateMetadata`.
+- **Pricing — specific to this feature, not yet reconciled with §2's single-tier model:** Free (1
+  watchlist, weekly email digest, limited alerts), Pro ($19-39/mo: unlimited watchlists,
+  real-time alerts, AI summaries, historical impact reports, exportable PDFs), Team/Agency
+  ($99+/mo: multiple users, API access, white-label reports for clients), plus an optional
+  one-time "$9.99 Property Risk Report" upsell for casual/non-subscribed users. **Open decision,
+  not resolved by this doc update:** whether this becomes a second entitlement dimension
+  alongside the existing `isSubscriber()` check (§5l), or gets folded into an expanded version of
+  the single subscription. Do not implement either direction without the founder confirming which.
+- **Explicitly not yet built:** no scraper, no database, no AI alert pipeline, no watchlist UI, no
+  new Stripe price/tier wired up, no opportunity-scoring classifier. This section is design
+  direction only — same status the AI concierge had in the original §5k before it shipped in §5l.
+  Reusable patterns already in this repo worth starting from when this is built: the Leaflet/OSM
+  map components (§5c) for a map overlay of tracked addresses/alerts, and the grounded two-call AI
+  pattern in `api/ai/concierge/route.ts` (§5l) for turning scraped documents into a plain-English
+  summary.
+
 ---
 
 ## 6. Current Status Snapshot
@@ -652,6 +938,12 @@ the sign-up button. This was a real product gap, not just a marketing one.
       `npx eslint src`, not bare `npm run lint` — see §5i's note on a
       pre-existing, unrelated nested `.next` directory in the repo); not
       yet verified end-to-end with a real Stripe test payment.
+      **Superseded 2026-08-30 (see §5l):** the founder decided to retire this
+      $39 one-time flow in favor of a single monthly subscription, and the
+      migration was completed the same day — `api/stripe/verify` now
+      verifies the subscription checkout directly, `api/stripe/verify-pro`
+      is deleted, and `unlocked`/`subscriptionStatus` are merged into one
+      `isSubscriber()` check (legacy `unlocked: true` users stay entitled).
 - [x] Town dataset is real, sourced, non-fabricated data (18 NSW regional
       towns; PRD market updates + Your Investment Property Mag/CoreLogic
       suburb data, each figure carrying its own source URL and as-of date;
@@ -731,9 +1023,37 @@ the sign-up button. This was a real product gap, not just a marketing one.
       `NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL` / `STRIPE_SECRET_KEY` are unset;
       needs a real Stripe Payment Link created and a live test payment run
       before this can be marked done (see Section 6 rule below).
+- [x] Single Cadacre subscription tier shipped (2026-08-30, in two same-day
+      passes — see §5j then §5l) — the full feature list (custom ranking
+      weights, scenario simulator, portfolio tracker, CSV export,
+      relocation-readiness pack, rank-drift/hazard alerts, rent tracker,
+      negotiation-letter generator) plus the AI concierge chat, all behind
+      one merged `isSubscriber()` entitlement; the earlier "Cadacre Pro"
+      naming and the separate one-time $39 flow are both retired. Phase 2
+      gate in §2 explicitly overridden by the founder, not silently bypassed.
+      Builds, type-checks, and lints clean (`npx eslint src` / `npx tsc
+      --noEmit`); dev-server route smoke-test only this pass (protected
+      routes redirect correctly, public routes 200, `/api/ai/concierge`
+      returns 401 unauthenticated, `/api/stripe/verify` redirects to
+      `/shortlist?subscribe_error=1` without a session) — **not yet
+      verified end-to-end with a real signed-in subscriber or a real
+      Groq-backed concierge answer** (no Stripe Payment Link/webhook
+      registered yet, and this pass didn't exercise the concierge with a
+      real `GROQ_API_KEY` set).
+- [x] AI concierge chat shipped (2026-08-30, same day as the subscription
+      merge — see §5l) — `api/ai/concierge/route.ts` + `AiConciergeChat.tsx`,
+      exactly per the §5k design: NL question → Groq-translated structured
+      filter → deterministic `matchesFilters` → Groq phrases the answer
+      strictly from the real matched towns. Degrades to a plain
+      "unavailable" state if `GROQ_API_KEY` is unset. Subscriber-gated,
+      dashboard-only. Not yet exercised with a real Groq key in this pass.
 - [ ] Legal review of ToS/Privacy not yet done
 - [ ] Domain not yet purchased
 - [ ] Zero real users, zero real revenue
+- [ ] Council/planning monitoring feature (2026-08-30) — design direction documented in §5m as a
+      second feature area alongside the rentvesting product. Nothing built yet: no scraper, no
+      database, no AI alert pipeline, no watchlist UI, no new Stripe tier. Requires new
+      infrastructure (scheduler, real database) this repo does not currently have.
 
 **When picking up work on this repo, check this section first and update it as milestones are actually completed — do not mark items complete based on code existing if they haven't been verified working end-to-end (e.g. a Stripe integration isn't "done" until a real test payment has succeeded).**
 
@@ -745,4 +1065,6 @@ the sign-up button. This was a real product gap, not just a marketing one.
 - Never invent data, testimonials, user counts, or revenue figures in copy or code comments. If a placeholder is needed, label it explicitly as a placeholder.
 - Preserve the "ledger" design language and Old-English/land-record brand voice in any new UI — do not default to generic SaaS dashboard patterns.
 - Flag legal-sensitive features (Section 4) back to the founder rather than building them speculatively.
-- When in doubt about scope (e.g., "should I build the subscription tier"), default to Phase 1 scope only unless told otherwise.
+- When in doubt about scope, default to what's explicitly described in the current §2 model (as
+  of 2026-08-30: the single subscription tier and its free-tier hook) rather than adding new paid
+  tiers, referral mechanics, or Phase 3 features unless told otherwise.

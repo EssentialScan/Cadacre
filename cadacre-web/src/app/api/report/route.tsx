@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { Document, Page, Text, View, StyleSheet, renderToBuffer } from "@react-pdf/renderer";
-import { rankTowns } from "@/lib/rankTowns";
+import { rankTowns, getTownDecisionNarrative, getTownDecisionSensitivity } from "@/lib/rankTowns";
+import { isSubscriber } from "@/lib/entitlements";
 import type { HazardFlag } from "@/data/towns";
 
 export const runtime = "nodejs";
@@ -82,9 +83,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
 
-  const client = await clerkClient();
-  const user = await client.users.getUser(userId);
-  if (user.privateMetadata?.unlocked !== true) {
+  if (!(await isSubscriber(userId))) {
     return NextResponse.json({ error: "Report not unlocked." }, { status: 403 });
   }
 
@@ -113,6 +112,19 @@ export async function GET(request: NextRequest) {
           {ranked.length === 1 ? "" : "s"} matched.
         </Text>
 
+        {ranked.length > 0 && (
+          <View style={{ marginBottom: 16, padding: 10, backgroundColor: "#FAF7F0", borderLeftWidth: 3, borderLeftColor: "#1D5FD6" }}>
+            <Text style={{ fontSize: 11, fontFamily: "Helvetica-Bold", color: "#1B2430", marginBottom: 6 }}>
+              Key Finding
+            </Text>
+            <Text style={{ fontSize: 9.5, color: "#2A2A28", lineHeight: 1.5 }}>
+              {ranked[0].town.name} emerges as the best fit within your criteria. It balances affordability,
+              yield, and risk profile. Review the town-specific decision notes below to understand which assumptions
+              matter most for your case.
+            </Text>
+          </View>
+        )}
+
         <View style={styles.headerRow}>
           <Text style={styles.colTown}>Town</Text>
           <Text style={styles.colFigure}>Median price</Text>
@@ -121,21 +133,79 @@ export async function GET(request: NextRequest) {
           <Text style={styles.colHazard}>Bushfire / Flood</Text>
         </View>
 
-        {ranked.map(({ rank, town }) => (
-          <View style={styles.row} key={town.id}>
-            <Text style={styles.colTown}>
-              {rank}. {town.name}, {town.state}
-            </Text>
-            <Text style={styles.colFigure}>{money(town.medianPrice.value)}</Text>
-            <Text style={styles.colFigure}>{pct(town.grossYieldPct.value)}</Text>
-            <Text style={styles.colFigure}>{pct(town.vacancyRatePct.value)}</Text>
-            <Text style={styles.colHazard}>
-              {hazardText(town.bushfireRisk)} / {hazardText(town.floodRisk)}
-            </Text>
-          </View>
-        ))}
+        {ranked.map(({ rank, town }) => {
+          const narrative = getTownDecisionNarrative({
+            town: town.name,
+            medianPrice: town.medianPrice.value,
+            grossYieldPct: town.grossYieldPct.value,
+            vacancyRatePct: town.vacancyRatePct.value,
+            bushfireRisk: town.bushfireRisk,
+            floodRisk: town.floodRisk,
+            infrastructureProjects: [],
+          });
+          const sensitivity = getTownDecisionSensitivity({
+            town: town.name,
+            medianPrice: town.medianPrice.value,
+            grossYieldPct: town.grossYieldPct.value,
+            vacancyRatePct: town.vacancyRatePct.value,
+            bushfireRisk: town.bushfireRisk,
+            floodRisk: town.floodRisk,
+            infrastructureProjects: [],
+          });
+          return (
+            <View style={styles.row} key={town.id}>
+              <Text style={styles.colTown}>
+                {rank}. {town.name}, {town.state}
+              </Text>
+              <Text style={styles.colFigure}>{money(town.medianPrice.value)}</Text>
+              <Text style={styles.colFigure}>{pct(town.grossYieldPct.value)}</Text>
+              <Text style={styles.colFigure}>{pct(town.vacancyRatePct.value)}</Text>
+              <Text style={styles.colHazard}>
+                {hazardText(town.bushfireRisk)} / {hazardText(town.floodRisk)}
+              </Text>
+            </View>
+          );
+        })}
 
-        <Text style={styles.sectionTitle}>Infrastructure notes</Text>
+        <Text style={styles.sectionTitle}>Town decisions</Text>
+        <Text style={{ fontSize: 8.5, color: "#555555", marginBottom: 12 }}>
+          Each town ranked by value (affordability, yield, vacancy). Below,
+          the key decision lever and sensitivity for each.
+        </Text>
+        {ranked.map(({ rank, town }) => {
+          const narrative = getTownDecisionNarrative({
+            town: town.name,
+            medianPrice: town.medianPrice.value,
+            grossYieldPct: town.grossYieldPct.value,
+            vacancyRatePct: town.vacancyRatePct.value,
+            bushfireRisk: town.bushfireRisk,
+            floodRisk: town.floodRisk,
+            infrastructureProjects: [],
+          });
+          const sensitivity = getTownDecisionSensitivity({
+            town: town.name,
+            medianPrice: town.medianPrice.value,
+            grossYieldPct: town.grossYieldPct.value,
+            vacancyRatePct: town.vacancyRatePct.value,
+            bushfireRisk: town.bushfireRisk,
+            floodRisk: town.floodRisk,
+            infrastructureProjects: [],
+          });
+          return (
+            <View key={town.id} wrap={false} style={{ marginBottom: 8 }}>
+              <Text style={styles.infraTown}>
+                {rank}. {town.name}, {town.state}
+              </Text>
+              <Text style={styles.infraLine}>{narrative}</Text>
+              <Text style={[styles.infraLine, { fontSize: 8.5, fontStyle: "italic", color: "#666666" }]}>
+                Key assumption: {sensitivity.primary}
+              </Text>
+              <Text style={[styles.infraLine, { fontSize: 8.5, fontStyle: "italic", color: "#666666" }]}>
+                If yield tightens: {sensitivity.ifYieldTightens.toLowerCase()}
+              </Text>
+            </View>
+          );
+        })}
         <Text style={{ fontSize: 8.5, color: "#555555" }}>
           Publicly announced projects near each town, sourced from state
           budget papers, Infrastructure Australia, or council websites.

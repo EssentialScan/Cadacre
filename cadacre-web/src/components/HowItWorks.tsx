@@ -15,7 +15,7 @@ const steps = [
   {
     n: "III",
     title: "Get your ranked shortlist",
-    body: "Top 3 towns, free, ranked by yield. Unlock the full list and a downloadable report for a one-time $39 — less than a week of Sydney rent.",
+    body: "Top 3 towns, free, ranked by yield. Subscribe monthly to unlock the full list, a downloadable report, and every other Cadacre tool — less than a week of Sydney rent.",
   },
 ];
 

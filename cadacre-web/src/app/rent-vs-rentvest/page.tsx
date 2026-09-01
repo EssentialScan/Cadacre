@@ -1,13 +1,18 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { RentVsRentvestTool } from "@/components/RentVsRentvestTool";
 import { getAllTowns, getSydneyMetroTowns } from "@/data";
+import { isSubscriber } from "@/lib/entitlements";
 
-export default function RentVsRentvestPage() {
+export default async function RentVsRentvestPage() {
   const allTowns = getAllTowns();
   const sydneySuburbs = getSydneyMetroTowns().filter((t) => t.medianRent.value !== null);
   const regionalTowns = allTowns.filter((t) => (t.region ?? "Regional NSW") === "Regional NSW");
+
+  const { userId } = await auth();
+  const proSubscriber = userId ? await isSubscriber(userId) : false;
 
   return (
     <div className="flex min-h-screen flex-col bg-parchment">
@@ -26,7 +31,11 @@ export default function RentVsRentvestPage() {
         </p>
 
         <div className="mt-10">
-          <RentVsRentvestTool sydneySuburbs={sydneySuburbs} regionalTowns={regionalTowns} />
+          <RentVsRentvestTool
+            sydneySuburbs={sydneySuburbs}
+            regionalTowns={regionalTowns}
+            isSubscriber={proSubscriber}
+          />
         </div>
 
         <p className="mt-10 text-sm text-charcoal/60">

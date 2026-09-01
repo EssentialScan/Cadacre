@@ -82,10 +82,29 @@ export type Town = {
   // Open-Meteo climate normals (2021–2023 daily archive, averaged) for the
   // town centroid — a real weather dataset, not a Cadacre estimate.
   climate?: SourcedField<{ avgSummerMaxC: number; avgWinterMinC: number; annualRainfallMm: number }>;
-  // OpenStreetMap Overpass counts of schools/hospitals/supermarkets within
-  // radiusKm of the town centroid — a real snapshot count, not a
-  // property-level or address-level analysis (stays town-level per §5a).
-  amenities?: SourcedField<{ schools: number; hospitals: number; supermarkets: number; radiusKm: number }>;
+  // OpenStreetMap Overpass counts of schools/hospitals/supermarkets/gyms/
+  // parks/pharmacies within radiusKm of the town centroid — a real snapshot
+  // count, not a property-level or address-level analysis (stays town-level
+  // per §5a). See AGENTS.md §5m for the fetch script and coverage.
+  amenities?: SourcedField<{
+    schools: number;
+    hospitals: number;
+    supermarkets: number;
+    gyms: number;
+    parks: number;
+    pharmacies: number;
+    radiusKm: number;
+  }>;
+  // OpenStreetMap Overpass straight-line distance (km) from the town
+  // centroid to the nearest main road (motorway/trunk/primary), rail
+  // station, and airport/aerodrome. A sub-field is null only if that
+  // specific search radius found nothing (rare); the whole SourcedField is
+  // null only if the fetch failed for that town. See AGENTS.md §5m.
+  transportProximity?: SourcedField<{
+    nearestMainRoadKm: number | null;
+    nearestRailStationKm: number | null;
+    nearestAirportKm: number | null;
+  }>;
   // NSW Bureau of Crime Statistics and Research (BOCSAR), LGA-level —
   // sum of six property-crime offence rates per 100,000 population (break
   // and enter dwelling/non-dwelling, motor vehicle theft, steal from motor
@@ -149,7 +168,15 @@ export const towns: Town[] = [
       asOf: "2021–2023",
     },
     amenities: {
-      value: { schools: 16, hospitals: 3, supermarkets: 9, radiusKm: 5 },
+      value: {
+        schools: 16,
+        hospitals: 3,
+        supermarkets: 9,
+        gyms: 2,
+        parks: 7,
+        pharmacies: 4,
+        radiusKm: 5,
+      },
       source: "OpenStreetMap Overpass API — count within 5km of town centroid",
       sourceUrl: "https://overpass-api.de/api/interpreter",
       asOf: "2026-08-28",
@@ -283,7 +310,15 @@ export const towns: Town[] = [
       asOf: "2021–2023",
     },
     amenities: {
-      value: { schools: 21, hospitals: 3, supermarkets: 6, radiusKm: 5 },
+      value: {
+        schools: 21,
+        hospitals: 3,
+        supermarkets: 6,
+        gyms: 4,
+        parks: 10,
+        pharmacies: 5,
+        radiusKm: 5,
+      },
       source: "OpenStreetMap Overpass API — count within 5km of town centroid",
       sourceUrl: "https://overpass-api.de/api/interpreter",
       asOf: "2026-08-28",

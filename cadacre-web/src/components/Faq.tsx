@@ -14,12 +14,12 @@ const faqs = [
     a: "No. There are no sponsored placements in the ranked results. Any future paid or referral content will be clearly disclosed, separately from the ranking itself.",
   },
   {
-    q: "What exactly do I get for $39?",
-    a: "The full ranked list of every regional town that clears your budget and yield criteria, plus a downloadable PDF report. It's a one-time payment — there is no subscription.",
+    q: "What exactly do I get with the subscription?",
+    a: "The full ranked list of every regional town that clears your budget and yield criteria plus a downloadable PDF report, custom ranking weights, the multi-town scenario simulator, the portfolio tracker, CSV export, the relocation-readiness pack, rank-drift and hazard alerts, the rent tracker, and the negotiation-letter generator. Cancel any time from your account page.",
   },
   {
     q: "Can I get a refund?",
-    a: "Reach out to us directly if the report doesn't match what was described — we review these individually rather than automating refund decisions.",
+    a: "Reach out to us directly if something doesn't match what was described — we review these individually rather than automating refund decisions. You can also cancel your subscription at any time to stop future charges.",
   },
 ];
 

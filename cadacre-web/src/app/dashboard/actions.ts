@@ -1,14 +1,15 @@
 "use server";
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { rankTowns } from "@/lib/rankTowns";
-import { FREE_COUNT, type LedgerRow, type ShortlistResult } from "./types";
-
-async function isUnlocked(userId: string): Promise<boolean> {
-  const client = await clerkClient();
-  const user = await client.users.getUser(userId);
-  return user.privateMetadata?.unlocked === true;
-}
+import { rankTowns, type RankWeights } from "@/lib/rankTowns";
+import { isSubscriber } from "@/lib/entitlements";
+import {
+  FREE_COUNT,
+  type LedgerRow,
+  type ShortlistResult,
+  type PortfolioProperty,
+  type RentTrackerBaseline,
+} from "./types";
 
 function readSavedTownIds(metadata: Record<string, unknown> | undefined): string[] {
   const raw = metadata?.savedTownIds;
@@ -44,6 +45,7 @@ export async function toggleSavedTown(townId: string): Promise<string[]> {
 export async function getShortlist(input: {
   budget: number;
   targetYieldPct: number;
+  weights?: RankWeights;
 }): Promise<ShortlistResult> {
   const { userId } = await auth();
   if (!userId) {
@@ -60,11 +62,15 @@ export async function getShortlist(input: {
     throw new Error("Enter a target yield between 0% and 20%.");
   }
 
-  const ranked = rankTowns({ budget, targetYieldPct });
-  const unlocked = await isUnlocked(userId);
+  const subscribed = await isSubscriber(userId);
+  const ranked = rankTowns({
+    budget,
+    targetYieldPct,
+    weights: subscribed ? input.weights : undefined,
+  });
 
   const rows: LedgerRow[] = ranked.map(({ rank, town, valueScore }) => {
-    const visible = unlocked || rank <= FREE_COUNT;
+    const visible = subscribed || rank <= FREE_COUNT;
     if (!visible) {
       return { locked: true, rank };
     }
@@ -83,10 +89,122 @@ export async function getShortlist(input: {
   });
 
   return {
-    input: { budget, targetYieldPct },
+    input: { budget, targetYieldPct, weights: subscribed ? input.weights : undefined },
     totalMatches: ranked.length,
     freeCount: FREE_COUNT,
-    unlocked,
+    subscribed,
     rows,
   };
+}
+
+async function requireSubscriber(): Promise<string> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Not authenticated.");
+  }
+  if (!(await isSubscriber(userId))) {
+    throw new Error("This is a Cadacre subscriber feature.");
+  }
+  return userId;
+}
+
+function readPortfolio(metadata: Record<string, unknown> | undefined): PortfolioProperty[] {
+  const raw = metadata?.portfolioProperties;
+  if (!Array.isArray(raw)) return [];
+  return raw.filter(
+    (entry): entry is PortfolioProperty =>
+      typeof entry === "object" &&
+      entry !== null &&
+      typeof (entry as PortfolioProperty).id === "string" &&
+      typeof (entry as PortfolioProperty).nickname === "string" &&
+      typeof (entry as PortfolioProperty).pricePaid === "number" &&
+      typeof (entry as PortfolioProperty).purchaseDate === "string" &&
+      typeof (entry as PortfolioProperty).weeklyRent === "number"
+  );
+}
+
+export async function getPortfolio(): Promise<PortfolioProperty[]> {
+  const { userId } = await auth();
+  if (!userId) return [];
+  if (!(await isSubscriber(userId))) return [];
+
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  return readPortfolio(user.privateMetadata);
+}
+
+export async function addPortfolioProperty(
+  input: Omit<PortfolioProperty, "id">
+): Promise<PortfolioProperty[]> {
+  const userId = await requireSubscriber();
+
+  if (!input.nickname.trim()) {
+    throw new Error("Give the property a nickname.");
+  }
+  if (!Number.isFinite(input.pricePaid) || input.pricePaid <= 0) {
+    throw new Error("Enter a purchase price greater than $0.");
+  }
+  if (!Number.isFinite(input.weeklyRent) || input.weeklyRent < 0) {
+    throw new Error("Enter a weekly rent of $0 or more.");
+  }
+
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  const current = readPortfolio(user.privateMetadata);
+  const next: PortfolioProperty[] = [
+    ...current,
+    { ...input, id: crypto.randomUUID() },
+  ];
+
+  await client.users.updateUserMetadata(userId, { privateMetadata: { portfolioProperties: next } });
+  return next;
+}
+
+export async function removePortfolioProperty(id: string): Promise<PortfolioProperty[]> {
+  const userId = await requireSubscriber();
+
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  const current = readPortfolio(user.privateMetadata);
+  const next = current.filter((entry) => entry.id !== id);
+
+  await client.users.updateUserMetadata(userId, { privateMetadata: { portfolioProperties: next } });
+  return next;
+}
+
+function readRentTrackerBaseline(
+  metadata: Record<string, unknown> | undefined
+): RentTrackerBaseline | null {
+  const raw = metadata?.rentTrackerBaseline;
+  if (
+    typeof raw === "object" &&
+    raw !== null &&
+    typeof (raw as RentTrackerBaseline).suburbId === "string" &&
+    typeof (raw as RentTrackerBaseline).asOf === "string" &&
+    typeof (raw as RentTrackerBaseline).affordablePrice === "number" &&
+    Array.isArray((raw as RentTrackerBaseline).matchedTownIds)
+  ) {
+    return raw as RentTrackerBaseline;
+  }
+  return null;
+}
+
+export async function getRentTrackerBaseline(): Promise<RentTrackerBaseline | null> {
+  const { userId } = await auth();
+  if (!userId) return null;
+  if (!(await isSubscriber(userId))) return null;
+
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  return readRentTrackerBaseline(user.privateMetadata);
+}
+
+export async function saveRentTrackerBaseline(
+  baseline: RentTrackerBaseline
+): Promise<RentTrackerBaseline> {
+  const userId = await requireSubscriber();
+
+  const client = await clerkClient();
+  await client.users.updateUserMetadata(userId, { privateMetadata: { rentTrackerBaseline: baseline } });
+  return baseline;
 }
