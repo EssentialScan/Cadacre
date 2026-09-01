@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getDb } from "@/db/client";
+import { watches } from "@/db/schema";
 import { ADAPTERS } from "@/lib/councilWatch/adapters";
 import { ingestAdapterResults } from "@/lib/councilWatch/ingest";
 import { matchNewApplications } from "@/lib/councilWatch/match";
@@ -21,7 +23,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  const fetchResults = await Promise.allSettled(ADAPTERS.map((adapter) => adapter.fetchApplications()));
+  const db = getDb();
+  const watchedLgas = db
+    ? (await db.selectDistinct({ lgaName: watches.lgaName }).from(watches)).map((w) => w.lgaName)
+    : [];
+
+  const fetchResults = await Promise.allSettled(
+    ADAPTERS.map((adapter) => adapter.fetchApplications({ watchedLgas }))
+  );
 
   const ingestResults: { source: string; newCount?: number; error?: string }[] = [];
   let newApplicationIds: string[] = [];

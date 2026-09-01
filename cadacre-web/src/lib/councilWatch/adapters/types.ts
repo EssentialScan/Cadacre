@@ -43,6 +43,13 @@ export interface CouncilSourceAdapter {
    * bounded recent window for high-volume sources). Adapters don't
    * paginate/persist state between runs — the ingest step's upsert by
    * (source, externalId) plus lastSeenAt is what turns this into durable
-   * history across repeated calls. */
-  fetchApplications(): Promise<ScrapedApplication[]>;
+   * history across repeated calls.
+   *
+   * `watchedLgas` (normalized LGA keys, see nswLgas.ts) lets a source with
+   * broad but expensive-to-crawl coverage — e.g. a statewide portal with
+   * thousands of pages — scope its own fetch to only the LGAs someone is
+   * actually watching, instead of blindly crawling everything it could
+   * theoretically serve. A small/fixed source (a hand-seeded list) can
+   * ignore this and just return its whole set every time. */
+  fetchApplications(context: { watchedLgas: string[] }): Promise<ScrapedApplication[]>;
 }

@@ -14,6 +14,8 @@ export const manualSeedAdapter: CouncilSourceAdapter = {
   label: "Manually verified seed data (Phase 1)",
   coversLgas: ["CESSNOCK", "GREATER HUME SHIRE"],
   async fetchApplications(): Promise<ScrapedApplication[]> {
+    // Fixed, tiny, hand-verified set — always returned in full regardless
+    // of which LGAs are actually being watched.
     return seedData as ScrapedApplication[];
   },
 };
