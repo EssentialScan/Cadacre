@@ -911,9 +911,13 @@ rentvesting flow, dataset, or entitlement check; everything here is net-new surf
   not resolved by this doc update:** whether this becomes a second entitlement dimension
   alongside the existing `isSubscriber()` check (§5l), or gets folded into an expanded version of
   the single subscription. Do not implement either direction without the founder confirming which.
-- **Explicitly not yet built:** no scraper, no database, no AI alert pipeline, no watchlist UI, no
-  new Stripe price/tier wired up, no opportunity-scoring classifier. This section is design
-  direction only — same status the AI concierge had in the original §5k before it shipped in §5l.
+- **Explicitly not yet built (as of this section's original writing, 2026-08-30):** no scraper, no
+  database, no AI alert pipeline, no watchlist UI, no new Stripe price/tier wired up, no
+  opportunity-scoring classifier. **Superseded 2026-09-01 — see §6:** the scraper, database, AI
+  summary pipeline, and watchlist UI all shipped (Phase 1 + Phase 2, same session), including a
+  real live NSW Planning Portal adapter covering 129/130 NSW LGAs. Still genuinely open: no new
+  Stripe price/tier (the open pricing-reconciliation question above is still unresolved), no
+  opportunity-scoring classifier, no live cron schedule yet (`vercel.json` — Phase 3).
   Reusable patterns already in this repo worth starting from when this is built: the Leaflet/OSM
   map components (§5c) for a map overlay of tracked addresses/alerts, and the grounded two-call AI
   pattern in `api/ai/concierge/route.ts` (§5l) for turning scraped documents into a plain-English
@@ -1050,10 +1054,31 @@ rentvesting flow, dataset, or entitlement check; everything here is net-new surf
 - [ ] Legal review of ToS/Privacy not yet done
 - [ ] Domain not yet purchased
 - [ ] Zero real users, zero real revenue
-- [ ] Council/planning monitoring feature (2026-08-30) — design direction documented in §5m as a
-      second feature area alongside the rentvesting product. Nothing built yet: no scraper, no
-      database, no AI alert pipeline, no watchlist UI, no new Stripe tier. Requires new
-      infrastructure (scheduler, real database) this repo does not currently have.
+- [x] Council/planning monitoring feature, Phase 1 + Phase 2 (2026-08-30 design, built 2026-09-01)
+      — §5m's design shipped: Neon Postgres + Drizzle (`src/db/`), a pluggable
+      `CouncilSourceAdapter` architecture, ingest/match/AI-summary pipeline, a Vercel Cron route
+      (`api/cron/council-watch`, not yet wired into `vercel.json`), and a subscriber-gated
+      `/council-watch` watchlist UI (LGA/suburb/address kinds, capped at 10 watches/subscriber).
+      **Phase 2 (real live data source) also done the same session, ahead of the original plan's
+      sequencing** — the NSW Planning Portal's public DA Exhibitions listing
+      (`planningportal.nsw.gov.au/daexhibitions`) was found and verified to be a real, free,
+      self-serve, CC BY 4.0-licensed source (not robots.txt-blocked, no API key, no sales-gated
+      access — passes §4 rule 8 cleanly, unlike the NSW DA Data API and PlanningAlerts.org.au's
+      commercial tier, both ruled out during planning). `nswPlanningPortalAdapter`
+      (`src/lib/councilWatch/adapters/nswPlanningPortal.ts`) scrapes it live, scoped to only the
+      LGAs someone is actually watching (bounded per cron run: 2 pages/LGA, 60 detail-page fetches
+      total) and covers 129 of NSW's 130 LGAs (hand-verified mapping in
+      `nswPlanningPortalLgaMap.ts` — only "Unincorporated Far West" has no matching portal option).
+      Verified live against the real portal (21 real DA records fetched across two council areas)
+      before committing. The Phase 1 `manualSeedAdapter` is superseded and no longer registered in
+      `adapters/index.ts`, but kept in the repo for offline/local-dev testing. `npx tsc --noEmit`,
+      `npm run build`, and the existing `rankTowns.test.ts` suite all stay clean.
+      **Still not done:** `vercel.json`'s cron entry (Phase 3 — this route is still only
+      manually-triggerable), `CRON_SECRET`/`DATABASE_URL` are unset in the real Vercel
+      environment, no new Stripe tier (still an open question per §5m on whether this needs one),
+      and this hasn't been exercised end-to-end with a real signed-in subscriber against a real
+      database — same "not yet verified working end-to-end" caveat as everything else in this
+      section.
 
 **When picking up work on this repo, check this section first and update it as milestones are actually completed — do not mark items complete based on code existing if they haven't been verified working end-to-end (e.g. a Stripe integration isn't "done" until a real test payment has succeeded).**
 
