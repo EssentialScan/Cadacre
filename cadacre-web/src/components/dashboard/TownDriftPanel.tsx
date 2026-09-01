@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo } from "react";
 import type { Town } from "@/data/towns";
 import { computeTownDrift, hasAnyDrift } from "@/lib/townDrift";
 import { getSnapshotAsOf } from "@/data/townSnapshot";
@@ -8,7 +11,11 @@ import { getSnapshotAsOf } from "@/data/townSnapshot";
 // "record last updated {asOf}" line can live elsewhere (freshness signal);
 // this itemized diff detail is the Pro-gated part.
 export function TownDriftPanel({ town }: { town: Town }) {
-  const drift = computeTownDrift(town);
+  // computeTownDrift re-ranks the whole curated town list — memoize on
+  // town.id so it only re-runs when the selected town changes, not on
+  // every re-render of the co-mounted drawer (e.g. typing in
+  // InvestmentCalculator's inputs).
+  const drift = useMemo(() => computeTownDrift(town), [town]);
   if (!hasAnyDrift(drift)) return null;
 
   const asOf = getSnapshotAsOf();

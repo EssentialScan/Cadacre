@@ -1,4 +1,4 @@
-import type { HazardFlag } from "@/data/towns";
+import type { HazardFlag, InfrastructureProject } from "@/data/towns";
 import type { RankWeights } from "@/lib/rankTowns";
 
 export const FREE_COUNT = 3;
@@ -11,10 +11,12 @@ export type LedgerRow =
       town: string;
       state: string;
       medianPrice: number | null;
+      medianRent: number | null;
       grossYieldPct: number | null;
       vacancyRatePct: number | null;
       bushfireRisk: HazardFlag;
       floodRisk: HazardFlag;
+      infrastructureProjects: InfrastructureProject[];
     }
   | { locked: true; rank: number };
 

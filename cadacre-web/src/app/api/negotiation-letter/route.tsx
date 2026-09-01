@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { Document, Page, Text, StyleSheet, renderToBuffer } from "@react-pdf/renderer";
-import { isSubscriber } from "@/lib/entitlements";
+import { requireSubscriberApi } from "@/lib/apiAuth";
 import { getSydneyMetroTowns } from "@/data";
 
 export const runtime = "nodejs";
@@ -21,13 +20,8 @@ function money(value: number): string {
 }
 
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-  if (!(await isSubscriber(userId))) {
-    return NextResponse.json({ error: "This is a Cadacre subscriber feature." }, { status: 403 });
-  }
+  const gate = await requireSubscriberApi("The negotiation-letter generator");
+  if ("response" in gate) return gate.response;
 
   const { searchParams } = request.nextUrl;
   const suburbId = searchParams.get("suburbId");

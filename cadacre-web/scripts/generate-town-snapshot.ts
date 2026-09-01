@@ -17,7 +17,12 @@ import path from "path";
 import { getAllTowns } from "../src/data";
 import { rankTowns } from "../src/lib/rankTowns";
 
-const REFERENCE_INPUT = { budget: 500_000, targetYieldPct: 5 };
+// Chosen so real 2026 towns actually qualify — the previous {500_000, 5}
+// pair excluded every regional town (the cheapest, Cowra, is $480k at a
+// 4.87% yield, just under the 5% floor), which meant every checked-in
+// snapshot entry had rank: null and the rank-drift feature could never
+// detect a change. See AGENTS.md's rank-drift section for context.
+const REFERENCE_INPUT = { budget: 750_000, targetYieldPct: 4 };
 
 const towns = getAllTowns();
 const ranked = rankTowns(REFERENCE_INPUT, towns);

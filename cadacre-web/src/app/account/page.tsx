@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isSubscriber } from "@/lib/entitlements";
 
@@ -10,6 +10,9 @@ export default async function AccountPage() {
   if (!userId) redirect("/");
 
   const subscribed = await isSubscriber(userId);
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
+  const hasStripeCustomerId = typeof user.privateMetadata?.stripeCustomerId === "string";
   const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL;
   const subscribeUrl = paymentLink
     ? `${paymentLink}?client_reference_id=${encodeURIComponent(userId)}`
@@ -54,12 +57,19 @@ export default async function AccountPage() {
                 export, the relocation-readiness pack, rank-drift and hazard alerts, the rent
                 tracker, and the negotiation-letter generator.
               </p>
-              <a
-                href="/api/stripe/portal"
-                className="mt-5 inline-block rounded-sm bg-ink-navy px-5 py-2.5 text-sm font-medium text-parchment transition hover:bg-ink-navy/90"
-              >
-                Manage subscription
-              </a>
+              {hasStripeCustomerId ? (
+                <a
+                  href="/api/stripe/portal"
+                  className="mt-5 inline-block rounded-sm bg-ink-navy px-5 py-2.5 text-sm font-medium text-parchment transition hover:bg-ink-navy/90"
+                >
+                  Manage subscription
+                </a>
+              ) : (
+                <p className="mt-5 text-sm text-charcoal/50">
+                  Your access comes from an earlier one-time purchase, not a Stripe subscription,
+                  so there&apos;s no billing subscription to manage here.
+                </p>
+              )}
             </>
           ) : (
             <>

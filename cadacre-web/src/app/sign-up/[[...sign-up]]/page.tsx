@@ -8,15 +8,15 @@ export default async function SignUpPage({
   searchParams?: Promise<{ redirect_url?: string }>;
 }) {
   const { userId } = await auth();
+  const params = searchParams ? await searchParams : undefined;
 
   if (userId) {
-    const params = searchParams ? await searchParams : undefined;
     redirect(params?.redirect_url || "/shortlist");
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-parchment">
-      <SignUp />
+      <SignUp {...(params?.redirect_url ? { forceRedirectUrl: params.redirect_url } : {})} />
     </div>
   );
 }

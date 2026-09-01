@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { Document, Page, Text, View, StyleSheet, renderToBuffer } from "@react-pdf/renderer";
 import { rankTowns, getTownDecisionNarrative, getTownDecisionSensitivity } from "@/lib/rankTowns";
-import { isSubscriber } from "@/lib/entitlements";
+import { requireSubscriberApi } from "@/lib/apiAuth";
 import type { HazardFlag } from "@/data/towns";
 
 export const runtime = "nodejs";
@@ -78,14 +77,8 @@ function hazardText(flag: HazardFlag): string {
 }
 
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-
-  if (!(await isSubscriber(userId))) {
-    return NextResponse.json({ error: "Report not unlocked." }, { status: 403 });
-  }
+  const gate = await requireSubscriberApi("The full report");
+  if ("response" in gate) return gate.response;
 
   const { searchParams } = request.nextUrl;
   const budget = Number(searchParams.get("budget"));
@@ -133,39 +126,19 @@ export async function GET(request: NextRequest) {
           <Text style={styles.colHazard}>Bushfire / Flood</Text>
         </View>
 
-        {ranked.map(({ rank, town }) => {
-          const narrative = getTownDecisionNarrative({
-            town: town.name,
-            medianPrice: town.medianPrice.value,
-            grossYieldPct: town.grossYieldPct.value,
-            vacancyRatePct: town.vacancyRatePct.value,
-            bushfireRisk: town.bushfireRisk,
-            floodRisk: town.floodRisk,
-            infrastructureProjects: [],
-          });
-          const sensitivity = getTownDecisionSensitivity({
-            town: town.name,
-            medianPrice: town.medianPrice.value,
-            grossYieldPct: town.grossYieldPct.value,
-            vacancyRatePct: town.vacancyRatePct.value,
-            bushfireRisk: town.bushfireRisk,
-            floodRisk: town.floodRisk,
-            infrastructureProjects: [],
-          });
-          return (
-            <View style={styles.row} key={town.id}>
-              <Text style={styles.colTown}>
-                {rank}. {town.name}, {town.state}
-              </Text>
-              <Text style={styles.colFigure}>{money(town.medianPrice.value)}</Text>
-              <Text style={styles.colFigure}>{pct(town.grossYieldPct.value)}</Text>
-              <Text style={styles.colFigure}>{pct(town.vacancyRatePct.value)}</Text>
-              <Text style={styles.colHazard}>
-                {hazardText(town.bushfireRisk)} / {hazardText(town.floodRisk)}
-              </Text>
-            </View>
-          );
-        })}
+        {ranked.map(({ rank, town }) => (
+          <View style={styles.row} key={town.id}>
+            <Text style={styles.colTown}>
+              {rank}. {town.name}, {town.state}
+            </Text>
+            <Text style={styles.colFigure}>{money(town.medianPrice.value)}</Text>
+            <Text style={styles.colFigure}>{pct(town.grossYieldPct.value)}</Text>
+            <Text style={styles.colFigure}>{pct(town.vacancyRatePct.value)}</Text>
+            <Text style={styles.colHazard}>
+              {hazardText(town.bushfireRisk)} / {hazardText(town.floodRisk)}
+            </Text>
+          </View>
+        ))}
 
         <Text style={styles.sectionTitle}>Town decisions</Text>
         <Text style={{ fontSize: 8.5, color: "#555555", marginBottom: 12 }}>
@@ -173,24 +146,18 @@ export async function GET(request: NextRequest) {
           the key decision lever and sensitivity for each.
         </Text>
         {ranked.map(({ rank, town }) => {
-          const narrative = getTownDecisionNarrative({
+          const snapshot = {
             town: town.name,
             medianPrice: town.medianPrice.value,
+            medianRent: town.medianRent.value,
             grossYieldPct: town.grossYieldPct.value,
             vacancyRatePct: town.vacancyRatePct.value,
             bushfireRisk: town.bushfireRisk,
             floodRisk: town.floodRisk,
-            infrastructureProjects: [],
-          });
-          const sensitivity = getTownDecisionSensitivity({
-            town: town.name,
-            medianPrice: town.medianPrice.value,
-            grossYieldPct: town.grossYieldPct.value,
-            vacancyRatePct: town.vacancyRatePct.value,
-            bushfireRisk: town.bushfireRisk,
-            floodRisk: town.floodRisk,
-            infrastructureProjects: [],
-          });
+            infrastructureProjects: town.infrastructureProjects,
+          };
+          const narrative = getTownDecisionNarrative(snapshot);
+          const sensitivity = getTownDecisionSensitivity(snapshot);
           return (
             <View key={town.id} wrap={false} style={{ marginBottom: 8 }}>
               <Text style={styles.infraTown}>
@@ -206,6 +173,7 @@ export async function GET(request: NextRequest) {
             </View>
           );
         })}
+        <Text style={styles.sectionTitle}>Infrastructure notes</Text>
         <Text style={{ fontSize: 8.5, color: "#555555" }}>
           Publicly announced projects near each town, sourced from state
           budget papers, Infrastructure Australia, or council websites.

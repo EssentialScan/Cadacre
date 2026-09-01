@@ -18,7 +18,7 @@ type Match = {
 };
 
 type ConciergeResponse = {
-  configured: boolean;
+  configured?: boolean;
   answer?: string;
   matches?: Match[];
   message?: string;
@@ -123,7 +123,7 @@ export function AiConciergeChat({ open, onClose }: { open: boolean; onClose: () 
                 </button>
               </div>
 
-              {result && !result.configured && (
+              {result && result.configured === false && result.message && (
                 <p className="mt-5 text-sm text-charcoal/60">{result.message}</p>
               )}
               {result?.error && (

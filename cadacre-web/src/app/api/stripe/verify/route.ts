@@ -45,23 +45,25 @@ export async function GET(request: NextRequest) {
 
     const subscriptionId =
       typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
-    if (subscriptionId) {
-      // Tag the subscription itself with the Clerk user id so later
-      // customer.subscription.updated/.deleted webhook events (which carry
-      // no client_reference_id) can still be attributed without a lookup.
-      await stripe.subscriptions.update(subscriptionId, {
-        metadata: { clerkUserId: userId },
-      });
-    }
-
     const client = await clerkClient();
-    await client.users.updateUserMetadata(userId, {
-      privateMetadata: {
-        subscriptionStatus: "active",
-        stripeCustomerId:
-          typeof session.customer === "string" ? session.customer : session.customer?.id,
-      },
-    });
+
+    // These two writes are independent (Stripe subscription metadata vs.
+    // Clerk user metadata) — run them concurrently instead of back-to-back.
+    await Promise.all([
+      subscriptionId
+        // Tag the subscription itself with the Clerk user id so later
+        // customer.subscription.updated/.deleted webhook events (which carry
+        // no client_reference_id) can still be attributed without a lookup.
+        ? stripe.subscriptions.update(subscriptionId, { metadata: { clerkUserId: userId } })
+        : Promise.resolve(),
+      client.users.updateUserMetadata(userId, {
+        privateMetadata: {
+          subscriptionStatus: "active",
+          stripeCustomerId:
+            typeof session.customer === "string" ? session.customer : session.customer?.id,
+        },
+      }),
+    ]);
 
     const url = new URL(redirectBase);
     url.searchParams.set("subscribed", "1");

@@ -38,12 +38,12 @@ export async function POST(request: NextRequest) {
   }
 
   switch (event.type) {
+    case "customer.subscription.created":
     case "customer.subscription.updated": {
       const subscription = event.data.object as Stripe.Subscription;
       const clerkUserId = subscription.metadata?.clerkUserId;
       if (clerkUserId) {
-        const status = subscription.status === "active" ? "active" : subscription.status;
-        await setSubscriptionStatus(clerkUserId, status);
+        await setSubscriptionStatus(clerkUserId, subscription.status);
       }
       break;
     }

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { isSubscriber } from "@/lib/entitlements";
+import { requireSubscriberApi } from "@/lib/apiAuth";
 import { getAllTowns } from "@/data";
 import { matchesFilters, type TownMapFilters } from "@/lib/townFilters";
 
@@ -72,13 +71,8 @@ async function callGroq(apiKey: string, model: string, messages: { role: string;
 }
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-  if (!(await isSubscriber(userId))) {
-    return NextResponse.json({ error: "The AI concierge is a Cadacre subscriber feature." }, { status: 403 });
-  }
+  const gate = await requireSubscriberApi("The AI concierge");
+  if ("response" in gate) return gate.response;
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {

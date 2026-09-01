@@ -1,21 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { getTownDecisionTag, getTownDecisionNarrative } from "@/lib/rankTowns";
+import { getTownDecisionTag, type TownDecisionSnapshot } from "@/lib/rankTowns";
 import { HazardIcons } from "@/components/HazardIcons";
 import { TownMapToggle } from "@/components/TownMapToggle";
+import type { LedgerRow } from "@/app/dashboard/types";
+
+type UnlockedRow = Extract<LedgerRow, { locked: false }>;
+
+const TAG_LABEL: Record<string, string> = {
+  "yield-heavy": "yield-heavy",
+  "budget-led": "budget-led",
+  balanced: "balanced",
+  "needs-review": "needs review",
+};
 
 export function SensitivityExplorer({ towns, initialBudget, initialYield }: {
-  towns: any[];
+  towns: UnlockedRow[];
   initialBudget: number;
   initialYield: number;
 }) {
   const [budget, setBudget] = useState(initialBudget);
   const [targetYield, setTargetYield] = useState(initialYield);
 
-  // Real-time filter: which towns still match the adjusted criteria
+  // Real-time filter: which towns still match the adjusted criteria. A null
+  // price/yield (data genuinely unavailable) never excludes a town, matching
+  // the convention matchesFilters() uses everywhere else in the app.
   const matching = towns.filter(
-    (town) => town.medianPrice <= budget && town.grossYieldPct >= targetYield
+    (town) =>
+      (town.medianPrice === null || town.medianPrice <= budget) &&
+      (town.grossYieldPct === null || town.grossYieldPct >= targetYield)
   );
 
   const matchedCount = matching.length;
@@ -109,47 +123,51 @@ export function SensitivityExplorer({ towns, initialBudget, initialYield }: {
             <span>Hazards</span>
           </div>
 
-          {matching.map((town) => (
-            <div
-              key={town.town}
-              className="ledger-row grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] items-center gap-2 px-5 py-4 border-b border-faded-rule text-charcoal"
-            >
-              <span className="flex items-center gap-2 font-medium text-ink-navy">
-                <span className="flex flex-col">
-                  <span className="flex items-center gap-2">
-                    {town.town}, {town.state}
-                    <TownMapToggle town={town.town} state={town.state} />
-                  </span>
-                  <span className="mt-1 text-[10px] uppercase tracking-[0.14em] text-charcoal/60">
-                    {getTownDecisionTag({
-                      town: town.town,
-                      medianPrice: town.medianPrice,
-                      grossYieldPct: town.grossYieldPct,
-                      vacancyRatePct: town.vacancyRatePct,
-                      bushfireRisk: town.bushfireRisk,
-                      floodRisk: town.floodRisk,
-                      infrastructureProjects: [],
-                    }) === "yield-heavy"
-                      ? "yield-heavy"
-                      : "budget-led"}
+          {matching.map((town) => {
+            const snapshot: TownDecisionSnapshot = {
+              town: town.town,
+              medianPrice: town.medianPrice,
+              medianRent: town.medianRent,
+              grossYieldPct: town.grossYieldPct,
+              vacancyRatePct: town.vacancyRatePct,
+              bushfireRisk: town.bushfireRisk,
+              floodRisk: town.floodRisk,
+              infrastructureProjects: town.infrastructureProjects,
+            };
+            const tag = getTownDecisionTag(snapshot);
+
+            return (
+              <div
+                key={town.town}
+                className="ledger-row grid grid-cols-[1fr_repeat(4,minmax(0,0.7fr))_minmax(0,0.55fr)] items-center gap-2 px-5 py-4 border-b border-faded-rule text-charcoal"
+              >
+                <span className="flex items-center gap-2 font-medium text-ink-navy">
+                  <span className="flex flex-col">
+                    <span className="flex items-center gap-2">
+                      {town.town}, {town.state}
+                      <TownMapToggle town={town.town} state={town.state} />
+                    </span>
+                    <span className="mt-1 text-[10px] uppercase tracking-[0.14em] text-charcoal/60">
+                      {TAG_LABEL[tag]}
+                    </span>
                   </span>
                 </span>
-              </span>
-              <span className="font-mono-figure text-sm">
-                ${town.medianPrice?.toLocaleString("en-AU") || "—"}
-              </span>
-              <span className="font-mono-figure text-sm">
-                {town.grossYieldPct ? `${town.grossYieldPct.toFixed(1)}%` : "—"}
-              </span>
-              <span className="font-mono-figure text-sm">
-                {town.vacancyRatePct ? `${town.vacancyRatePct.toFixed(1)}%` : "—"}
-              </span>
-              <span className="font-mono-figure text-sm text-deep-forest">
-                {town.valueScore || "—"}/100
-              </span>
-              <HazardIcons bushfireRisk={town.bushfireRisk} floodRisk={town.floodRisk} />
-            </div>
-          ))}
+                <span className="font-mono-figure text-sm">
+                  {town.medianPrice !== null ? `$${town.medianPrice.toLocaleString("en-AU")}` : "—"}
+                </span>
+                <span className="font-mono-figure text-sm">
+                  {town.grossYieldPct !== null ? `${town.grossYieldPct.toFixed(1)}%` : "—"}
+                </span>
+                <span className="font-mono-figure text-sm">
+                  {town.vacancyRatePct !== null ? `${town.vacancyRatePct.toFixed(1)}%` : "—"}
+                </span>
+                <span className="font-mono-figure text-sm text-deep-forest">
+                  {town.valueScore}/100
+                </span>
+                <HazardIcons bushfireRisk={town.bushfireRisk} floodRisk={town.floodRisk} />
+              </div>
+            );
+          })}
         </div>
       )}
 

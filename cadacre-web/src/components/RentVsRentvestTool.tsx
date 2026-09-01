@@ -35,6 +35,7 @@ export function RentVsRentvestTool({
   const [suburbId, setSuburbId] = useState(sydneySuburbs[0]?.id ?? "");
   const [baseline, setBaseline] = useState<RentTrackerBaseline | null>(null);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSubscriber) return;
@@ -186,6 +187,7 @@ export function RentVsRentvestTool({
                   disabled={saving}
                   onClick={() => {
                     setSaving(true);
+                    setSaveError(null);
                     saveRentTrackerBaseline({
                       suburbId: suburb.id,
                       suburbName: suburb.name,
@@ -198,12 +200,18 @@ export function RentVsRentvestTool({
                       matchedTownIds: matches.map((m) => m.town.id),
                     })
                       .then(setBaseline)
+                      .catch((err) =>
+                        setSaveError(err instanceof Error ? err.message : "Couldn't save right now.")
+                      )
                       .finally(() => setSaving(false));
                   }}
                   className="rounded-sm border border-deep-forest px-4 py-2 text-sm font-medium text-deep-forest transition hover:bg-deep-forest/10 disabled:opacity-50"
                 >
                   {saving ? "Saving…" : "Track this (Subscriber)"}
                 </button>
+              )}
+              {saveError && (
+                <p className="w-full text-xs text-red-700">{saveError}</p>
               )}
             </div>
           )}
@@ -214,8 +222,10 @@ export function RentVsRentvestTool({
               moved from {money(baseline.affordablePrice)} to {money(affordablePrice)}
               {matches.length !== baseline.matchedTownIds.length && (
                 <>
-                  , newly matching {Math.max(matches.length - baseline.matchedTownIds.length, 0)}{" "}
-                  more regional town{Math.abs(matches.length - baseline.matchedTownIds.length) === 1 ? "" : "s"}
+                  , {matches.length > baseline.matchedTownIds.length ? "newly matching" : "now matching"}{" "}
+                  {Math.abs(matches.length - baseline.matchedTownIds.length)}{" "}
+                  {matches.length > baseline.matchedTownIds.length ? "more" : "fewer"} regional town
+                  {Math.abs(matches.length - baseline.matchedTownIds.length) === 1 ? "" : "s"}
                 </>
               )}
               .

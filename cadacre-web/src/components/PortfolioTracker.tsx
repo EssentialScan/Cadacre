@@ -36,9 +36,14 @@ export function PortfolioTracker({
   }
 
   function handleRemove(id: string) {
+    setError(null);
     startTransition(async () => {
-      const next = await removePortfolioProperty(id);
-      setProperties(next);
+      try {
+        const next = await removePortfolioProperty(id);
+        setProperties(next);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Something went wrong.");
+      }
     });
   }
 

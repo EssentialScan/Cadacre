@@ -1,4 +1,5 @@
 import { getAllTowns, type Town } from "@/data";
+import { computeCashFlowEstimate, formatMoney } from "@/lib/investmentMath";
 
 // Subscriber custom-weighting feature — defaults match the original
 // fixed 40/40/20 split. Free users always get the default; only a Pro
@@ -38,6 +39,7 @@ export type DecisionSummary = {
 export type TownDecisionSnapshot = {
   town: string;
   medianPrice: number | null;
+  medianRent: number | null;
   grossYieldPct: number | null;
   vacancyRatePct: number | null;
   bushfireRisk?: { level: string | null } | null;
@@ -78,16 +80,18 @@ export function getTownDecisionSensitivity(town: TownDecisionSnapshot): Decision
   const yieldPct = unwrapValue(town.grossYieldPct);
   const vacancy = unwrapValue(town.vacancyRatePct);
   const medianPrice = unwrapValue(town.medianPrice);
+  const weeklyRent = unwrapValue(town.medianRent);
   const riskPenalty = normalizeRisk(town.bushfireRisk?.level) + normalizeRisk(town.floodRisk?.level);
 
   let primary = "The numbers are workable within your inputs.";
-  if (typeof medianPrice === "number" && typeof yieldPct === "number") {
-    const weeklyRent = medianPrice * 0.004; // rough 0.4% annual gross / 52 weeks
+  if (typeof weeklyRent === "number") {
     if (weeklyRent > 130) {
-      primary = `The weekly cash flow is tight (~$${Math.round(weeklyRent)}) — any yield dip hurts.`;
+      primary = `The weekly rent is on the higher side (~$${Math.round(weeklyRent)}) — any yield dip hurts.`;
     } else if (weeklyRent < 80) {
-      primary = `Strong cash flow (~$${Math.round(weeklyRent)}/week) is a cushion against downside risk.`;
+      primary = `Rent is modest (~$${Math.round(weeklyRent)}/week), which is a cushion against downside risk.`;
     }
+  } else {
+    primary = "Weekly rent isn't published for this town, so cash-flow sensitivity can't be estimated here.";
   }
 
   let ifBudgetRises = "A 5–10% price rise would push the cash flow margin thinner.";
@@ -120,66 +124,63 @@ export function getTownDecisionSensitivity(town: TownDecisionSnapshot): Decision
 }
 
 export type StressTestComparison = {
-  sydneyWealthAfter: number;
-  regionalWealthAfter: number;
-  wealthDifference: number;
-  verdict: string;
+  sydneyWeeklyRent: number;
+  regionalWeeklyRent: number;
+  regionalWeeklyRepayment: number;
+  regionalStampDuty: number;
+  regionalUpfrontCost: number;
+  regionalNetWeeklyCashFlow: number;
+  weeklyCashFlowDifference: number;
+  summary: string;
   sydneyNarrative: string;
   regionalNarrative: string;
 };
 
+// Today-only cash-flow comparison — deliberately no multi-year wealth
+// projection or price-appreciation assumption (AGENTS.md §5j prohibits
+// fabricating future price/wealth data for this feature family). Reuses
+// the same amortizing mortgage math as InvestmentCalculator/
+// ScenarioSimulator via computeCashFlowEstimate so numbers agree across
+// the app, instead of an independent flat-rate approximation.
 export function buildStressTestComparison(input: {
   sydneyWeeklyRent: number;
   regionalMedianPrice: number;
-  regionalGrossYield: number;
-  annualWealthGrowth: number;
-  initialDeposit: number;
-  years: number;
+  regionalGrossYieldPct: number;
+  depositPct: number;
+  ratePct: number;
+  termYears: number;
 }): StressTestComparison {
-  // Sydney scenario: rent stays high, accumulate savings & baseline wealth growth
-  const sydneyYearlyRent = input.sydneyWeeklyRent * 52;
-  const sydneyWealthAfter =
-    input.initialDeposit * Math.pow(1 + input.annualWealthGrowth, input.years) -
-    sydneyYearlyRent * input.years; // Rough: savings are reduced by cumulative rent
+  const regionalWeeklyRent = (input.regionalMedianPrice * (input.regionalGrossYieldPct / 100)) / 52;
+  const cashFlow = computeCashFlowEstimate({
+    price: input.regionalMedianPrice,
+    rent: regionalWeeklyRent,
+    depositPct: input.depositPct,
+    ratePct: input.ratePct,
+    termYears: input.termYears,
+  });
 
-  // Regional scenario: buy with mortgage, gain equity + rental income
-  const mortgageLTV = 0.8; // Borrow 80% of purchase price
-  const loanAmount = input.regionalMedianPrice * mortgageLTV;
-  const yearlyRentalIncome = input.regionalMedianPrice * (input.regionalGrossYield / 100);
-  const yearlyMortgagePayment = loanAmount * 0.07; // ~7% blended rate (conservative)
-  const yearlyNetCashFlow = yearlyRentalIncome - yearlyMortgagePayment - 2500; // ~$50/week for maintenance/rates
-  const equityGainPerYear = yearlyMortgagePayment - yearlyRentalIncome * 0.2; // Principal paydown
-  const regionalWealthAfter =
-    input.initialDeposit * Math.pow(1 + input.annualWealthGrowth, input.years) +
-    yearlyNetCashFlow * input.years +
-    equityGainPerYear * input.years;
+  const weeklyCashFlowDifference = cashFlow.netWeeklyCashFlow + input.sydneyWeeklyRent;
 
-  const difference = regionalWealthAfter - sydneyWealthAfter;
-  const sydneyNarrative =
-    sydneyWealthAfter > 0
-      ? `After ${input.years} years, staying in Sydney with rent at $${input.sydneyWeeklyRent}/week leaves you with ~$${Math.round(sydneyWealthAfter).toLocaleString("en-AU")} in wealth (savings + baseline growth). You keep lifestyle flexibility.`
-      : `After ${input.years} years, Sydney rent at $${input.sydneyWeeklyRent}/week is eating most of your wealth accumulation. You're priced out of local ownership.`;
+  const sydneyNarrative = `Staying in Sydney at $${Math.round(input.sydneyWeeklyRent)}/week in rent is a fixed weekly cost, with no offsetting rental income or equity.`;
   const regionalNarrative =
-    difference > 0
-      ? `Regional ownership with a $${input.regionalMedianPrice.toLocaleString("en-AU")} purchase and $${input.initialDeposit.toLocaleString("en-AU")} deposit leaves you with ~$${Math.round(regionalWealthAfter).toLocaleString("en-AU")} after ${input.years} years (equity + net cash flow + baseline growth). The extra wealth is worth the lifestyle trade-off.`
-      : `Even with regional yield, the wealth path is weaker than staying in Sydney. The break-even point is further out, or your assumptions need tightening.`;
+    cashFlow.netWeeklyCashFlow >= 0
+      ? `The regional purchase's estimated rent covers the mortgage repayment today, netting ~$${Math.round(cashFlow.netWeeklyCashFlow)}/week, on top of a ~${formatMoney(cashFlow.upfrontCost)} upfront cost (deposit + stamp duty).`
+      : `The regional purchase runs an estimated net shortfall of ~$${Math.round(Math.abs(cashFlow.netWeeklyCashFlow))}/week after the mortgage repayment, on top of a ~${formatMoney(cashFlow.upfrontCost)} upfront cost (deposit + stamp duty).`;
 
-  let verdict = "Sydney stays ahead.";
-  if (difference > sydneyWealthAfter * 0.5) {
-    verdict = `Regional investment wins: ~$${Math.round(Math.abs(difference)).toLocaleString("en-AU")} more wealth after ${input.years} years.`;
-  } else if (difference > 0) {
-    verdict = `Regional pulls ahead, but it's close. The decision hinges on your tolerance for lifestyle change and leverage risk.`;
-  } else if (difference > sydneyWealthAfter * -0.25) {
-    verdict = `Sydney is slightly safer, but the regional option isn't far behind. Consider a longer time horizon.`;
-  } else {
-    verdict = `Sydney is clearly ahead at ${input.years}-year horizon. Regional makes sense only if you're willing to wait longer for the equity payoff.`;
-  }
+  const summary =
+    weeklyCashFlowDifference >= 0
+      ? `Today, the regional path leaves you ~$${Math.round(weeklyCashFlowDifference)}/week better off than the Sydney rent figure, before any equity or future price change.`
+      : `Today, the regional path costs ~$${Math.round(Math.abs(weeklyCashFlowDifference))}/week more out of pocket than the Sydney rent figure, before any equity or future price change.`;
 
   return {
-    sydneyWealthAfter: Math.round(sydneyWealthAfter),
-    regionalWealthAfter: Math.round(regionalWealthAfter),
-    wealthDifference: Math.round(difference),
-    verdict,
+    sydneyWeeklyRent: Math.round(input.sydneyWeeklyRent),
+    regionalWeeklyRent: Math.round(regionalWeeklyRent),
+    regionalWeeklyRepayment: Math.round(cashFlow.weeklyRepayment),
+    regionalStampDuty: Math.round(cashFlow.stampDuty),
+    regionalUpfrontCost: Math.round(cashFlow.upfrontCost),
+    regionalNetWeeklyCashFlow: Math.round(cashFlow.netWeeklyCashFlow),
+    weeklyCashFlowDifference: Math.round(weeklyCashFlowDifference),
+    summary,
     sydneyNarrative,
     regionalNarrative,
   };
@@ -247,14 +248,15 @@ export function buildDecisionSummary(rows: TownDecisionSnapshot[]): DecisionSumm
     };
   }
 
+  const maxPrice = Math.max(...rows.map((item) => item.medianPrice ?? 0));
+  const minPrice = Math.min(...rows.map((item) => item.medianPrice ?? maxPrice));
+  const priceRange = Math.max(maxPrice - minPrice, 1);
+
   const scored = rows
     .map((row) => {
       const yieldPct = row.grossYieldPct ?? 0;
       const vacancy = row.vacancyRatePct ?? 3.5;
       const riskPenalty = normalizeRisk(row.bushfireRisk?.level) + normalizeRisk(row.floodRisk?.level);
-      const maxPrice = Math.max(...rows.map((item) => item.medianPrice ?? 0));
-      const minPrice = Math.min(...rows.map((item) => item.medianPrice ?? maxPrice));
-      const priceRange = Math.max(maxPrice - minPrice, 1);
       const priceNormalised = row.medianPrice === null
         ? 0
         : (maxPrice - row.medianPrice) / priceRange;

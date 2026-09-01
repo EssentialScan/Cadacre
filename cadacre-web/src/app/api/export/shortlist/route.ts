@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { isSubscriber } from "@/lib/entitlements";
+import { requireSubscriberApi } from "@/lib/apiAuth";
 import { rankTowns, type RankWeights } from "@/lib/rankTowns";
 
 export const runtime = "nodejs";
@@ -12,13 +11,8 @@ function csvCell(value: string | number | null): string {
 }
 
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-  if (!(await isSubscriber(userId))) {
-    return NextResponse.json({ error: "CSV export is a Cadacre subscriber feature." }, { status: 403 });
-  }
+  const gate = await requireSubscriberApi("CSV export");
+  if ("response" in gate) return gate.response;
 
   const { searchParams } = request.nextUrl;
   const budget = Number(searchParams.get("budget"));
@@ -27,16 +21,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid budget or yield." }, { status: 400 });
   }
 
-  const weights: RankWeights | undefined =
+  let weights: RankWeights | undefined;
+  if (
     searchParams.has("weightAffordability") &&
     searchParams.has("weightYield") &&
     searchParams.has("weightVacancy")
-      ? {
-          affordability: Number(searchParams.get("weightAffordability")),
-          yield: Number(searchParams.get("weightYield")),
-          vacancy: Number(searchParams.get("weightVacancy")),
-        }
-      : undefined;
+  ) {
+    const affordability = Number(searchParams.get("weightAffordability"));
+    const yieldWeight = Number(searchParams.get("weightYield"));
+    const vacancy = Number(searchParams.get("weightVacancy"));
+    if (
+      !Number.isFinite(affordability) || affordability < 0 ||
+      !Number.isFinite(yieldWeight) || yieldWeight < 0 ||
+      !Number.isFinite(vacancy) || vacancy < 0
+    ) {
+      return NextResponse.json({ error: "Invalid ranking weights." }, { status: 400 });
+    }
+    weights = { affordability, yield: yieldWeight, vacancy };
+  }
 
   const ranked = rankTowns({ budget, targetYieldPct, weights });
 

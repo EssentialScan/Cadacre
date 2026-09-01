@@ -2,22 +2,26 @@
 
 import { useState } from "react";
 import { buildStressTestComparison } from "@/lib/rankTowns";
+import { RBA_INVESTOR_VARIABLE_RATE, formatMoney } from "@/lib/investmentMath";
 
 export function RentvestorLab() {
   const [sydneyRent, setSydneyRent] = useState<number>(600);
-  const [deposit, setDeposit] = useState<number>(150000);
+  const [depositPct, setDepositPct] = useState<number>(20);
   const [regionalPrice, setRegionalPrice] = useState<number>(665000);
   const [regionalYield, setRegionalYield] = useState<number>(5.8);
-  const [years, setYears] = useState<number>(5);
+  const [ratePct, setRatePct] = useState<number>(RBA_INVESTOR_VARIABLE_RATE.ratePct);
+  const [termYears, setTermYears] = useState<number>(30);
   const [submitted, setSubmitted] = useState(false);
+
+  const safeRegionalPrice = Math.max(regionalPrice, 1);
 
   const comparison = buildStressTestComparison({
     sydneyWeeklyRent: sydneyRent,
-    regionalMedianPrice: regionalPrice,
-    regionalGrossYield: regionalYield,
-    annualWealthGrowth: 0.04,
-    initialDeposit: deposit,
-    years,
+    regionalMedianPrice: safeRegionalPrice,
+    regionalGrossYieldPct: regionalYield,
+    depositPct,
+    ratePct,
+    termYears,
   });
 
   return (
@@ -25,8 +29,8 @@ export function RentvestorLab() {
       <div className="rounded-sm border border-faded-rule bg-white/60 p-6">
         <h2 className="font-display text-2xl text-ink-navy">Rentvestor Lab</h2>
         <p className="mt-2 text-sm text-charcoal/70">
-          Compare two futures: keep renting in Sydney, or invest regionally.
-          Adjust the numbers to test your own scenario.
+          Compare today&apos;s numbers: keep renting in Sydney, or buy regionally.
+          Adjust the inputs to test your own scenario.
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -36,6 +40,7 @@ export function RentvestorLab() {
             </label>
             <input
               type="number"
+              min={0}
               value={sydneyRent}
               onChange={(e) => setSydneyRent(Number(e.target.value))}
               className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-3 py-2 font-mono-figure text-charcoal"
@@ -44,12 +49,14 @@ export function RentvestorLab() {
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wide text-charcoal/60">
-              Initial deposit ($)
+              Deposit (%)
             </label>
             <input
               type="number"
-              value={deposit}
-              onChange={(e) => setDeposit(Number(e.target.value))}
+              min={1}
+              max={100}
+              value={depositPct}
+              onChange={(e) => setDepositPct(Number(e.target.value))}
               className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-3 py-2 font-mono-figure text-charcoal"
             />
           </div>
@@ -60,6 +67,7 @@ export function RentvestorLab() {
             </label>
             <input
               type="number"
+              min={1}
               value={regionalPrice}
               onChange={(e) => setRegionalPrice(Number(e.target.value))}
               className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-3 py-2 font-mono-figure text-charcoal"
@@ -73,27 +81,39 @@ export function RentvestorLab() {
             <input
               type="number"
               step="0.1"
+              min={0}
               value={regionalYield}
               onChange={(e) => setRegionalYield(Number(e.target.value))}
               className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-3 py-2 font-mono-figure text-charcoal"
             />
           </div>
 
-          <div className="md:col-span-2">
+          <div>
             <label className="block text-xs font-semibold uppercase tracking-wide text-charcoal/60">
-              Time horizon (years)
+              Mortgage rate (%)
             </label>
-            <div className="mt-2 flex items-center gap-4">
-              <input
-                type="range"
-                min="1"
-                max="20"
-                value={years}
-                onChange={(e) => setYears(Number(e.target.value))}
-                className="flex-1"
-              />
-              <span className="font-mono-figure text-sm text-ink-navy">{years}</span>
-            </div>
+            <input
+              type="number"
+              step="0.1"
+              min={0}
+              value={ratePct}
+              onChange={(e) => setRatePct(Number(e.target.value))}
+              className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-3 py-2 font-mono-figure text-charcoal"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wide text-charcoal/60">
+              Loan term (years)
+            </label>
+            <input
+              type="number"
+              min={1}
+              max={40}
+              value={termYears}
+              onChange={(e) => setTermYears(Number(e.target.value))}
+              className="mt-2 w-full rounded-sm border border-faded-rule bg-parchment px-3 py-2 font-mono-figure text-charcoal"
+            />
           </div>
         </div>
 
@@ -107,16 +127,15 @@ export function RentvestorLab() {
 
       {submitted && (
         <div className="space-y-4">
-          {/* Verdict */}
           <div className="rounded-sm border border-ink-navy bg-white/50 p-5">
-            <p className="font-display text-lg text-ink-navy">{comparison.verdict}</p>
+            <p className="font-display text-lg text-ink-navy">{comparison.summary}</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-charcoal/50">
-                  Sydney path
+                  Sydney path (today)
                 </p>
                 <p className="mt-1 font-display text-xl text-charcoal/70">
-                  ${comparison.sydneyWealthAfter.toLocaleString("en-AU")}
+                  -{formatMoney(comparison.sydneyWeeklyRent)}/week
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-charcoal/60">
                   {comparison.sydneyNarrative}
@@ -124,10 +143,15 @@ export function RentvestorLab() {
               </div>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-charcoal/50">
-                  Regional path
+                  Regional path (today)
                 </p>
-                <p className="mt-1 font-display text-xl text-deep-forest">
-                  ${comparison.regionalWealthAfter.toLocaleString("en-AU")}
+                <p
+                  className={`mt-1 font-display text-xl ${
+                    comparison.regionalNetWeeklyCashFlow >= 0 ? "text-deep-forest" : "text-charcoal/70"
+                  }`}
+                >
+                  {comparison.regionalNetWeeklyCashFlow >= 0 ? "+" : "-"}
+                  {formatMoney(Math.abs(comparison.regionalNetWeeklyCashFlow))}/week
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-charcoal/60">
                   {comparison.regionalNarrative}
@@ -137,8 +161,10 @@ export function RentvestorLab() {
 
             <div className="mt-4 border-t border-faded-rule pt-4">
               <p className="text-xs text-charcoal/50">
-                <strong>Assumptions:</strong> 4% annual wealth growth (baseline stock market return), 7% mortgage rate, $50/week
-                maintenance. Regional purchase uses {Math.round(((regionalPrice * 0.8) / regionalPrice) * 100)}% LVR. Results are illustrative, not advice.
+                <strong>Assumptions:</strong> {ratePct}% mortgage rate over a {termYears}-year term,{" "}
+                {depositPct}% deposit, plus estimated NSW transfer duty. This is a today-only cash-flow
+                comparison — it does not project future price growth, rent growth, or equity. Results are
+                illustrative, not advice; confirm actual figures with a licensed lender or adviser.
               </p>
             </div>
           </div>

@@ -81,10 +81,12 @@ export async function getShortlist(input: {
       town: town.name,
       state: town.state,
       medianPrice: town.medianPrice.value,
+      medianRent: town.medianRent.value,
       grossYieldPct: town.grossYieldPct.value,
       vacancyRatePct: town.vacancyRatePct.value,
       bushfireRisk: town.bushfireRisk,
       floodRisk: town.floodRisk,
+      infrastructureProjects: town.infrastructureProjects,
     };
   });
 

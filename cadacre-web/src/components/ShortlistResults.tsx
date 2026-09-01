@@ -1,4 +1,4 @@
-import type { ShortlistResult } from "@/app/dashboard/types";
+import type { ShortlistResult, LedgerRow } from "@/app/dashboard/types";
 import { HazardIcons } from "@/components/HazardIcons";
 import { TownMapToggle } from "@/components/TownMapToggle";
 import { SensitivityExplorer } from "@/components/SensitivityExplorer";
@@ -95,11 +95,12 @@ export function ShortlistResults({
       .map((row) => ({
         town: row.town,
         medianPrice: row.medianPrice,
+        medianRent: row.medianRent,
         grossYieldPct: row.grossYieldPct,
         vacancyRatePct: row.vacancyRatePct,
         bushfireRisk: row.bushfireRisk,
         floodRisk: row.floodRisk,
-        infrastructureProjects: [],
+        infrastructureProjects: row.infrastructureProjects,
       }))
   );
 
@@ -174,53 +175,43 @@ export function ShortlistResults({
                         {row.town}, {row.state}
                         <TownMapToggle town={row.town} state={row.state} />
                       </span>
-                      <span className="mt-1 text-[10px] uppercase tracking-[0.14em] text-charcoal/60">
-                        {(() => {
-                          const tag = getTownDecisionTag({
-                            town: row.town,
-                            medianPrice: row.medianPrice,
-                            grossYieldPct: row.grossYieldPct,
-                            vacancyRatePct: row.vacancyRatePct,
-                            bushfireRisk: row.bushfireRisk,
-                            floodRisk: row.floodRisk,
-                            infrastructureProjects: [],
-                          });
-
-                          return tag === "yield-heavy"
+                      {(() => {
+                        const snapshot = {
+                          town: row.town,
+                          medianPrice: row.medianPrice,
+                          medianRent: row.medianRent,
+                          grossYieldPct: row.grossYieldPct,
+                          vacancyRatePct: row.vacancyRatePct,
+                          bushfireRisk: row.bushfireRisk,
+                          floodRisk: row.floodRisk,
+                          infrastructureProjects: row.infrastructureProjects,
+                        };
+                        const tag = getTownDecisionTag(snapshot);
+                        const narrative = getTownDecisionNarrative(snapshot);
+                        const sensitivity = getTownDecisionSensitivity(snapshot);
+                        const tagLabel =
+                          tag === "yield-heavy"
                             ? "yield-heavy"
                             : tag === "budget-led"
                               ? "budget-led"
                               : tag === "balanced"
                                 ? "balanced"
                                 : "needs review";
-                        })()}
-                      </span>
-                      <span className="mt-1 max-w-[26rem] text-[10px] leading-relaxed text-charcoal/55">
-                        {getTownDecisionNarrative({
-                          town: row.town,
-                          medianPrice: row.medianPrice,
-                          grossYieldPct: row.grossYieldPct,
-                          vacancyRatePct: row.vacancyRatePct,
-                          bushfireRisk: row.bushfireRisk,
-                          floodRisk: row.floodRisk,
-                          infrastructureProjects: [],
-                        })}
-                      </span>
-                      <span className="mt-2 max-w-[26rem] text-[9px] leading-relaxed text-charcoal/45 italic">
-                        {(() => {
-                          const sensitivity = getTownDecisionSensitivity({
-                            town: row.town,
-                            medianPrice: row.medianPrice,
-                            grossYieldPct: row.grossYieldPct,
-                            vacancyRatePct: row.vacancyRatePct,
-                            bushfireRisk: row.bushfireRisk,
-                            floodRisk: row.floodRisk,
-                            infrastructureProjects: [],
-                          });
-                          // Compact sensitivity summary: show the primary lever and one key risk
-                          return `${sensitivity.primary} If yield tightens, ${sensitivity.ifYieldTightens.toLowerCase()}`;
-                        })()}
-                      </span>
+
+                        return (
+                          <>
+                            <span className="mt-1 text-[10px] uppercase tracking-[0.14em] text-charcoal/60">
+                              {tagLabel}
+                            </span>
+                            <span className="mt-1 max-w-[26rem] text-[10px] leading-relaxed text-charcoal/55">
+                              {narrative}
+                            </span>
+                            <span className="mt-2 max-w-[26rem] text-[9px] leading-relaxed text-charcoal/45 italic">
+                              {sensitivity.primary} If yield tightens, {sensitivity.ifYieldTightens.toLowerCase()}
+                            </span>
+                          </>
+                        );
+                      })()}
                     </span>
                   </span>
                   <span
@@ -329,16 +320,7 @@ export function ShortlistResults({
       {subscribed && (
         <div className="mt-14 space-y-4 border-t border-faded-rule pt-10">
           <SensitivityExplorer
-            towns={rows.filter((r) => !r.locked).map((r) => ({
-              town: r.town,
-              state: r.state,
-              medianPrice: r.medianPrice,
-              grossYieldPct: r.grossYieldPct,
-              vacancyRatePct: r.vacancyRatePct,
-              bushfireRisk: r.bushfireRisk,
-              floodRisk: r.floodRisk,
-              valueScore: r.valueScore,
-            }))}
+            towns={rows.filter((r): r is Extract<LedgerRow, { locked: false }> => !r.locked)}
             initialBudget={input.budget}
             initialYield={input.targetYieldPct}
           />
