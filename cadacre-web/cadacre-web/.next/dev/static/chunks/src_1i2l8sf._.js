@@ -1,4 +1,36 @@
 (globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[project]/src/app/dashboard/data:4aa6a0 [app-client] (ecmascript) <text/javascript>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "saveRentTrackerBaseline",
+    ()=>$$RSC_SERVER_ACTION_7
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-client-wrapper.js [app-client] (ecmascript)");
+/* __next_internal_action_entry_do_not_use__ [{"408308955bcaeaf3077f1568b6e35ebc5a121656de":{"name":"saveRentTrackerBaseline"}},"src/app/dashboard/actions.ts",""] */ "use turbopack no side effects";
+;
+const $$RSC_SERVER_ACTION_7 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createServerReference"])("408308955bcaeaf3077f1568b6e35ebc5a121656de", __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["callServer"], void 0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["findSourceMapURL"], "saveRentTrackerBaseline");
+;
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/src/app/dashboard/data:9ff648 [app-client] (ecmascript) <text/javascript>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "getRentTrackerBaseline",
+    ()=>$$RSC_SERVER_ACTION_6
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-client-wrapper.js [app-client] (ecmascript)");
+/* __next_internal_action_entry_do_not_use__ [{"00876ec9f7d4f3ff0b6f0797ae34840529f44eae6e":{"name":"getRentTrackerBaseline"}},"src/app/dashboard/actions.ts",""] */ "use turbopack no side effects";
+;
+const $$RSC_SERVER_ACTION_6 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createServerReference"])("00876ec9f7d4f3ff0b6f0797ae34840529f44eae6e", __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["callServer"], void 0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["findSourceMapURL"], "getRentTrackerBaseline");
+;
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
 "[project]/src/components/RentVsRentvestTool.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
@@ -11,9 +43,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$rankTowns$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/rankTowns.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$investmentMath$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/investmentMath.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$data$3a$9ff648__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$text$2f$javascript$3e$__ = __turbopack_context__.i("[project]/src/app/dashboard/data:9ff648 [app-client] (ecmascript) <text/javascript>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$data$3a$4aa6a0__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$text$2f$javascript$3e$__ = __turbopack_context__.i("[project]/src/app/dashboard/data:4aa6a0 [app-client] (ecmascript) <text/javascript>");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -24,9 +59,21 @@ function money(value) {
 }
 const DEPOSIT_PCT = 20;
 const TERM_YEARS = 30;
-function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
+function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3, isProSubscriber }) {
     _s();
     const [suburbId, setSuburbId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(sydneySuburbs[0]?.id ?? "");
+    const [baseline, setBaseline] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [saving, setSaving] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "RentVsRentvestTool.useEffect": ()=>{
+            if (!isProSubscriber) return;
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$data$3a$9ff648__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$text$2f$javascript$3e$__["getRentTrackerBaseline"])().then(setBaseline).catch({
+                "RentVsRentvestTool.useEffect": ()=>{}
+            }["RentVsRentvestTool.useEffect"]);
+        }
+    }["RentVsRentvestTool.useEffect"], [
+        isProSubscriber
+    ]);
     const suburb = sydneySuburbs.find((t)=>t.id === suburbId) ?? null;
     const affordablePrice = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "RentVsRentvestTool.useMemo[affordablePrice]": ()=>{
@@ -69,7 +116,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                 children: "Where do you currently rent?"
             }, void 0, false, {
                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                lineNumber: 68,
+                lineNumber: 79,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -86,12 +133,12 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                         ]
                     }, t.id, true, {
                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                        lineNumber: 78,
+                        lineNumber: 89,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                lineNumber: 71,
+                lineNumber: 82,
                 columnNumber: 7
             }, this),
             suburb && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -107,41 +154,41 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                         children: "Where"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 88,
+                                        lineNumber: 99,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Median price"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 89,
+                                        lineNumber: 100,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Weekly rent / repayment"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 90,
+                                        lineNumber: 101,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Stamp duty"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 91,
+                                        lineNumber: 102,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Net weekly cash flow"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 92,
+                                        lineNumber: 103,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                lineNumber: 87,
+                                lineNumber: 98,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -158,13 +205,13 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                                 children: "Sydney Metro — renting"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                                lineNumber: 98,
+                                                lineNumber: 109,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 96,
+                                        lineNumber: 107,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -172,7 +219,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                         children: money(suburb.medianPrice.value)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 102,
+                                        lineNumber: 113,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -180,7 +227,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                         children: money(suburb.medianRent.value)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 103,
+                                        lineNumber: 114,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -188,7 +235,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                         children: "—"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 104,
+                                        lineNumber: 115,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -196,13 +243,13 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                         children: "—"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 105,
+                                        lineNumber: 116,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                lineNumber: 95,
+                                lineNumber: 106,
                                 columnNumber: 13
                             }, this),
                             matches.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -210,7 +257,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                 children: affordablePrice === null ? "This suburb's weekly rent isn't available, so an equivalent purchase budget can't be estimated." : "No regional town in the current record matches this budget."
                             }, void 0, false, {
                                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                lineNumber: 109,
+                                lineNumber: 120,
                                 columnNumber: 15
                             }, this),
                             matches.map(({ town, rank })=>{
@@ -232,7 +279,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                                     children: String(rank).padStart(2, "0")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                                    lineNumber: 134,
+                                                    lineNumber: 145,
                                                     columnNumber: 21
                                                 }, this),
                                                 town.name,
@@ -241,7 +288,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                            lineNumber: 133,
+                                            lineNumber: 144,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -249,7 +296,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                             children: money(town.medianPrice.value)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                            lineNumber: 139,
+                                            lineNumber: 150,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -257,7 +304,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                             children: cashFlow ? money(cashFlow.weeklyRepayment) : "Not available"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                            lineNumber: 140,
+                                            lineNumber: 151,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -265,7 +312,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                             children: cashFlow ? money(cashFlow.stampDuty) : "Not available"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                            lineNumber: 143,
+                                            lineNumber: 154,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -273,20 +320,20 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                             children: cashFlow ? `${cashFlow.netWeeklyCashFlow >= 0 ? "+" : ""}${money(cashFlow.netWeeklyCashFlow)}` : "Not available"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                            lineNumber: 146,
+                                            lineNumber: 157,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, town.id, true, {
                                     fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 140,
                                     columnNumber: 17
                                 }, this);
                             })
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                        lineNumber: 86,
+                        lineNumber: 97,
                         columnNumber: 11
                     }, this),
                     affordablePrice !== null && affordablePrice > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -304,13 +351,13 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                         children: money(affordablePrice)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                        lineNumber: 164,
+                                        lineNumber: 175,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                lineNumber: 162,
+                                lineNumber: 173,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -319,19 +366,74 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                                 children: "See the full ranked shortlist →"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                                lineNumber: 166,
+                                lineNumber: 177,
                                 columnNumber: 15
+                            }, this),
+                            isProSubscriber && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                type: "button",
+                                disabled: saving,
+                                onClick: ()=>{
+                                    setSaving(true);
+                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$data$3a$4aa6a0__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$text$2f$javascript$3e$__["saveRentTrackerBaseline"])({
+                                        suburbId: suburb.id,
+                                        suburbName: suburb.name,
+                                        asOf: new Date().toLocaleDateString("en-AU", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric"
+                                        }),
+                                        affordablePrice,
+                                        matchedTownIds: matches.map((m)=>m.town.id)
+                                    }).then(setBaseline).finally(()=>setSaving(false));
+                                },
+                                className: "rounded-sm border border-deep-forest px-4 py-2 text-sm font-medium text-deep-forest transition hover:bg-deep-forest/10 disabled:opacity-50",
+                                children: saving ? "Saving…" : "Track this (Cadacre Pro)"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/RentVsRentvestTool.tsx",
+                                lineNumber: 184,
+                                columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                        lineNumber: 161,
+                        lineNumber: 172,
+                        columnNumber: 13
+                    }, this),
+                    isProSubscriber && baseline && baseline.suburbId === suburb.id && affordablePrice !== null && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mt-4 rounded-sm border border-survey-brass/40 bg-survey-brass/5 p-4 text-sm text-charcoal/75",
+                        children: [
+                            "Since you tracked ",
+                            baseline.suburbName,
+                            " on ",
+                            baseline.asOf,
+                            ", the equivalent budget moved from ",
+                            money(baseline.affordablePrice),
+                            " to ",
+                            money(affordablePrice),
+                            matches.length !== baseline.matchedTownIds.length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                children: [
+                                    ", newly matching ",
+                                    Math.max(matches.length - baseline.matchedTownIds.length, 0),
+                                    " ",
+                                    "more regional town",
+                                    Math.abs(matches.length - baseline.matchedTownIds.length) === 1 ? "" : "s"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/RentVsRentvestTool.tsx",
+                                lineNumber: 216,
+                                columnNumber: 17
+                            }, this),
+                            "."
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/RentVsRentvestTool.tsx",
+                        lineNumber: 212,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                lineNumber: 85,
+                lineNumber: 96,
                 columnNumber: 9
             }, this),
             suburbCashFlow === null && suburb && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -342,7 +444,7 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                lineNumber: 178,
+                lineNumber: 228,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -355,17 +457,17 @@ function RentVsRentvestTool({ sydneySuburbs, regionalTowns, resultCount = 3 }) {
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-                lineNumber: 185,
+                lineNumber: 235,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/RentVsRentvestTool.tsx",
-        lineNumber: 67,
+        lineNumber: 78,
         columnNumber: 5
     }, this);
 }
-_s(RentVsRentvestTool, "GrLYkL0fXTiZP5zq3U1I5aAtwbc=");
+_s(RentVsRentvestTool, "/xBHfTgv5SuLFzbIDB2Vq3noih0=");
 _c = RentVsRentvestTool;
 var _c;
 __turbopack_context__.k.register(_c, "RentVsRentvestTool");
@@ -1098,4 +1200,4 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 }),
 ]);
 
-//# sourceMappingURL=src_20czodj._.js.map
+//# sourceMappingURL=src_1i2l8sf._.js.map

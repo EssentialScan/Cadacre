@@ -137,6 +137,9 @@ const towns = [
                 schools: 16,
                 hospitals: 3,
                 supermarkets: 9,
+                gyms: 2,
+                parks: 7,
+                pharmacies: 4,
                 radiusKm: 5
             },
             source: "OpenStreetMap Overpass API — count within 5km of town centroid",
@@ -314,6 +317,9 @@ const towns = [
                 schools: 21,
                 hospitals: 3,
                 supermarkets: 6,
+                gyms: 4,
+                parks: 10,
+                pharmacies: 5,
                 radiusKm: 5
             },
             source: "OpenStreetMap Overpass API — count within 5km of town centroid",
