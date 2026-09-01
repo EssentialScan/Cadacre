@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { distanceKm } from "@/lib/geo";
 
 type OsmElement = {
   id: number;
@@ -15,12 +16,6 @@ function elementPoint(element: OsmElement) {
     : element.center
       ? { lat: element.center.lat, lng: element.center.lon }
       : null;
-}
-
-function distanceKm(first: { lat: number; lng: number }, second: { lat: number; lng: number }) {
-  const latDistance = (first.lat - second.lat) * 111;
-  const lngDistance = (first.lng - second.lng) * 111 * Math.cos((first.lat * Math.PI) / 180);
-  return Math.sqrt(latDistance ** 2 + lngDistance ** 2);
 }
 
 function validCoordinate(value: string | null) {

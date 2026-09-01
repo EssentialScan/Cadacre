@@ -1,0 +1,28 @@
+[
+  {
+    "externalId": "PAN-10108",
+    "lgaName": "CESSNOCK",
+    "councilName": "Cessnock City Council",
+    "address": "24 North Avenue, Cessnock NSW 2325",
+    "suburb": "Cessnock",
+    "postcode": "2325",
+    "description": "Demolition of existing buildings and erection of new retail premises including construction of ten (10) units",
+    "applicationType": "Demolition, Commercial development",
+    "status": "Approved",
+    "decisionDate": "2020-07-20",
+    "sourceUrl": "https://www.planningportal.nsw.gov.au/daex/determined/demolition-existing-buildings-erection-new-retail-premises-including-construction-ten-10"
+  },
+  {
+    "externalId": "DA10.2026.36.1",
+    "lgaName": "GREATER HUME SHIRE",
+    "councilName": "Greater Hume Shire Council",
+    "address": "20 Wagner Drive, Jindera NSW 2642",
+    "suburb": "Jindera",
+    "postcode": "2642",
+    "description": "Extension to existing shed, slab and associated plumbing works",
+    "applicationType": "Shed, Alterations or additions to an existing building or structure",
+    "status": "Determined",
+    "decisionDate": "2026-05-05",
+    "sourceUrl": "https://www.planningportal.nsw.gov.au/daex/determined/da102026361-extension-existing-shed-slab-and-associated-plumbing-works"
+  }
+]

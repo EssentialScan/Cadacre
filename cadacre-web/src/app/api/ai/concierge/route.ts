@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireSubscriberApi } from "@/lib/apiAuth";
 import { getAllTowns } from "@/data";
 import { matchesFilters, type TownMapFilters } from "@/lib/townFilters";
+import { callGroq } from "@/lib/groq";
 
 // AI concierge chat (AGENTS.md §5k, §4 rule 8) — a natural-language question
 // is translated by the model into a structured filter object, which is then
@@ -48,26 +49,6 @@ function sanitizeFilters(raw: unknown): ParsedFilters {
     filters.region = data.region;
   }
   return filters;
-}
-
-async function callGroq(apiKey: string, model: string, messages: { role: string; content: string }[], jsonMode: boolean) {
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model,
-      temperature: 0.1,
-      max_tokens: 500,
-      messages,
-      ...(jsonMode ? { response_format: { type: "json_object" } } : {}),
-    }),
-    cache: "no-store",
-  });
-  if (!response.ok) {
-    throw new Error(`Groq request failed (${response.status})`);
-  }
-  const result = (await response.json()) as { choices?: { message?: { content?: string } }[] };
-  return result.choices?.[0]?.message?.content ?? "";
 }
 
 export async function POST(request: Request) {

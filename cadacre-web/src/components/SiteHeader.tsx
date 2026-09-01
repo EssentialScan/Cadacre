@@ -70,6 +70,12 @@ export function SiteHeader() {
               Dashboard
             </Link>
             <Link
+              href="/council-watch"
+              className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"
+            >
+              Council Watch
+            </Link>
+            <Link
               href="/account"
               className="text-sm font-medium text-charcoal/80 transition hover:text-ink-navy"
             >
