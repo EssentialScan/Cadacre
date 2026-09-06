@@ -1,13 +1,34 @@
-import Image from "next/image";
-import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isSubscriber } from "@/lib/entitlements";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { ApiKeyManager } from "@/components/ApiKeyManager";
+import { UserButton } from "@clerk/nextjs";
+import { getDb } from "@/db/client";
+import { apiKeys } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { CheckCircle2, XCircle } from "lucide-react";
+import Link from "next/link";
+
+export const metadata = {
+  title: "Account | REITCompare",
+  description: "Manage your REITCompare subscription, alerts, and API keys.",
+};
+
+export const dynamic = "force-dynamic";
+
+const FEATURES = [
+  "REIT Portfolio Tracker with weighted metrics",
+  "Tax component tracking (tax-deferred, capital gains, foreign income)",
+  "Multi-condition alerts with webhook delivery",
+  "Full access to the REIT Data API",
+  "Saved screener views",
+];
 
 export default async function AccountPage() {
   const { userId } = await auth();
-  if (!userId) redirect("/");
+  if (!userId) redirect("/sign-in");
 
   const subscribed = await isSubscriber(userId);
   const client = await clerkClient();
@@ -18,91 +39,137 @@ export default async function AccountPage() {
     ? `${paymentLink}?client_reference_id=${encodeURIComponent(userId)}`
     : undefined;
 
+  // Load API keys for this user
+  const db = getDb();
+  const userApiKeys = db
+    ? await db.select({
+        id: apiKeys.id,
+        keyPrefix: apiKeys.keyPrefix,
+        tier: apiKeys.tier,
+        requestCount: apiKeys.requestCount,
+        lastUsedAt: apiKeys.lastUsedAt,
+        createdAt: apiKeys.createdAt,
+      }).from(apiKeys).where(eq(apiKeys.userId, userId))
+    : [];
+
   return (
-    <div className="min-h-screen bg-parchment">
-      <header className="sticky top-0 z-50 border-b border-faded-rule bg-parchment/95 backdrop-blur">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/content.png" alt="Cadacre" width={1254} height={1254} priority className="h-9 w-9 rounded-sm" />
-            <span className="hidden font-mono-figure text-[10px] uppercase tracking-[0.3em] text-charcoal/45 sm:inline">
-              Account
-            </span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm font-medium text-charcoal/70 hover:text-ink-navy">
-              Dashboard
-            </Link>
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1 bg-parchment/30 pt-12 pb-24">
+        <div className="mx-auto max-w-3xl px-6 sm:px-8">
+          <div className="mb-10 flex items-start justify-between">
+            <div>
+              <h1 className="font-display text-4xl font-bold tracking-tight text-ink-navy mb-2">Account</h1>
+              <p className="text-muted-foreground text-sm">{user.emailAddresses[0]?.emailAddress}</p>
+            </div>
             <UserButton />
           </div>
-        </div>
-      </header>
 
-      <main className="mx-auto max-w-2xl px-6 py-14 sm:px-8">
-        <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-          Account
-        </p>
-        <h1 className="mt-4 font-display text-3xl font-semibold text-ink-navy sm:text-4xl">
-          Your subscription
-        </h1>
+          {/* Subscription Card */}
+          <div className="rounded-xl border border-border bg-white shadow-premium p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-lg font-bold text-foreground">Subscription</h2>
+              <div className={`flex items-center gap-1.5 text-sm font-semibold ${subscribed ? "text-data-green" : "text-muted-foreground"}`}>
+                {subscribed ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+                {subscribed ? "Active" : "Free plan"}
+              </div>
+            </div>
 
-        <div className="mt-8 rounded-sm border border-faded-rule bg-white/50 p-6">
-          {subscribed ? (
-            <>
-              <p className="font-mono-figure text-xs uppercase tracking-widest text-deep-forest">
-                Active
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-charcoal/75">
-                Your subscription unlocks the full ranked shortlist and PDF report, custom
-                ranking weights, the multi-town scenario simulator, the portfolio tracker, CSV
-                export, the relocation-readiness pack, rank-drift and hazard alerts, the rent
-                tracker, and the negotiation-letter generator.
-              </p>
-              {hasStripeCustomerId ? (
-                <a
-                  href="/api/stripe/portal"
-                  className="mt-5 inline-block rounded-sm bg-ink-navy px-5 py-2.5 text-sm font-medium text-parchment transition hover:bg-ink-navy/90"
-                >
-                  Manage subscription
-                </a>
-              ) : (
-                <p className="mt-5 text-sm text-charcoal/50">
-                  Your access comes from an earlier one-time purchase, not a Stripe subscription,
-                  so there&apos;s no billing subscription to manage here.
+            {subscribed ? (
+              <>
+                <ul className="space-y-2 mb-5">
+                  {FEATURES.map(f => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-foreground">
+                      <CheckCircle2 className="h-4 w-4 text-data-green shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                {hasStripeCustomerId ? (
+                  <a
+                    href="/api/stripe/portal"
+                    className="inline-flex items-center px-5 py-2.5 border border-border rounded-lg text-sm font-medium hover:bg-muted transition-colors"
+                  >
+                    Manage billing
+                  </a>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Your access was granted directly — no billing subscription to manage.
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                  Upgrade to unlock the REIT Portfolio Tracker, advanced alerts, and full API access.
                 </p>
-              )}
-            </>
-          ) : (
-            <>
-              <p className="font-mono-figure text-xs uppercase tracking-widest text-charcoal/50">
-                Not subscribed
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-charcoal/75">
-                One monthly subscription unlocks everything beyond the free dashboard map, the
-                top-3 teaser ledger, and the single-suburb rent comparison.
-              </p>
-              {subscribeUrl ? (
-                <a
-                  href={subscribeUrl}
-                  className="mt-5 inline-block rounded-sm bg-ink-navy px-5 py-2.5 text-sm font-medium text-parchment transition hover:bg-ink-navy/90"
-                >
-                  Subscribe to Cadacre
-                </a>
-              ) : (
-                <p className="mt-5 text-sm text-charcoal/50">
-                  Subscriptions aren&apos;t configured yet.
-                </p>
-              )}
-            </>
-          )}
-        </div>
+                <ul className="space-y-2 mb-5">
+                  {FEATURES.map(f => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="h-4 w-4 rounded-full border border-border shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-baseline gap-3 mb-5">
+                  <span className="font-display text-3xl font-bold text-foreground">$12</span>
+                  <span className="text-muted-foreground text-sm">/ month AUD</span>
+                </div>
+                {subscribeUrl ? (
+                  <a
+                    href={subscribeUrl}
+                    className="inline-flex items-center px-6 py-3 bg-brand-blue text-white font-semibold rounded-lg hover:bg-brand-blue/90 transition-colors"
+                  >
+                    Subscribe to REITCompare
+                  </a>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Subscriptions not yet configured.</p>
+                )}
+              </>
+            )}
+          </div>
 
-        <p className="mt-10 text-xs leading-relaxed text-charcoal/45">
-          General information based on public data, not personalised financial or investment
-          advice. See our{" "}
-          <Link href="/terms" className="underline hover:text-ink-navy">Terms</Link> for full
-          detail.
-        </p>
+          {/* API Keys Card */}
+          <div className="rounded-xl border border-border bg-white shadow-premium p-6 mb-8">
+            <div className="mb-4">
+              <h2 className="font-display text-lg font-bold text-foreground mb-1">Data API Keys</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Use these keys to access the{" "}
+                <Link href="/api/v1/reits" className="underline hover:text-foreground">REITCompare REST API</Link>.
+                Free tier includes 100 requests. Keys are hashed — store them securely after generation.
+              </p>
+            </div>
+            <ApiKeyManager initialKeys={userApiKeys as any} />
+          </div>
+
+          {/* Quick links */}
+          <div className="rounded-xl border border-border bg-white shadow-premium p-6">
+            <h2 className="font-display text-lg font-bold text-foreground mb-4">Quick links</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { href: "/portfolio", label: "Portfolio Tracker" },
+                { href: "/comparison", label: "REIT Screener" },
+                { href: "/explore", label: "Asset Map" },
+                { href: "/terms", label: "Terms of Service" },
+              ].map(l => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="flex items-center px-4 py-3 border border-border rounded-lg text-sm font-medium hover:bg-muted transition-colors"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-8 text-xs text-muted-foreground leading-relaxed">
+            General information only — not personalised financial or investment advice.
+            See our <Link href="/terms" className="underline hover:text-foreground">Terms</Link> for full detail.
+          </p>
+        </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

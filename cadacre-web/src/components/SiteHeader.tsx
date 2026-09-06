@@ -56,10 +56,16 @@ export function SiteHeader() {
           <Show when="signed-in">
             <div className="hidden items-center gap-5 whitespace-nowrap lg:flex xl:gap-6">
               <Link
-                href="/screener"
+                href="/portfolio"
                 className="text-sm font-medium text-muted-foreground transition hover:text-primary"
               >
-                Screener
+                Portfolio
+              </Link>
+              <Link
+                href="/alerts"
+                className="text-sm font-medium text-muted-foreground transition hover:text-primary"
+              >
+                Alerts
               </Link>
               <Link
                 href="/dashboard"

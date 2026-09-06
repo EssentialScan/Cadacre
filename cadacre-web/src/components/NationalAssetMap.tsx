@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
-import "mapbox-gl/dist/mapbox-gl.css";
+import maplibregl from "maplibre-gl";
+import Map, { Marker, Popup, NavigationControl } from "@vis.gl/react-maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { MapPin } from "lucide-react";
 export interface AssetMapItem {
   id: string;
@@ -70,29 +71,29 @@ export function NationalAssetMap({ assets, initialViewState }: NationalAssetMapP
     zoom: 10,
   };
 
-  const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+  const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY;
 
-  if (!MAPBOX_TOKEN) {
+  if (!MAPTILER_KEY) {
     return (
       <div className="w-full h-full bg-muted/20 flex flex-col items-center justify-center p-6 text-center border border-dashed border-border/50 rounded-xl">
         <MapPin className="h-10 w-10 text-muted-foreground/40 mb-4" />
-        <h3 className="text-lg font-semibold text-foreground tracking-tight mb-2">Mapbox Token Required</h3>
+        <h3 className="text-lg font-semibold text-foreground tracking-tight mb-2">MapTiler Key Required</h3>
         <p className="text-sm text-muted-foreground max-w-sm">
-          Please add <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">NEXT_PUBLIC_MAPBOX_TOKEN</code> to your .env.local file to render the interactive map.
+          Please add <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">NEXT_PUBLIC_MAPTILER_KEY</code> to your .env.local file to render the interactive map. You can get a free one from maptiler.com.
         </p>
       </div>
     );
   }
 
   return (
-    <Map
-      initialViewState={initialViewState || defaultViewState}
-      mapStyle="mapbox://styles/mapbox/light-v11"
-      mapboxAccessToken={MAPBOX_TOKEN}
-      style={{ width: "100%", height: "100%", borderRadius: "inherit" }}
-    >
-      <NavigationControl position="top-right" />
-      {pins}
+    <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, borderRadius: "inherit" }}>
+      <Map
+        initialViewState={initialViewState || defaultViewState}
+        mapStyle={`https://api.maptiler.com/maps/streets-v4/style.json?key=${MAPTILER_KEY}`}
+        style={{ width: "100%", height: "100%", borderRadius: "inherit" }}
+      >
+        <NavigationControl position="top-right" />
+        {pins}
 
       {popupInfo && (
         <Popup
@@ -129,5 +130,6 @@ export function NationalAssetMap({ assets, initialViewState }: NationalAssetMapP
         </Popup>
       )}
     </Map>
+    </div>
   );
 }

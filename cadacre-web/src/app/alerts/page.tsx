@@ -3,18 +3,18 @@ import { redirect } from "next/navigation";
 import { isSubscriber } from "@/lib/entitlements";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { ReitPortfolioTracker } from "@/components/ReitPortfolioTracker";
+import { AlertsManager } from "@/components/AlertsManager";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "REIT Portfolio Tracker | REITCompare",
-  description: "Track your A-REIT holdings. Cost basis, yield-on-cost, NTA-weighted metrics, and distribution calendar.",
+  title: "Alerts | REITCompare",
+  description: "Set metric threshold alerts for Australian REITs. Get notified when NTA discount, yield, or gearing crosses your defined thresholds.",
 };
 
 export const dynamic = "force-dynamic";
 
-export default async function PortfolioPage() {
+export default async function AlertsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
@@ -24,7 +24,7 @@ export default async function PortfolioPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="flex-1 bg-parchment/30 pt-12 pb-24">
-        <div className="mx-auto max-w-6xl px-6 sm:px-8">
+        <div className="mx-auto max-w-3xl px-6 sm:px-8">
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-4">
               <span className="inline-flex items-center rounded-full border border-border bg-white px-2.5 py-0.5 text-xs font-semibold text-brand-blue shadow-sm">
@@ -32,16 +32,16 @@ export default async function PortfolioPage() {
               </span>
             </div>
             <h1 className="font-display text-4xl font-bold tracking-tight text-ink-navy mb-3">
-              REIT Portfolio Tracker
+              Alerts
             </h1>
             <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
-              Track your A-REIT holdings. View your cost basis, yield-on-cost, and NTA-weighted portfolio
-              metrics in one place — no ratings, no recommendations, just your data.
+              Define metric thresholds. Get notified when NTA discount, yield, gearing, or WALE crosses
+              a value you set — via email or webhook. Alerts state facts only, no buy/sell signals.
             </p>
           </div>
 
           {subscribed ? (
-            <ReitPortfolioTracker />
+            <AlertsManager />
           ) : (
             <div className="max-w-lg">
               <div className="rounded-xl border border-border bg-white shadow-premium p-8 text-center">
@@ -50,8 +50,7 @@ export default async function PortfolioPage() {
                 </div>
                 <h2 className="font-display text-xl font-bold text-foreground mb-2">Premium Feature</h2>
                 <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                  The REIT Portfolio Tracker is available to REITCompare subscribers. Get access to
-                  portfolio tracking, advanced alerts, and the data API.
+                  Advanced alerts with webhook delivery are available to REITCompare subscribers.
                 </p>
                 <Link
                   href="/account"
