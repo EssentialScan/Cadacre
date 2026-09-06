@@ -11,7 +11,7 @@ export default async function SignUpPage({
   const params = searchParams ? await searchParams : undefined;
 
   if (userId) {
-    redirect(params?.redirect_url || "/shortlist");
+    redirect(params?.redirect_url || "/dashboard");
   }
 
   return (

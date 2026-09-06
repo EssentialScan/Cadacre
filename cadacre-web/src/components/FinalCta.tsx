@@ -1,49 +1,44 @@
 import Link from "next/link";
-import { FadeUp } from "@/components/motion/FadeIn";
+import { SlideIn } from "@/components/motion/ScrollAnimations";
 import { Magnetic } from "@/components/motion/Magnetic";
-import { ParallaxImage } from "@/components/motion/ParallaxImage";
+import { Button } from "@/components/ui/button";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden border-b border-faded-rule bg-white/40 text-ink-navy">
-      <ParallaxImage
-        src="/pexels-volkerthimm-27307400.jpg"
-        alt="A regional residential street at dusk"
-        className="absolute inset-0"
-        sizes="100vw"
+    <section className="relative overflow-hidden border-t border-border/50 bg-background">
+      {/* Grid texture */}
+      <div className="absolute inset-0 pointer-events-none opacity-20" aria-hidden
+        style={{
+          backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--border)) 1px, transparent 0)",
+          backgroundSize: "40px 40px"
+        }}
       />
-      <div className="absolute inset-0 bg-parchment/90" />
-
-      <div className="relative z-10 mx-auto max-w-3xl px-6 py-28 text-center sm:px-8">
-        <FadeUp>
-          <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-            07 — Get started
-          </p>
-          <h2 className="mt-4 font-display text-3xl font-semibold text-ink-navy sm:text-5xl">
-            You already have enough for a deposit.
-            <br />
-            Just not here.
+      
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-40 text-center sm:px-8">
+        <SlideIn>
+          <div className="mx-auto w-fit inline-flex items-center gap-2 rounded-full border border-border bg-muted/30 px-4 py-1.5 text-xs font-semibold text-brand-blue mb-8">
+            07 — Start
+          </div>
+          <h2 className="font-display font-bold leading-[1.02] text-foreground"
+            style={{ fontSize: "clamp(3rem, 7vw, 6.5rem)" }}>
+            Compare A-REITs<br />
+            with actual<br />
+            <span className="text-brand-blue">data.</span>
           </h2>
-          <p className="mt-5 text-sm text-charcoal/70 sm:text-base">
-            Run the numbers against the record — free, in under two minutes,
-            no card required.
+          <p className="mt-8 text-base text-muted-foreground max-w-md mx-auto">
+            View their assets nationally. Free to start, no credit card required.
           </p>
-        </FadeUp>
-        <FadeUp delay={0.15} className="mt-10">
+        </SlideIn>
+
+        <SlideIn delay={0.2} className="mt-12 flex justify-center">
           <Magnetic>
-            <Link
-              href="/sign-up?redirect_url=/shortlist"
-              className="group relative inline-flex overflow-hidden rounded-sm bg-ink-navy px-7 py-3.5 text-sm font-semibold text-parchment"
-            >
-              <span className="relative z-10">Run your free shortlist</span>
-              <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/25 transition-transform duration-300 ease-out group-hover:translate-x-0" />
+            <Link href="/sign-up?redirect_url=/dashboard">
+              <Button size="lg" className="rounded-full px-10 py-8 text-base shadow-md transition-all">
+                Start comparing — free
+              </Button>
             </Link>
           </Magnetic>
-          <p className="mt-4 text-xs text-charcoal/50">
-            Free to browse and run the teaser. Subscribe only if you want the full ranked list
-            and every other tool.
-          </p>
-        </FadeUp>
+        </SlideIn>
       </div>
     </section>
   );

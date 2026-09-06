@@ -14,9 +14,11 @@ export default async function SignInPage({
     redirect(params?.redirect_url || "/dashboard");
   }
 
+  const forceRedirectUrl = params?.redirect_url || "/dashboard";
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-parchment">
-      <SignIn {...(params?.redirect_url ? { forceRedirectUrl: params.redirect_url } : {})} />
+      <SignIn forceRedirectUrl={forceRedirectUrl} />
     </div>
   );
 }

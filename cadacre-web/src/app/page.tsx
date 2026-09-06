@@ -1,41 +1,27 @@
 import { SiteHeader } from "@/components/SiteHeader";
-import { Hero } from "@/components/Hero";
-import { ProblemSection } from "@/components/ProblemSection";
-import { RentVsRentvestTeaser } from "@/components/RentVsRentvestTeaser";
-import { HowItWorks } from "@/components/HowItWorks";
-import { DataSources } from "@/components/DataSources";
-import { RecordBanner } from "@/components/RecordBanner";
-import { SampleLedger } from "@/components/SampleLedger";
-import { Pricing } from "@/components/Pricing";
-import { Faq } from "@/components/Faq";
-import { FinalCta } from "@/components/FinalCta";
 import { SiteFooter } from "@/components/SiteFooter";
-import { PaperGrain } from "@/components/PaperGrain";
-import { getAllTowns } from "@/data";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { ProblemSection } from "@/components/landing/ProblemSection";
+import { ProductShowcase } from "@/components/landing/ProductShowcase";
+import { MapShowcaseSection } from "@/components/landing/MapShowcaseSection";
+import { TransparencySection } from "@/components/landing/TransparencySection";
+import { PremiumApiSection } from "@/components/landing/PremiumApiSection";
+import { FaqFinalSection } from "@/components/landing/FaqFinalSection";
 
 export default function Home() {
-  const towns = getAllTowns();
-  const heroTowns = towns.filter((t) => (t.region ?? "Regional NSW") === "Regional NSW");
-
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <PaperGrain />
-      <div className="relative z-10 flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
         <SiteHeader />
         <main className="flex-1">
-          <Hero towns={heroTowns} />
+          <HeroSection />
           <ProblemSection />
-          <RentVsRentvestTeaser />
-          <HowItWorks />
-          <DataSources />
-          <RecordBanner />
-          <SampleLedger />
-          <Pricing />
-          <Faq />
-          <FinalCta />
+          <ProductShowcase />
+          <MapShowcaseSection />
+          <TransparencySection />
+          <PremiumApiSection />
+          <FaqFinalSection />
         </main>
         <SiteFooter />
-      </div>
     </div>
   );
 }

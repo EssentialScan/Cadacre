@@ -1,41 +1,27 @@
 import type { Metadata } from "next";
-import { Source_Serif_4, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
-
-const publicSans = Public_Sans({
-  variable: "--font-public-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "Cadacre — A plain record of where to rentvest",
-  description:
-    "A data-backed shortlist of regional Australian towns to rentvest in, drawn from public records — no sponsored placements, no sales pressure.",
+  title: "REITCompare — The independent data layer for Australian property-backed investing",
+  description: "A free comparison and discovery engine for A-REITs, built for retail investors, advisers, and fintechs. No AFSL, no advice, just data.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${sourceSerif.variable} ${publicSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={cn("h-full antialiased font-sans tabular-nums", inter.variable)}
     >
       <body
-        className="min-h-full flex flex-col bg-parchment text-charcoal"
+        className="min-h-full flex flex-col bg-background text-foreground"
         suppressHydrationWarning
       >
         <ClerkProvider>

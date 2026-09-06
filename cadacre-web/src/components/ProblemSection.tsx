@@ -1,66 +1,46 @@
-import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
-import { RevealImage } from "@/components/motion/RevealImage";
+import { SlideIn, ScaleReveal } from "@/components/motion/ScrollAnimations";
 
 const points = [
   {
-    title: "Sydney priced you out, quietly",
-    body: "Median house prices climbed faster than most first-home savings ever could. By the time the gap looks closeable, it's moved again. Waiting isn't a strategy — it's a loss taken in slow motion.",
+    n: "01",
+    title: "Rezonings happen without you.",
+    body: "DAs are public record. Nobody's watching them for you.",
   },
   {
-    title: "‘Somewhere regional’ isn’t a plan",
-    body: "Everyone says rentvest somewhere regional. Almost nobody says where, or why. A spreadsheet from a friend, a three-year-old blog post, a buyer's agent paid to push their own listing — none of that is research.",
-  },
-  {
-    title: "The numbers were never hidden",
-    body: "Median price, gross rental yield, vacancy rate — every figure Cadacre ranks on is public record, sourced and dated. We didn't discover anything. We just stopped letting it sit in twenty different PDFs.",
+    n: "02",
+    title: "Sydney already priced you out.",
+    body: "Rentvesting is the workaround. Choosing where is the hard part.",
   },
 ];
 
 export function ProblemSection() {
   return (
-    <section className="border-b border-faded-rule bg-white/40">
+    <section className="border-t border-faded-rule grad-problem">
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-          <div className="md:col-span-7">
-            <FadeUp>
-              <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
-                01 — Why the old plan stopped working
-              </p>
-              <h2 className="mt-4 max-w-md font-display text-3xl font-semibold leading-tight text-ink-navy sm:text-4xl">
-                The gap isn&apos;t closing. It&apos;s the plan that has to
-                change.
-              </h2>
-            </FadeUp>
+        <div className="grid grid-cols-1 gap-16 md:grid-cols-12 md:items-start">
 
-            <Stagger className="mt-12 divide-y divide-faded-rule border-t border-faded-rule">
-              {points.map((point, i) => (
-                <StaggerItem
-                  key={point.title}
-                  className="grid grid-cols-[auto_1fr] gap-6 py-8"
-                >
-                  <span className="font-display text-2xl italic text-charcoal/25">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+          <SlideIn direction="left" className="md:col-span-4 md:sticky md:top-24">
+            <p className="font-mono-figure text-[10px] font-bold uppercase tracking-[0.3em] text-survey-brass">
+              01 — The problem
+            </p>
+            <h2 className="mt-5 font-display font-bold leading-[1.05] text-ink-navy"
+              style={{ fontSize: "clamp(2.2rem, 4vw, 3.5rem)" }}>
+              You find out too late.
+            </h2>
+          </SlideIn>
+
+          <div className="md:col-span-7 md:col-start-6 divide-y divide-faded-rule border-t border-faded-rule">
+            {points.map((point, i) => (
+              <ScaleReveal key={point.n} delay={i * 0.1}>
+                <div className="grid grid-cols-[3rem_1fr] gap-4 py-10">
+                  <span className="font-mono-figure text-xs text-survey-brass/50 pt-1">{point.n}</span>
                   <div>
-                    <h3 className="font-display text-lg font-semibold text-ink-navy">
-                      {point.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-charcoal/75">
-                      {point.body}
-                    </p>
+                    <h3 className="font-display text-xl font-bold text-ink-navy">{point.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-charcoal/55">{point.body}</p>
                   </div>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-
-          <div className="md:col-span-5">
-            <RevealImage
-              src="/pexels-volkerthimm-27307400.jpg"
-              alt="A quiet residential courtyard in a regional Australian town"
-              className="sticky top-24 aspect-3/4 rounded-sm border border-faded-rule"
-              sizes="(min-width: 768px) 33vw, 90vw"
-            />
+                </div>
+              </ScaleReveal>
+            ))}
           </div>
         </div>
       </div>

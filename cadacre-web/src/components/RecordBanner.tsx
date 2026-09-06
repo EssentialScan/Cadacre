@@ -1,47 +1,48 @@
-import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
+import { SlideIn, ScaleReveal } from "@/components/motion/ScrollAnimations";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 
 const stats = [
-  { value: "NSW", label: "Regional towns tracked, updated as sources refresh" },
-  { value: "Monthly", label: "One subscription to unlock the full ranked record" },
-  { value: "0", label: "Sponsored placements in the rankings" },
+  { value: "NSW", label: "Tracked" },
+  { value: "Monthly", label: "Subscription" },
+  { value: "0", label: "Paid placements" },
 ];
 
 export function RecordBanner() {
   return (
-    <section className="relative overflow-hidden border-b border-faded-rule bg-parchment text-ink-navy">
+    <section className="relative overflow-hidden border-t border-faded-rule grad-record">
       <ParallaxImage
         src="/pexels-gaion-31344019.jpg"
-        alt="Aerial view of a regional Australian town centre"
+        alt="Aerial view of a regional Australian town"
         className="absolute inset-0"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-parchment/88" />
-      <div className="absolute inset-0 bg-linear-to-t from-parchment via-parchment/70 to-parchment/50" />
+      <div className="absolute inset-0 bg-parchment/91" />
       <div className="terminal-grid absolute inset-0" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-24 sm:px-8">
-        <FadeUp className="max-w-xl">
-          <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
+        <SlideIn>
+          <p className="font-mono-figure text-[10px] font-bold uppercase tracking-[0.3em] text-survey-brass">
             04 — The record
           </p>
-          <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink-navy sm:text-4xl">
-            Not a hot take. A record — sourced, dated, ranked.
+          <h2 className="mt-5 font-display font-bold leading-[1.05] text-ink-navy"
+            style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}>
+            Not a hot take.<br />A record.
           </h2>
-        </FadeUp>
+        </SlideIn>
 
-        <Stagger className="mt-16 grid grid-cols-1 gap-10 border-t border-faded-rule pt-10 sm:grid-cols-3">
-          {stats.map((stat) => (
-            <StaggerItem key={stat.label}>
-              <span className="font-display text-4xl font-semibold text-ink-navy">
-                {stat.value}
-              </span>
-              <p className="mt-2 max-w-[16rem] font-mono-figure text-xs uppercase tracking-wide text-charcoal/60">
-                {stat.label}
-              </p>
-            </StaggerItem>
+        <div className="mt-16 grid grid-cols-3 divide-x divide-faded-rule border-t border-faded-rule">
+          {stats.map((s, i) => (
+            <ScaleReveal key={s.label} delay={i * 0.1}>
+              <div className="pt-8 pl-8 first:pl-0">
+                <span className="font-display text-4xl font-bold text-survey-brass sm:text-5xl"
+                  style={{ textShadow: "0 0 28px rgba(0,85,255,0.18)" }}>
+                  {s.value}
+                </span>
+                <p className="mt-2 font-mono-figure text-[10px] uppercase tracking-widest text-charcoal/45">{s.label}</p>
+              </div>
+            </ScaleReveal>
           ))}
-        </Stagger>
+        </div>
       </div>
     </section>
   );

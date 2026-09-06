@@ -11,7 +11,7 @@ export function RentVsRentvestTeaser() {
   if (sydneySuburbs.length === 0) return null;
 
   return (
-    <section className="border-b border-faded-rule bg-parchment">
+    <section className="border-t border-b border-faded-rule grad-council">
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
         <FadeUp className="max-w-2xl">
           <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">

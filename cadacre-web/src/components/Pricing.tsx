@@ -1,74 +1,71 @@
 import Link from "next/link";
-import { FadeUp, Stagger, StaggerItem } from "@/components/motion/FadeIn";
-import { DrawRule } from "@/components/motion/DrawRule";
+import { SlideIn, ScaleReveal } from "@/components/motion/ScrollAnimations";
 import { Magnetic } from "@/components/motion/Magnetic";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 
 const included = [
-  "Full ranked list of every qualifying regional town, plus a downloadable PDF",
-  "Custom ranking weights, multi-town scenario simulator, and CSV export",
-  "Portfolio tracker, rank-drift and hazard alerts, and the relocation-readiness pack",
-  "Rent tracker and negotiation-letter generator for renters",
-  "One month of free access to the Rentvestor Index newsletter",
+  "Filterable comparison table across all ASX-listed A-REITs",
+  "Interactive national asset map (Sydney built deepest)",
+  "Email alerts on NTA discount thresholds and distributions",
+  "Individual REIT detail pages with peer modules",
+  "No ratings, no recommendations, just data",
 ];
 
 export function Pricing() {
   return (
-    <section id="pricing" className="border-b border-faded-rule bg-white/40">
+    <section id="pricing" className="border-t border-border/50 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:items-start">
-          <FadeUp className="md:col-span-5">
-            <p className="font-mono-figure text-xs uppercase tracking-[0.25em] text-survey-brass">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:items-start">
+
+          <SlideIn direction="left" className="lg:col-span-5 lg:sticky lg:top-24">
+            <p className="font-mono-figure text-[10px] font-bold uppercase tracking-[0.3em] text-brand-blue">
               05 — Access
             </p>
-            <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink-navy">
-              One subscription. Renters and investors, both covered.
+            <h2 className="mt-5 font-display font-bold leading-[1.05] text-foreground"
+              style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
+              Tool-first data.<br />
+              Free to compare.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-charcoal/70">
-              A wrong regional pick — or an unfair rent increase you didn&apos;t catch — can cost
-              a lot more than this. Browse the free dashboard map and run the free shortlist
-              teaser first; subscribe when you&apos;re ready to act on it.
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground max-w-sm">
+              REITCompare is currently in early access with a generous free tier. Premium portfolio tools coming soon.
             </p>
-          </FadeUp>
+          </SlideIn>
 
-          <FadeUp delay={0.1} className="md:col-span-6 md:col-start-7">
-            <DrawRule />
-            <div className="flex items-baseline justify-between pt-8">
-              <span className="font-mono-figure text-xs uppercase tracking-[0.2em] text-charcoal/50">
-                Monthly subscription
-              </span>
-              <span className="font-display text-5xl font-semibold text-ink-navy">
-                Cadacre
-              </span>
-            </div>
-
-            <Stagger className="mt-8 divide-y divide-faded-rule border-t border-faded-rule">
-              {included.map((item) => (
-                <StaggerItem
-                  key={item}
-                  className="flex items-start gap-3 py-3 text-sm text-charcoal/80"
-                >
-                  <span className="mt-0.5 font-mono-figure text-deep-forest">
-                    ✓
-                  </span>
-                  <span>{item}</span>
-                </StaggerItem>
-              ))}
-            </Stagger>
-
-            <Magnetic strength={0.15} className="mt-10 block w-full">
-              <Link
-                href="/sign-up?redirect_url=/shortlist"
-                className="group relative inline-flex w-full items-center justify-center overflow-hidden rounded-sm bg-ink-navy px-6 py-3 text-sm font-semibold text-parchment"
-              >
-                <span className="relative z-10">Run the free shortlist first</span>
-                <span className="absolute inset-0 z-0 -translate-x-full bg-survey-brass/30 transition-transform duration-300 ease-out group-hover:translate-x-0" />
-              </Link>
-            </Magnetic>
-            <p className="mt-4 text-xs text-charcoal/50">
-              No card required to browse or run the free teaser — subscribe only when you want
-              the full ranked list and every other tool.
-            </p>
-          </FadeUp>
+          <ScaleReveal delay={0.15} className="lg:col-span-6 lg:col-start-7">
+            <Card className="bg-white shadow-premium border border-border transition-all hover:shadow-premium-hover rounded-xl">
+              <CardHeader className="pb-8">
+                <div className="flex items-baseline justify-between">
+                  <CardDescription className="font-mono-figure text-[10px] font-bold uppercase tracking-[0.2em] text-brand-blue">Free</CardDescription>
+                  <CardTitle className="font-display text-3xl font-bold text-foreground tracking-tight">REITCompare</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="border-t border-border/50 pt-8 pb-8">
+                <ul className="space-y-4">
+                  {included.map((item) => (
+                    <li key={item} className="flex items-start gap-4 text-sm text-muted-foreground font-medium">
+                      <span className="font-mono-figure font-bold text-data-green mt-0.5 shrink-0">
+                        ✓
+                      </span>
+                      <span className="leading-snug">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardFooter className="flex-col">
+                <Magnetic strength={0.15} className="block w-full">
+                  <Link href="/sign-up?redirect_url=/dashboard" className="w-full">
+                    <Button size="lg" className="w-full rounded-lg btn-premium">
+                      Start comparing — free
+                    </Button>
+                  </Link>
+                </Magnetic>
+                <p className="mt-4 text-center text-xs text-muted-foreground/50">
+                  B2B API and Premium Portfolio features launching in Phase 2.
+                </p>
+              </CardFooter>
+            </Card>
+          </ScaleReveal>
         </div>
       </div>
     </section>
