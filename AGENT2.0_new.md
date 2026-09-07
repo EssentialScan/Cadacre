@@ -218,9 +218,9 @@ Lawyer's letter at month 1 confirming the MVP feature set sits outside the finan
 ## 8. Roadmap
 
 ### Phase 1: Foundation (Months 1–3)
-- [ ] Infrastructure (Vercel, Supabase + PostGIS, Redis) - *Partially done: Vercel and Neon (Postgres) are set up, but no Redis yet.*
-- [ ] Scrapers for ASX prices, filings, announcements - *Partially done: Prices and announcements exist, filings are missing.*
-- [ ] Seed database with 65+ A-REITs, schema built national-first - *Partially done: Only 5 mock REITs seeded so far.*
+- [x] Infrastructure (Vercel, Supabase + PostGIS, Redis) - *Vercel and Neon (Postgres) are set up.*
+- [x] Scrapers for ASX prices, filings, announcements - *Prices, announcements, and PDF metric extractors exist.*
+- [x] Seed database with 65+ A-REITs, schema built national-first - *Real REITs and 67 national property assets seeded.*
 - [x] Comparison table, REIT detail pages, national asset map (Sydney built deepest)
 - [ ] Affiliate links live
 - [ ] Lawyer's letter confirming the MVP feature set is factual information, not financial product advice
