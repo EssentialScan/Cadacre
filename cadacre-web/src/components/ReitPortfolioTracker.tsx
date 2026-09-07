@@ -27,15 +27,23 @@ export function ReitPortfolioTracker() {
   const [isPending, startTransition] = useTransition();
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [newKey, setNewKey] = useState<string | null>(null);
+  const [taxData, setTaxData] = useState<any>(null);
+  const [loadingTax, setLoadingTax] = useState(true);
+  const [activeTab, setActiveTab] = useState<"holdings" | "tax">("holdings");
 
   const loadHoldings = async () => {
     setLoading(true);
+    setLoadingTax(true);
     try {
-      const res = await fetch("/api/portfolio");
-      if (res.ok) setHoldings(await res.json());
+      const [resHoldings, resTax] = await Promise.all([
+        fetch("/api/portfolio"),
+        fetch("/api/portfolio/tax")
+      ]);
+      if (resHoldings.ok) setHoldings(await resHoldings.json());
+      if (resTax.ok) setTaxData(await resTax.json());
     } finally {
       setLoading(false);
+      setLoadingTax(false);
     }
   };
 
@@ -134,8 +142,28 @@ export function ReitPortfolioTracker() {
         </Card>
       </div>
 
-      {/* Holdings Table */}
-      <Card className="bg-white border border-border shadow-premium">
+      {/* Tabs */}
+      <div className="flex items-center gap-4 border-b border-border mb-6">
+        <button
+          onClick={() => setActiveTab("holdings")}
+          className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
+            activeTab === "holdings" ? "border-brand-blue text-brand-blue" : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Holdings
+        </button>
+        <button
+          onClick={() => setActiveTab("tax")}
+          className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
+            activeTab === "tax" ? "border-brand-blue text-brand-blue" : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Distributions & Tax
+        </button>
+      </div>
+
+      {activeTab === "holdings" ? (
+        <Card className="bg-white border border-border shadow-premium">
         <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5 flex flex-row items-center justify-between">
           <CardTitle className="text-base font-semibold">Holdings</CardTitle>
           <div className="flex gap-2">
@@ -264,8 +292,87 @@ export function ReitPortfolioTracker() {
           )}
         </CardContent>
       </Card>
+      ) : (
+        <div className="space-y-6">
+          {loadingTax ? (
+            <div className="p-8 text-center text-muted-foreground text-sm border border-border rounded-xl bg-white shadow-premium">Loading tax data…</div>
+          ) : !taxData || taxData.holdings.length === 0 ? (
+            <div className="p-10 text-center border border-border rounded-xl bg-white shadow-premium">
+              <Calendar className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-sm font-medium text-foreground mb-1">No distributions yet</p>
+              <p className="text-sm text-muted-foreground">We haven't recorded any distributions for your holdings since their purchase dates.</p>
+            </div>
+          ) : (
+            <>
+              {/* Tax Summary Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <Card className="bg-white border border-border shadow-premium">
+                  <CardContent className="p-5">
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Total Earned</p>
+                    <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(taxData.summary.totalEarned)}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white border-brand-blue/20 bg-brand-blue/5 shadow-premium">
+                  <CardContent className="p-5">
+                    <p className="text-xs font-medium text-brand-blue mb-1">Tax Deferred (Advantage)</p>
+                    <p className="text-2xl font-display font-bold text-brand-blue tabular-nums">{fmt(taxData.summary.taxDeferredEarned)}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white border border-border shadow-premium">
+                  <CardContent className="p-5">
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Capital Gains</p>
+                    <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(taxData.summary.cgDiscountEarned)}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white border border-border shadow-premium">
+                  <CardContent className="p-5">
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Foreign Income</p>
+                    <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(taxData.summary.foreignIncomeEarned)}</p>
+                  </CardContent>
+                </Card>
+              </div>
 
-      <p className="text-xs text-muted-foreground leading-relaxed">
+              {/* Tax Table */}
+              <Card className="bg-white border border-border shadow-premium">
+                <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5">
+                  <CardTitle className="text-base font-semibold">Distribution Breakdown by Holding</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent border-b border-border/50">
+                        <TableHead>REIT</TableHead>
+                        <TableHead className="text-right">Units</TableHead>
+                        <TableHead className="text-right">Total Dist.</TableHead>
+                        <TableHead className="text-right">Tax Deferred</TableHead>
+                        <TableHead className="text-right">Capital Gains</TableHead>
+                        <TableHead className="text-right">Foreign Inc.</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {taxData.holdings.map((h: any) => (
+                        <TableRow key={h.id} className="hover:bg-muted/30 border-b border-border/30">
+                          <TableCell>
+                            <span className="font-display font-bold text-foreground">{h.ticker}</span>
+                            <div className="text-xs text-muted-foreground">{h.name}</div>
+                          </TableCell>
+                          <TableCell className="text-right font-mono-figure text-sm">{h.units.toLocaleString()}</TableCell>
+                          <TableCell className="text-right font-mono-figure text-sm font-semibold">{fmt(h.taxComponents.totalEarned)}</TableCell>
+                          <TableCell className="text-right font-mono-figure text-sm text-brand-blue font-medium">{fmt(h.taxComponents.taxDeferredEarned)}</TableCell>
+                          <TableCell className="text-right font-mono-figure text-sm">{fmt(h.taxComponents.cgDiscountEarned)}</TableCell>
+                          <TableCell className="text-right font-mono-figure text-sm">{fmt(h.taxComponents.foreignIncomeEarned)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </div>
+      )}
+
+      <p className="text-xs text-muted-foreground leading-relaxed mt-8">
         Portfolio metrics are based on the numbers you enter and current REIT data from our database.
         General information only — not personalised financial or investment advice.
         NTA, yield, and gearing figures reflect the latest available data, not real-time prices.

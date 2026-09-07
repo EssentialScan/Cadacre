@@ -4,6 +4,7 @@ import { getDb } from "@/db/client";
 import { apiKeys } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { createHash, randomBytes } from "crypto";
+import { isSubscriber } from "@/lib/entitlements";
 
 export const runtime = "nodejs";
 
@@ -38,6 +39,8 @@ export async function POST() {
   const db = getDb();
   if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
 
+  const subscribed = await isSubscriber(userId);
+
   // Generate a secure random key: "reit_" prefix + 32 random hex bytes
   const rawKey = "reit_" + randomBytes(24).toString("hex");
   const keyHash = createHash("sha256").update(rawKey).digest("hex");
@@ -47,7 +50,7 @@ export async function POST() {
     userId,
     keyHash,
     keyPrefix,
-    tier: "free",
+    tier: subscribed ? "paid" : "free",
     requestCount: 0,
   }).returning({
     id: apiKeys.id,

@@ -23,4 +23,10 @@ VALUES
 ('CQR', '112-122 Belmore Road', 'Randwick', 'NSW', ST_SetSRID(ST_MakePoint(151.240, -33.916), 4326), 'Convenience Retail', 65000000, 2014),
 ('CQR', '24-32 Lexington Drive', 'Bella Vista', 'NSW', ST_SetSRID(ST_MakePoint(150.957, -33.737), 4326), 'Convenience Retail', 55000000, 2016),
 ('CIP', '10 Williamson Road', 'Ingleburn', 'NSW', ST_SetSRID(ST_MakePoint(150.864, -34.004), 4326), 'Cold Storage Facility', 38000000, 2020),
-('CIP', '37-51 Scrivener Street', 'Warwick Farm', 'NSW', ST_SetSRID(ST_MakePoint(150.938, -33.921), 4326), 'Manufacturing Facility', 42000000, 2021);
+('CIP', '37-51 Scrivener Street', 'Warwick Farm', 'NSW', ST_SetSRID(ST_MakePoint(150.938, -33.921), 4326), 'Manufacturing Facility', 42000000, 2021),
+('GMG', 'Port Melbourne Industrial Estate', 'Port Melbourne', 'VIC', ST_SetSRID(ST_MakePoint(144.922, -37.828), 4326), 'Logistics Facility', 85000000, 2017),
+('SCG', 'Westfield Doncaster', 'Doncaster', 'VIC', ST_SetSRID(ST_MakePoint(145.123, -37.787), 4326), 'Shopping Centre', 1500000000, 2008),
+('DXS', '180 Lonsdale Street', 'Melbourne', 'VIC', ST_SetSRID(ST_MakePoint(144.966, -37.811), 4326), 'A-Grade Office', 450000000, 2015),
+('GMG', 'Brisbane Airport Industrial', 'Brisbane Airport', 'QLD', ST_SetSRID(ST_MakePoint(153.118, -27.383), 4326), 'Distribution Centre', 95000000, 2019),
+('SCG', 'Westfield Chermside', 'Chermside', 'QLD', ST_SetSRID(ST_MakePoint(153.032, -27.385), 4326), 'Shopping Centre', 1800000000, 2007),
+('DXS', '480 Queen Street', 'Brisbane City', 'QLD', ST_SetSRID(ST_MakePoint(153.031, -27.463), 4326), 'Premium Office Tower', 620000000, 2016);

@@ -33,6 +33,9 @@ export function SiteHeader() {
           <Link href="/explore" className="transition hover:text-primary">
             Asset Map
           </Link>
+          <Link href="/api-docs" className="transition hover:text-primary">
+            API Docs
+          </Link>
           <Link href="/glossary" className="transition hover:text-primary">
             Glossary
           </Link>

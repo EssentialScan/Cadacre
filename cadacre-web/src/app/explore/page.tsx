@@ -24,7 +24,7 @@ export default async function ExplorePage() {
           reitTicker: reits.ticker,
           address: reitAssets.address,
           suburb: reitAssets.suburb,
-          state: reitAssets.suburb, // Fallback since state isn't in Drizzle schema yet
+          state: reitAssets.state,
           lat: reitAssets.lat,
           lng: reitAssets.lng,
           propertyType: reitAssets.propertyType,
@@ -36,7 +36,6 @@ export default async function ExplorePage() {
       assets = dbAssets.map(a => ({
         ...a,
         reitTicker: a.reitTicker || "UNK",
-        state: "NSW", // Hardcode for now since it's not in schema
       }));
     } catch (e) {
       console.warn("Database error.", e);
@@ -64,7 +63,7 @@ export default async function ExplorePage() {
                 National Asset Discovery
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Showing {assets.length} geocoded assets in the Sydney basin
+                Showing {assets.length} geocoded assets nationally
               </p>
             </div>
           </div>

@@ -69,9 +69,9 @@ export function NationalAssetMap({ assets, initialViewState, isLockedSample = fa
   };
 
   const defaultViewState = {
-    longitude: 151.2093, // Sydney CBD
-    latitude: -33.8688,
-    zoom: 10,
+    longitude: 133.7751, // Central Australia
+    latitude: -25.2744,
+    zoom: 4,
   };
 
   const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY;
