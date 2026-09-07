@@ -1,4 +1,5 @@
-import yahooFinance from "yahoo-finance2";
+import YahooFinanceClass from "yahoo-finance2";
+const yahooFinance = new (YahooFinanceClass as any)();
 
 export interface ScrapedReitData {
   ticker: string;
