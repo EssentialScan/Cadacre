@@ -141,7 +141,8 @@ export async function scrapeOfficialAsxAnnouncements(ticker: string): Promise<{ 
   }
 }
 
-import pdf from "pdf-parse";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdf = require("pdf-parse");
 import Groq from "groq-sdk";
 
 export async function extractMetricsFromPdf(pdfUrl: string) {

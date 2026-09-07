@@ -30,6 +30,7 @@ interface NationalAssetMapProps {
 
 export function NationalAssetMap({ assets, initialViewState, isLockedSample = false }: NationalAssetMapProps) {
   const [popupInfo, setPopupInfo] = useState<AssetMapItem | null>(null);
+  console.log("NationalAssetMap rendered with assets:", assets);
 
   const pins = useMemo(
     () =>

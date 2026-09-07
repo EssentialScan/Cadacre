@@ -33,7 +33,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: "No REITs configured" }, { status: 200 });
     }
 
-    const results = [];
+    const results: any[] = [];
     let successCount = 0;
     let failCount = 0;
     let newAnnouncementsInserted = 0;
