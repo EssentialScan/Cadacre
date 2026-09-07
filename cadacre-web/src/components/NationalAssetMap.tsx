@@ -95,7 +95,7 @@ export function NationalAssetMap({ assets, initialViewState, isLockedSample = fa
         maxBounds={[
           [110.0, -45.0], // Southwest coordinates (approximate Australia bounds)
           [155.0, -9.0]   // Northeast coordinates
-        ]}
+        ] as any}
         mapStyle={`https://api.maptiler.com/maps/streets-v4/style.json?key=${MAPTILER_KEY}`}
         style={{ width: "100%", height: "100%", borderRadius: "inherit" }}
       >
