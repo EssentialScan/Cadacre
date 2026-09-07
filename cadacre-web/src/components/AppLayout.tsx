@@ -87,10 +87,24 @@ export function AppLayout({ children, isPro }: { children: React.ReactNode, isPr
           })}
         </nav>
 
-        <div className="p-3 border-t border-border/50">
+        <div className="p-3 border-t border-border/50 flex flex-col gap-2">
+          {!isPro && (
+            <Link 
+              href="/#pricing" 
+              className={`flex items-center justify-center text-xs font-semibold text-brand-blue bg-brand-blue/10 px-3 py-1.5 rounded-md hover:bg-brand-blue/20 transition-colors ${collapsed ? 'hidden' : ''}`}
+            >
+              Upgrade to Pro
+            </Link>
+          )}
+          <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'} px-2 py-1`}>
+            <UserButton />
+            {!collapsed && (
+              <span className="text-sm font-medium text-muted-foreground">Account</span>
+            )}
+          </div>
           <button 
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center py-2 text-muted-foreground hover:bg-muted/50 rounded-md transition-colors"
+            className="w-full flex items-center justify-center py-2 mt-1 text-muted-foreground hover:bg-muted/50 rounded-md transition-colors"
           >
             {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
           </button>
@@ -99,18 +113,6 @@ export function AppLayout({ children, isPro }: { children: React.ReactNode, isPr
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Topbar */}
-        <header className="h-16 bg-white border-b border-border/50 flex items-center justify-end px-6 shrink-0">
-          <div className="flex items-center gap-4">
-            {!isPro && (
-              <Link href="/#pricing" className="text-xs font-semibold text-brand-blue bg-brand-blue/10 px-3 py-1.5 rounded-full hover:bg-brand-blue/20 transition-colors">
-                Upgrade to Pro
-              </Link>
-            )}
-            <UserButton />
-          </div>
-        </header>
-
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto relative">
           {children}

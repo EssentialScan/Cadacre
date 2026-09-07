@@ -160,7 +160,12 @@ export default function BasketBuilderPage() {
                               width={80}
                             />
                             <Tooltip 
-                              formatter={(value: number) => [`$${value.toFixed(2)}`, 'Portfolio Value']}
+                              formatter={(value: any) => {
+                                if (typeof value === 'number') {
+                                  return [`$${value.toFixed(2)}`, 'Portfolio Value'];
+                                }
+                                return [value, 'Portfolio Value'];
+                              }}
                               labelStyle={{ color: '#0F172A', fontWeight: 'bold', marginBottom: '4px' }}
                               contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                             />

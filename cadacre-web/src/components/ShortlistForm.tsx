@@ -1,8 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { getShortlist } from "@/app/dashboard/actions";
-import type { ShortlistResult } from "@/app/dashboard/types";
+import { getShortlist } from "@/app/(app)/dashboard/actions";
+import type { ShortlistResult } from "@/app/(app)/dashboard/types";
 import { DEFAULT_RANK_WEIGHTS, type RankWeights } from "@/lib/rankTowns";
 import { ShortlistResults } from "@/components/ShortlistResults";
 

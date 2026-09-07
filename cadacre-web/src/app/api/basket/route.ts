@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     period1.setFullYear(period1.getFullYear() - 1); // 1 year ago
     
     const backtestDataMap = new Map<string, number>(); // date -> total portfolio value
-    let startingPortfolioValue = 10000; // Arbitrary $10k starting value
+    const startingPortfolioValue = 10000; // Arbitrary $10k starting value
     
     // Equal weighting: split the $10k equally among the basket
     const initialAllocationPerReit = startingPortfolioValue / basket.length;

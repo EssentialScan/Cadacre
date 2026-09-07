@@ -10,8 +10,8 @@ import {
   estimateAffordablePrice,
   formatMoney,
 } from "@/lib/investmentMath";
-import { getRentTrackerBaseline, saveRentTrackerBaseline } from "@/app/dashboard/actions";
-import type { RentTrackerBaseline } from "@/app/dashboard/types";
+import { getRentTrackerBaseline, saveRentTrackerBaseline } from "@/app/(app)/dashboard/actions";
+import type { RentTrackerBaseline } from "@/app/(app)/dashboard/types";
 
 function money(value: number | null): string {
   if (value === null) return "Not available";
