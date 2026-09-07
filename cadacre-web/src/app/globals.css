@@ -42,36 +42,36 @@
 }
 
 :root {
-  /* DESIGN.md Neutral Light Theme */
-  --background: 210 20% 97.5%; /* #F7F8FA */
-  --foreground: 212 29% 13%; /* #17202A */
+  /* Refined SaaS Light Theme */
+  --background: 210 20% 98%; /* #FAFBFC, very subtle cool gray for main canvas */
+  --foreground: 222.2 84% 4.9%; /* Slate-900 */
   
   --card: 0 0% 100%;
-  --card-foreground: 212 29% 13%;
+  --card-foreground: 222.2 84% 4.9%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 212 29% 13%;
+  --popover-foreground: 222.2 84% 4.9%;
   
   --primary: 175 77% 26%; /* #0F766E Teal */
-  --primary-foreground: 0 0% 100%;
+  --primary-foreground: 210 40% 98%;
   
-  --secondary: 210 20% 95%; /* #F1F3F5 */
-  --secondary-foreground: 211 11% 39%; /* #59636E */
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
   
-  --muted: 210 20% 95%;
-  --muted-foreground: 211 10% 58%; /* #8A949F */
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
   
-  --accent: 171 52% 94%; /* #E8F5F3 */
-  --accent-foreground: 175 77% 26%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
   
-  --destructive: 0 53% 51%; /* #C24141 */
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
   
-  --border: 220 13% 91%; /* #E5E7EB */
-  --input: 220 13% 91%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
   --ring: 175 77% 26%;
   
-  --radius: 0.625rem; /* 10px baseline */
+  --radius: 0.75rem; /* softer, slightly larger rounded corners */
 }
 
 @layer base {
@@ -80,33 +80,42 @@
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20;
+    /* Optimize font rendering for crisp text */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   /* Typography refinements */
-  h1, h2, h3 {
-    @apply tracking-tight;
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-slate-900;
   }
 }
 
 /* Precise Shadows (DESIGN.md) */
 .shadow-premium {
-  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 14px rgb(15 23 42 / 0.04);
+  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 4px 6px -1px rgb(15 23 42 / 0.04), 0 10px 15px -3px rgb(15 23 42 / 0.03);
 }
 .shadow-premium-hover {
-  box-shadow: 0 2px 4px rgb(15 23 42 / 0.05), 0 10px 28px rgb(15 23 42 / 0.07);
+  box-shadow: 0 4px 6px -1px rgb(15 23 42 / 0.05), 0 10px 15px -3px rgb(15 23 42 / 0.06), 0 20px 25px -5px rgb(15 23 42 / 0.04);
+}
+.shadow-soft {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+}
+.shadow-elevated {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
 }
 
 /* Precise Button (replaces gradient btn-premium) */
 .btn-premium {
-  @apply bg-primary text-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-[0_2px_4px_rgba(15,23,42,0.05)] hover:bg-[#0B5F59] active:scale-[0.98] transition-all duration-150 border border-transparent;
+  @apply bg-primary text-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-[0_2px_4px_rgba(15,23,42,0.05)] hover:bg-[#0B5F59] active:scale-[0.98] transition-all duration-150 border border-transparent font-medium;
 }
 
 /* Standard Data highlights (DESIGN.md) */
 .text-data-green {
-  color: #16805D;
+  color: #10b981; /* slightly brighter emerald for SaaS feel */
 }
 .text-data-red {
-  color: #C24141;
+  color: #ef4444; /* brighter red */
 }
 .text-brand-blue {
   color: #0F766E;

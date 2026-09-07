@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CommunityPage() {
   const db = getDb();
-  let publicPortfolios = [];
+  const publicPortfolios: any[] = [];
   
   if (db) {
     const publicUsers = await db.select().from(userProfiles).where(eq(userProfiles.isPortfolioPublic, true));

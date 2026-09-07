@@ -14,7 +14,8 @@ import {
   Bell, 
   BookOpen,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Settings
 } from "lucide-react";
 import Image from "next/image";
 
@@ -34,19 +35,27 @@ export function AppLayout({ children, isPro }: { children: React.ReactNode, isPr
   ];
 
   return (
-    <div className="flex h-screen bg-[#F7F8FA] overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden selection:bg-brand-blue/10">
       {/* Sidebar */}
       <aside 
-        className={`bg-white border-r border-border transition-all duration-300 flex flex-col ${
+        className={`relative z-20 bg-white border-r border-slate-200 transition-all duration-300 flex flex-col ${
           collapsed ? "w-16" : "w-64"
         }`}
       >
-        <div className="h-16 flex items-center px-4 border-b border-border/50 shrink-0 justify-between">
+        {/* Professional Collapse Toggle */}
+        <button 
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute -right-3 top-20 z-50 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm hover:text-slate-600 hover:shadow hover:scale-105 transition-all"
+        >
+          {collapsed ? <ChevronRight className="h-3 w-3" strokeWidth={3} /> : <ChevronLeft className="h-3 w-3" strokeWidth={3} />}
+        </button>
+
+        <div className="h-16 flex items-center px-4 border-b border-slate-100 shrink-0 justify-between">
           {!collapsed && (
             <Link href="/" className="flex items-center gap-2 overflow-hidden">
               <Image src="/content.png" alt="REITCompare" width={24} height={24} className="h-6 w-6 shrink-0" />
-              <span className="font-display font-bold text-foreground truncate">
-                REIT<span className="text-primary">Compare</span>
+              <span className="font-display font-bold text-slate-900 truncate">
+                REIT<span className="text-brand-blue">Compare</span>
               </span>
             </Link>
           )}
@@ -57,28 +66,28 @@ export function AppLayout({ children, isPro }: { children: React.ReactNode, isPr
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative group ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all relative group ${
                   isActive 
-                    ? "bg-brand-blue/10 text-brand-blue font-semibold" 
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    ? "bg-brand-blue/5 text-brand-blue font-medium shadow-sm ring-1 ring-brand-blue/10" 
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 } ${collapsed ? "justify-center" : ""}`}
                 title={collapsed ? item.label : undefined}
               >
-                <item.icon className="w-5 h-5 shrink-0" />
-                {!collapsed && <span className="truncate">{item.label}</span>}
+                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? "text-brand-blue" : "text-slate-400 group-hover:text-slate-600"}`} strokeWidth={isActive ? 2.5 : 2} />
+                {!collapsed && <span className="truncate tracking-tight text-sm">{item.label}</span>}
                 {!collapsed && item.pro && !isPro && (
-                  <span className="ml-auto text-[9px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded shrink-0">Pro</span>
+                  <span className="ml-auto text-[10px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded shrink-0">Pro</span>
                 )}
                 {/* Tooltip for collapsed state */}
                 {collapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
+                  <div className="absolute left-full ml-3 px-2 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md shadow-elevated opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
                     {item.label}
                   </div>
                 )}
@@ -87,32 +96,36 @@ export function AppLayout({ children, isPro }: { children: React.ReactNode, isPr
           })}
         </nav>
 
-        <div className="p-3 border-t border-border/50 flex flex-col gap-2">
+        <div className="p-4 border-t border-slate-100 flex flex-col gap-3">
           {!isPro && (
             <Link 
               href="/#pricing" 
-              className={`flex items-center justify-center text-xs font-semibold text-brand-blue bg-brand-blue/10 px-3 py-1.5 rounded-md hover:bg-brand-blue/20 transition-colors ${collapsed ? 'hidden' : ''}`}
+              className={`flex items-center justify-center text-xs font-semibold text-brand-blue bg-brand-blue/5 px-3 py-2 rounded-lg hover:bg-brand-blue/10 transition-colors border border-brand-blue/10 ${collapsed ? 'hidden' : ''}`}
             >
               Upgrade to Pro
             </Link>
           )}
-          <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'} px-2 py-1`}>
-            <UserButton />
+          <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between gap-2 p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200'}`}>
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <UserButton appearance={{ elements: { avatarBox: "w-8 h-8 shadow-sm ring-1 ring-slate-200" } }} />
+              {!collapsed && (
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-sm font-semibold text-slate-900 truncate tracking-tight">Account</span>
+                  <span className="text-[11px] text-slate-500 font-medium truncate">Manage settings</span>
+                </div>
+              )}
+            </div>
             {!collapsed && (
-              <span className="text-sm font-medium text-muted-foreground">Account</span>
+              <Link href="/account" className="p-1.5 text-slate-400 hover:text-slate-700 rounded-md hover:bg-slate-200/50 transition-colors" title="Account Settings">
+                <Settings className="w-4 h-4" />
+              </Link>
             )}
           </div>
-          <button 
-            onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center py-2 mt-1 text-muted-foreground hover:bg-muted/50 rounded-md transition-colors"
-          >
-            {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-          </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background">
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto relative">
           {children}

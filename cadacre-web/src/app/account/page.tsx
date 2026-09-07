@@ -6,10 +6,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ApiKeyManager } from "@/components/ApiKeyManager";
 import { UserButton } from "@clerk/nextjs";
 import { getDb } from "@/db/client";
-import { apiKeys } from "@/db/schema";
+import { apiKeys, userProfiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
+import { ProfileSettingsForm } from "@/components/ProfileSettingsForm";
 
 export const metadata = {
   title: "Account | REITCompare",
@@ -52,6 +53,11 @@ export default async function AccountPage() {
       }).from(apiKeys).where(eq(apiKeys.userId, userId))
     : [];
 
+  const profile = db
+    ? await db.select().from(userProfiles).where(eq(userProfiles.userId, userId))
+    : [];
+  const currentProfile = profile.length > 0 ? profile[0] : null;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
@@ -63,6 +69,20 @@ export default async function AccountPage() {
               <p className="text-muted-foreground text-sm">{user.emailAddresses[0]?.emailAddress}</p>
             </div>
             <UserButton />
+          </div>
+
+          {/* Profile Settings Card */}
+          <div className="rounded-xl border border-border bg-white shadow-premium p-6 mb-8">
+            <div className="mb-6">
+              <h2 className="font-display text-lg font-bold text-foreground mb-1">Profile Settings</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Manage how you appear in the community and whether your portfolio is visible to others.
+              </p>
+            </div>
+            <ProfileSettingsForm 
+              initialUsername={currentProfile?.username || ""} 
+              initialIsPublic={currentProfile?.isPortfolioPublic || false} 
+            />
           </div>
 
           {/* Subscription Card */}
