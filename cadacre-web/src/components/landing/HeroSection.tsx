@@ -48,12 +48,12 @@ export function HeroSection({ heroAssets }: { heroAssets?: any[] }) {
             </SlideIn>
 
             <SlideIn direction="up" delay={0.4} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Link href="/explore">
+              <Link href="/#screener">
                 <Button size="lg" className="btn-premium px-8 rounded-lg w-full sm:w-auto font-medium h-12 text-[15px]">
-                  Explore REITs
+                  Compare REITs
                 </Button>
               </Link>
-              <Link href="#map">
+              <Link href="/explore">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-lg px-8 bg-white hover:bg-muted text-foreground border-border shadow-[0_1px_2px_rgba(15,23,42,0.04)] font-medium h-12 text-[15px]">
                   Explore the map
                 </Button>

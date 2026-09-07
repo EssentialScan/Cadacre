@@ -43,7 +43,7 @@ export function ProductShowcase({ initialReits }: { initialReits?: any[] }) {
   const sectors = ["All", ...Array.from(new Set(formattedData.map(r => r.sector)))];
 
   return (
-    <section className="py-20 md:py-32 bg-transparent relative overflow-hidden">
+    <section id="screener" className="py-20 md:py-32 bg-transparent relative overflow-hidden">
       <AmbientSection theme="technical" />
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
         

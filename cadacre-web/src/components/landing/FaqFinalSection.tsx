@@ -102,7 +102,7 @@ export function FaqFinalSection() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 md:py-32 bg-transparent relative overflow-hidden">
+      <section id="faq" className="py-20 md:py-32 bg-transparent relative overflow-hidden">
         <AmbientSection theme="neutral" />
         <div className="mx-auto max-w-4xl px-6 sm:px-8 relative z-10">
           <SlideIn direction="up">
@@ -162,12 +162,12 @@ export function FaqFinalSection() {
             </p>
   
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/explore">
+              <Link href="/#screener">
                 <Button size="lg" className="rounded-xl bg-brand-blue hover:bg-[#0B5F59] text-white shadow-[0_8px_24px_rgba(15,118,110,0.25)] h-14 px-10 text-[16px] font-bold w-full sm:w-auto transition-transform hover:scale-[1.02] active:scale-[0.98]">
-                  Explore REITs
+                  Compare REITs
                 </Button>
               </Link>
-              <Link href="#map">
+              <Link href="/explore">
                 <Button variant="outline" size="lg" className="rounded-xl bg-white border-border shadow-sm hover:bg-[#F7F8FA] text-foreground h-14 px-10 text-[16px] font-bold w-full sm:w-auto transition-transform hover:scale-[1.02] active:scale-[0.98]">
                   Explore the map
                 </Button>

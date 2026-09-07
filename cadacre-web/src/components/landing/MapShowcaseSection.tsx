@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { SlideIn } from "@/components/motion/ScrollAnimations";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
@@ -115,9 +116,11 @@ export function MapShowcaseSection() {
           </SlideIn>
 
           <SlideIn direction="up" delay={0.2}>
-            <button className="px-8 py-4 bg-white text-foreground rounded-lg text-[15px] font-semibold shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:scale-[1.02] active:scale-95 transition-transform flex items-center gap-3">
-              Explore the Map <span className="text-brand-blue">&rarr;</span>
-            </button>
+            <Link href="/explore">
+              <button className="px-8 py-4 bg-white text-foreground rounded-lg text-[15px] font-semibold shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:scale-[1.02] active:scale-95 transition-transform flex items-center gap-3">
+                Explore the Map <span className="text-brand-blue">&rarr;</span>
+              </button>
+            </Link>
           </SlideIn>
         </div>
       </div>
