@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/scrape-announcements",
-      "schedule": "0 0,4,8 * * 1-5"
+      "schedule": "0 4 * * 1-5"
     }
   ]
 }
