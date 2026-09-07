@@ -1,11 +1,11 @@
 -- Insert REITs
-INSERT INTO reits (ticker, name, sector, market_cap, yield_pct, nta_premium_discount, gearing_pct, wale_years)
+INSERT INTO reits (ticker, name, sector, market_cap, yield, nta_discount, gearing, wale)
 VALUES 
-('GMG', 'Goodman Group', 'Industrial', 35000000000, 1.2, 4.2, 8.5, 4.5),
-('SCG', 'Scentre Group', 'Retail', 15000000000, 5.5, -15.6, 36.8, 6.2),
-('DXS', 'Dexus', 'Office', 8000000000, 6.1, -12.1, 31.2, 5.1),
-('CQR', 'Charter Hall Retail', 'Retail', 2000000000, 6.5, -10.5, 29.5, 4.8),
-('CIP', 'Centuria Industrial', 'Industrial', 1800000000, 5.2, -5.4, 33.2, 7.2)
+('GMG', 'Goodman Group', 'Industrial', NULL, NULL, NULL, NULL, NULL),
+('SCG', 'Scentre Group', 'Retail', NULL, NULL, NULL, NULL, NULL),
+('DXS', 'Dexus', 'Office', NULL, NULL, NULL, NULL, NULL),
+('CQR', 'Charter Hall Retail', 'Retail', NULL, NULL, NULL, NULL, NULL),
+('CIP', 'Centuria Industrial', 'Industrial', NULL, NULL, NULL, NULL, NULL)
 ON CONFLICT (ticker) DO NOTHING;
 
 -- Insert Assets (Using ST_SetSRID(ST_MakePoint(lng, lat), 4326) for PostGIS)

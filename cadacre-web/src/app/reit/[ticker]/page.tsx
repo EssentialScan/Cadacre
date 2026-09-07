@@ -9,6 +9,7 @@ import { MapPin, Building2, TrendingUp, Percent, Clock, Briefcase } from "lucide
 import { getDb } from "@/db/client";
 import { reits, reitAssets } from "@/db/schema";
 import { eq, ne } from "drizzle-orm";
+import CommunitySection from "./CommunitySection";
 
 export const dynamic = 'force-dynamic';
 
@@ -278,6 +279,11 @@ export default async function ReitDetailPage({ params }: { params: Promise<{ tic
               </Card>
 
             </div>
+          </div>
+
+          {/* Community Layer */}
+          <div className="mt-12">
+            <CommunitySection reitId={dbReit.id} ticker={dbReit.ticker} />
           </div>
 
         </div>

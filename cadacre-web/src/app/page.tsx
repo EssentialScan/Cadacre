@@ -7,6 +7,7 @@ import { ProductShowcase } from "@/components/landing/ProductShowcase";
 import { MapShowcaseSection } from "@/components/landing/MapShowcaseSection";
 import { TransparencySection } from "@/components/landing/TransparencySection";
 import { PremiumApiSection } from "@/components/landing/PremiumApiSection";
+import { CompetitivePositioningSection } from "@/components/landing/CompetitivePositioningSection";
 import { Pricing } from "@/components/Pricing";
 import { FaqFinalSection } from "@/components/landing/FaqFinalSection";
 import { PropertySection } from "@/components/landing/PropertySection";
@@ -60,6 +61,7 @@ export default async function Home() {
           <PropertySection />
           <TransparencySection />
           <PremiumApiSection />
+          <CompetitivePositioningSection />
           <Pricing />
           <FaqFinalSection />
         </main>

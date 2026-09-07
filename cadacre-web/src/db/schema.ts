@@ -176,3 +176,56 @@ export const reitDistributionsRelations = relations(reitDistributions, ({ one })
 export const alertsRelations = relations(alerts, ({ one }) => ({
   reit: one(reits, { fields: [alerts.reitId], references: [reits.id] }),
 }));
+
+// --- Phase 3 Community Layer ---
+
+export const userProfiles = pgTable("user_profiles", {
+  userId: text("user_id").primaryKey(), // Clerk userId
+  username: text("username").notNull().unique(),
+  isPortfolioPublic: boolean("is_portfolio_public").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const watchlists = pgTable("watchlists", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitNotes = pgTable("reit_notes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitComments = pgTable("reit_comments", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(), // Will join with userProfiles on read
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const watchlistsRelations = relations(watchlists, ({ one }) => ({
+  reit: one(reits, { fields: [watchlists.reitId], references: [reits.id] }),
+}));
+
+export const reitCommentsRelations = relations(reitComments, ({ one }) => ({
+  reit: one(reits, { fields: [reitComments.reitId], references: [reits.id] }),
+}));
+
+
+export const savedScreenerViews = pgTable("saved_screener_views", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  name: text("name").notNull(),
+  sector: text("sector"),
+  minYield: doublePrecision("min_yield"),
+  maxGearing: doublePrecision("max_gearing"),
+  minNtaDiscount: doublePrecision("min_nta_discount"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+

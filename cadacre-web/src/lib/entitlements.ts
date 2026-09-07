@@ -15,6 +15,11 @@ const ACTIVE_SUBSCRIPTION_STATUSES = new Set(["active", "trialing", "past_due"])
 // as a legacy fallback so anyone who already paid the retired one-time $39
 // report stays entitled without needing to resubscribe.
 export async function isSubscriber(userId: string): Promise<boolean> {
+  // Bypass for local testing
+  if (process.env.NODE_ENV === "development") {
+    return true;
+  }
+
   const client = await clerkClient();
   const user = await client.users.getUser(userId);
   const status = user.privateMetadata?.subscriptionStatus;

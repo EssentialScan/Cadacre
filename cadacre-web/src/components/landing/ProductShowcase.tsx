@@ -14,15 +14,7 @@ export function ProductShowcase({ initialReits }: { initialReits?: any[] }) {
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("Screener");
 
-  const defaultReits = [
-    { ticker: "GMG", name: "Goodman Group", sector: "Industrial", yield: 1.2, gearing: 8.3, ntaDiscount: -45.2 },
-    { ticker: "GPT", name: "GPT Group", sector: "Diversified", yield: 5.2, gearing: 28.7, ntaDiscount: 8.4 },
-    { ticker: "CIP", name: "Centuria Industrial", sector: "Industrial", yield: 5.8, gearing: 32.1, ntaDiscount: 14.2 },
-    { ticker: "DXS", name: "Dexus", sector: "Office", yield: 6.1, gearing: 31.2, ntaDiscount: 12.1 },
-    { ticker: "NSR", name: "National Storage", sector: "Industrial", yield: 4.5, gearing: 24.5, ntaDiscount: 2.1 },
-  ];
-
-  const rawData = initialReits && initialReits.length > 0 ? initialReits : defaultReits;
+  const rawData = initialReits && initialReits.length > 0 ? initialReits : [];
   
   const formattedData = rawData.map(r => ({
     ticker: r.ticker,
@@ -135,13 +127,14 @@ export function ProductShowcase({ initialReits }: { initialReits?: any[] }) {
                     className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors flex justify-between items-center ${activeTab === 'Portfolios' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white/50'}`}
                   >
                     <span>Portfolios</span>
-                    <span className="text-[9px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded">Pro</span>
+                    <span className="text-[9px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded">Demo</span>
                   </div>
                   <div 
                     onClick={() => setActiveTab("Alerts")}
-                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors ${activeTab === 'Alerts' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white/50'}`}
+                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors flex justify-between items-center ${activeTab === 'Alerts' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white/50'}`}
                   >
-                    Alerts
+                    <span>Alerts</span>
+                    <span className="text-[9px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded">Demo</span>
                   </div>
                 </div>
               </div>

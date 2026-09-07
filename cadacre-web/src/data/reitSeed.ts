@@ -20,11 +20,11 @@ export interface ReitMock {
   ticker: string;
   name: string;
   sector: Sector;
-  marketCap: number;
-  yield: number;
-  ntaDiscount: number;
-  gearing: number;
-  wale: number;
+  marketCap: number | null;
+  yield: number | null;
+  ntaDiscount: number | null;
+  gearing: number | null;
+  wale: number | null;
   description: string;
   topTenants: TopTenant[];
   geoExposure: GeoExposure[];
@@ -37,11 +37,11 @@ export const seedReits: ReitMock[] = [
     ticker: "GMG",
     name: "Goodman Group",
     sector: "Industrial",
-    marketCap: 65000000000,
-    yield: 1.2,
-    ntaDiscount: 0,
-    gearing: 8.5,
-    wale: 5.2,
+    marketCap: null,
+    yield: null,
+    ntaDiscount: null,
+    gearing: null,
+    wale: null,
     description: "Goodman Group is an integrated commercial and industrial property group that owns, develops and manages real estate including warehouses, large scale logistics facilities, business and office parks globally.",
     topTenants: [
       { name: "Amazon", percentage: 8.2 },
@@ -69,11 +69,11 @@ export const seedReits: ReitMock[] = [
     ticker: "SCG",
     name: "Scentre Group",
     sector: "Retail",
-    marketCap: 16500000000,
-    yield: 5.2,
-    ntaDiscount: 15.0,
-    gearing: 27.0,
-    wale: 6.1,
+    marketCap: null,
+    yield: null,
+    ntaDiscount: null,
+    gearing: null,
+    wale: null,
     description: "Scentre Group is the owner and operator of Westfield in Australia and New Zealand.",
     topTenants: [
       { name: "Woolworths", percentage: 5.2 },
@@ -101,11 +101,11 @@ export const seedReits: ReitMock[] = [
     ticker: "DXS",
     name: "Dexus",
     sector: "Office",
-    marketCap: 7500000000,
-    yield: 6.8,
-    ntaDiscount: 35.0,
-    gearing: 32.1,
-    wale: 4.8,
+    marketCap: null,
+    yield: null,
+    ntaDiscount: null,
+    gearing: null,
+    wale: null,
     description: "Dexus is an Australasian real estate group, managing a high-quality Australian property portfolio valued at $31.8 billion.",
     topTenants: [
       { name: "Commonwealth Bank", percentage: 6.2 },
@@ -133,11 +133,11 @@ export const seedReits: ReitMock[] = [
     ticker: "CQR",
     name: "Charter Hall Retail REIT",
     sector: "Retail",
-    marketCap: 2100000000,
-    yield: 6.5,
-    ntaDiscount: 18.0,
-    gearing: 29.5,
-    wale: 7.2,
+    marketCap: null,
+    yield: null,
+    ntaDiscount: null,
+    gearing: null,
+    wale: null,
     description: "Charter Hall Retail REIT is the leading owner of property for convenience retailers. The REIT's portfolio comprises 499 properties.",
     topTenants: [
       { name: "Coles", percentage: 15.2 },
@@ -165,11 +165,11 @@ export const seedReits: ReitMock[] = [
     ticker: "CIP",
     name: "Centuria Industrial REIT",
     sector: "Industrial",
-    marketCap: 2000000000,
-    yield: 5.1,
-    ntaDiscount: -5.0, // Premium
-    gearing: 31.0,
-    wale: 8.1,
+    marketCap: null,
+    yield: null,
+    ntaDiscount: null, // Premium
+    gearing: null,
+    wale: null,
     description: "Centuria Industrial REIT is Australia's largest domestic pure-play industrial REIT. CIP's portfolio includes 88 high-quality, fit-for-purpose industrial assets.",
     topTenants: [
       { name: "Woolworths", percentage: 9.2 },
