@@ -50,7 +50,6 @@ export const reitAssets = pgTable(
       .references(() => reits.id, { onDelete: "cascade" }),
     address: text("address").notNull(),
     suburb: text("suburb"),
-    state: text("state"),
     lat: doublePrecision("lat"),
     lng: doublePrecision("lng"),
     propertyType: text("property_type"),

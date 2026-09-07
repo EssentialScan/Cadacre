@@ -1,4 +1,5 @@
 import { NationalAssetMap } from "@/components/NationalAssetMap";
+import { ExploreClient } from "./ExploreClient";
 import { MapPin } from "lucide-react";
 import { getDb } from "@/db/client";
 import { reitAssets, reits } from "@/db/schema";
@@ -23,7 +24,6 @@ export default async function ExplorePage() {
           reitTicker: reits.ticker,
           address: reitAssets.address,
           suburb: reitAssets.suburb,
-          state: reitAssets.state,
           lat: reitAssets.lat,
           lng: reitAssets.lng,
           propertyType: reitAssets.propertyType,
@@ -42,55 +42,6 @@ export default async function ExplorePage() {
   }
 
   return (
-    <main className="flex-1 flex flex-col h-[calc(100vh-64px)]">
-      
-      {/* Map Header / Filters Placeholder */}
-      <div className="bg-white border-b border-border py-4 px-6 shadow-sm z-10 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-brand-blue/10 rounded-lg">
-            <MapPin className="h-5 w-5 text-brand-blue" />
-          </div>
-          <div>
-            <h1 className="font-display font-bold text-foreground text-xl tracking-tight leading-none">
-              National Asset Discovery
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Showing {assets.length} geocoded assets nationally
-            </p>
-          </div>
-        </div>
-        
-        <div className="flex gap-2">
-          <div className="px-4 py-2 border border-border rounded-md text-sm font-medium text-muted-foreground bg-muted/20">
-            Filters coming soon
-          </div>
-        </div>
-      </div>
-
-      {/* Map Container */}
-      <div className="flex-1 relative w-full h-full">
-        <NationalAssetMap assets={assets} />
-        
-        {/* Legend Overlay */}
-        <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-[0_1px_2px_rgba(15,23,42,0.04)] border border-border/50 z-10 pointer-events-none">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Asset Types</h4>
-          <ul className="space-y-2">
-            <li className="flex items-center gap-2 text-sm text-foreground">
-              <span className="w-3 h-3 rounded-full bg-brand-blue opacity-80"></span>
-              Industrial & Logistics
-            </li>
-            <li className="flex items-center gap-2 text-sm text-foreground">
-              <span className="w-3 h-3 rounded-full bg-brand-blue opacity-80"></span>
-              Retail & Shopping Centres
-            </li>
-            <li className="flex items-center gap-2 text-sm text-foreground">
-              <span className="w-3 h-3 rounded-full bg-brand-blue opacity-80"></span>
-              Commercial Office
-            </li>
-          </ul>
-        </div>
-      </div>
-
-    </main>
+    <ExploreClient assets={assets} />
   );
 }

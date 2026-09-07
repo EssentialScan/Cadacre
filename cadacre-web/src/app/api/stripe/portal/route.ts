@@ -3,7 +3,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import Stripe from "stripe";
 
 export const runtime = "nodejs";
-
+export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const { userId } = await auth();
   const accountUrl = new URL("/account", request.url);
