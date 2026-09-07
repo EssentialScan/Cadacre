@@ -1,4 +1,4 @@
-import type { ShortlistResult, LedgerRow } from "@/app/dashboard/types";
+import type { ShortlistResult, LedgerRow } from "@/app/(app)/dashboard/types";
 import { HazardIcons } from "@/components/HazardIcons";
 import { TownMapToggle } from "@/components/TownMapToggle";
 import { SensitivityExplorer } from "@/components/SensitivityExplorer";

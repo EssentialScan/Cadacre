@@ -6,7 +6,7 @@ import { userProfiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-export async function saveProfileSettings(formData: FormData) {
+export async function saveProfileSettings(prevState: any, formData: FormData) {
   const { userId } = await auth();
   if (!userId) {
     return { success: false, error: "Unauthorized" };

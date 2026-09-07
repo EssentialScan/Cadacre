@@ -4,7 +4,7 @@ import { useState } from "react";
 import { getTownDecisionTag, type TownDecisionSnapshot } from "@/lib/rankTowns";
 import { HazardIcons } from "@/components/HazardIcons";
 import { TownMapToggle } from "@/components/TownMapToggle";
-import type { LedgerRow } from "@/app/dashboard/types";
+import type { LedgerRow } from "@/app/(app)/dashboard/types";
 
 type UnlockedRow = Extract<LedgerRow, { locked: false }>;
 
