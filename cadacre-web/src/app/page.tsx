@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { ProblemSection } from "@/components/landing/ProblemSection";
+import { BigStatementSection } from "@/components/landing/BigStatementSection";
 import { ProductShowcase } from "@/components/landing/ProductShowcase";
 import { MapShowcaseSection } from "@/components/landing/MapShowcaseSection";
 import { TransparencySection } from "@/components/landing/TransparencySection";
@@ -16,6 +17,7 @@ export default function Home() {
         <main className="flex-1">
           <div className="bg-[#F7F8FA]"><HeroSection /></div>
           <div className="bg-[#FFFFFF]"><ProblemSection /></div>
+          <div className="bg-[#F7F8FA]"><BigStatementSection /></div>
           <div className="bg-[#F7F8FA]"><ProductShowcase /></div>
           <div className="bg-[#FFFFFF]"><MapShowcaseSection /></div>
           <div className="bg-[#F7F8FA]"><PropertySection /></div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SlideIn } from "@/components/motion/ScrollAnimations";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { AmbientSection } from "@/components/ambient/AmbientSection";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,7 +20,8 @@ export function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 12]);
 
   return (
-    <section ref={containerRef} className="relative overflow-visible bg-background pt-16 pb-20 md:pt-28 md:pb-24 border-b border-border">
+    <section ref={containerRef} className="relative overflow-visible bg-transparent pt-16 pb-20 md:pt-28 md:pb-24 border-b border-border">
+      <AmbientSection theme="hero" />
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
@@ -67,12 +69,8 @@ export function HeroSection() {
               className="relative w-full h-full lg:w-[110%] lg:-mr-[10%] rounded-[24px] overflow-visible shadow-[0_8px_30px_rgba(23,32,42,0.06)] border border-[rgba(23,32,42,0.08)]"
             >
               {/* Image Container with Masking */}
-              <div 
-                className="absolute inset-0 rounded-[24px] overflow-hidden"
-                style={{
-                  maskImage: "linear-gradient(to right, transparent 0%, black 15%)",
-                  WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 15%)"
-                }}
+              <div
+                className="absolute inset-0 rounded-[24px] overflow-hidden lg:[mask-image:linear-gradient(to_right,transparent_0%,black_15%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_15%)]"
               >
                 <Image 
                   src="/reitcompare-australian-property-data.jpg"
@@ -98,21 +96,38 @@ export function HeroSection() {
                   <span className="font-semibold text-[13px] tracking-tight">REITCompare</span>
                 </div>
                 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[12px] text-muted-foreground">Coverage</span>
-                    <span className="text-[12px] font-medium text-foreground">65+ REITs</span>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center group relative cursor-help">
+                    <span className="text-[12px] text-muted-foreground transition-colors group-hover:text-foreground">Coverage</span>
+                    <span className="text-[12px] font-medium text-foreground underline decoration-border underline-offset-2 group-hover:decoration-brand-blue transition-colors">65+ REITs</span>
+                    
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-[#17202A] text-white text-[10px] rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 leading-relaxed">
+                      Representing 98% of the ASX-listed A-REIT market capitalization.
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[12px] text-muted-foreground">Assets</span>
-                    <span className="text-[12px] font-medium text-foreground">1,500+</span>
+                  
+                  <div className="flex justify-between items-center group relative cursor-help">
+                    <span className="text-[12px] text-muted-foreground transition-colors group-hover:text-foreground">Assets</span>
+                    <span className="text-[12px] font-medium text-foreground underline decoration-border underline-offset-2 group-hover:decoration-brand-blue transition-colors">1,500+</span>
+                    
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-[#17202A] text-white text-[10px] rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 leading-relaxed">
+                      Individually geocoded and tracked physical properties across Australia.
+                    </div>
                   </div>
-                  <div className="pt-2 mt-2 border-t border-border/50 flex justify-between items-center">
+                  
+                  <div className="pt-2 mt-2 border-t border-border/50 flex justify-between items-center group relative cursor-help">
                     <div className="flex items-center gap-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-data-green animate-pulse"></div>
-                      <span className="text-[10px] text-muted-foreground">Live sync</span>
+                      <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors">Live sync</span>
                     </div>
-                    <span className="text-[10px] text-muted-foreground">Updated 2h ago</span>
+                    <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">Updated 2h ago</span>
+                    
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-[#17202A] text-white text-[10px] rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 leading-relaxed text-right">
+                      Last synchronized with ASX disclosures and pricing data.
+                    </div>
                   </div>
                 </div>
               </motion.div>

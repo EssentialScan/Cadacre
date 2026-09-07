@@ -1,38 +1,101 @@
 "use client";
 
 import Image from "next/image";
+import { useRef, useLayoutEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { SlideIn, ScaleReveal } from "@/components/motion/ScrollAnimations";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Search, Database, Fingerprint, Lock } from "lucide-react";
+import { AmbientSection } from "@/components/ambient/AmbientSection";
 
 export function TransparencySection() {
   const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Very subtle parallax for the document stack
+  const stackY = useTransform(scrollYProgress, [0, 1], [30, -30]);
+
+  // Measure actual node/dot positions so the connector lines always land on the dots,
+  // regardless of container width or breakpoint padding.
+  const visualRef = useRef<HTMLDivElement>(null);
+  const node1Ref = useRef<HTMLDivElement>(null);
+  const node2Ref = useRef<HTMLDivElement>(null);
+  const node3Ref = useRef<HTMLDivElement>(null);
+  const [paths, setPaths] = useState<{ a: string; b: string } | null>(null);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const container = visualRef.current;
+      const n1 = node1Ref.current;
+      const n2 = node2Ref.current;
+      const n3 = node3Ref.current;
+      if (!container || !n1 || !n2 || !n3) return;
+
+      const cRect = container.getBoundingClientRect();
+      const rel = (el: HTMLDivElement, side: "left" | "right") => {
+        const r = el.getBoundingClientRect();
+        return {
+          x: (side === "left" ? r.left : r.right) - cRect.left,
+          y: r.top + r.height / 2 - cRect.top,
+        };
+      };
+
+      const p1 = rel(n1, "right");
+      const p2l = rel(n2, "left");
+      const p2r = rel(n2, "right");
+      const p3 = rel(n3, "left");
+
+      setPaths({
+        a: `M ${p1.x} ${p1.y} C ${p1.x + 60} ${p1.y}, ${p2l.x - 60} ${p2l.y}, ${p2l.x} ${p2l.y}`,
+        b: `M ${p2r.x} ${p2r.y} C ${p2r.x + 60} ${p2r.y}, ${p3.x - 60} ${p3.y}, ${p3.x} ${p3.y}`,
+      });
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
-    <section className="py-24 lg:py-32 bg-[#F7F8FA] border-b border-border overflow-hidden">
-      <div className="mx-auto max-w-[1400px] px-6 sm:px-8">
+    <section ref={containerRef} className="py-20 md:py-32 bg-transparent relative overflow-hidden border-b border-border">
+      <AmbientSection theme="transparency" />
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        {/* Top: Massive Numeric Statement */}
+        <div className="mb-24 text-center lg:text-left">
+          <SlideIn direction="up">
+            <div className="font-mono-figure font-bold tracking-tighter text-brand-blue leading-none" style={{ fontSize: "clamp(5rem, 12vw, 140px)" }}>
+              65+
+            </div>
+            <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight text-foreground mt-4">
+              REITs mapped to the source.
+            </h2>
+          </SlideIn>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-24 items-center">
           
-          <div className="flex flex-col items-start text-left order-2 lg:order-1">
+          <div className="flex flex-col items-start text-left order-2 lg:order-1 relative z-10 lg:pr-12">
             <SlideIn direction="up">
-              <h2 className="font-display text-4xl md:text-[46px] font-bold tracking-tight text-foreground leading-[1.1] mb-6">
-                Every number
-                <br />
-                should have a story.
-              </h2>
+              <h3 className="font-display text-3xl font-bold tracking-tight text-foreground leading-[1.1] mb-6">
+                Every number<br />has a story.
+              </h3>
             </SlideIn>
             
             <SlideIn direction="up" delay={0.1}>
-              <p className="text-[17px] text-muted-foreground mb-10 leading-relaxed max-w-lg">
+              <p className="text-[18px] text-muted-foreground mb-10 leading-relaxed font-medium">
                 REITCompare provides a transparent source trail for every material metric. We don't hide our methodology or expect you to trust black-box calculations.
               </p>
             </SlideIn>
 
             <SlideIn direction="up" delay={0.2}>
-              <button className="text-[15px] font-medium text-brand-blue hover:text-[#0B5F59] transition-colors flex items-center group">
+              <button className="text-[16px] font-semibold text-brand-blue hover:text-[#0B5F59] transition-colors flex items-center group">
                 View our methodology
-                <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                <span className="ml-3 group-hover:translate-x-1.5 transition-transform">&rarr;</span>
               </button>
             </SlideIn>
           </div>
@@ -40,95 +103,83 @@ export function TransparencySection() {
           <div className="relative w-full order-1 lg:order-2">
             <ScaleReveal delay={0.2} className="w-full">
               
-              {/* Museum/Editorial Frame */}
-              <div 
-                className="relative bg-white border border-[#E5E7EB] rounded-[18px] p-4 lg:p-6 shadow-[0_8px_30px_rgba(23,32,42,0.06)]"
+              {/* Connected Data Visual */}
+              <div
+                ref={visualRef}
+                className="relative bg-[#F7F8FA] border border-[#E5E7EB] rounded-[24px] p-8 lg:p-12 shadow-[0_24px_48px_rgba(23,32,42,0.06)] h-[500px] flex items-center justify-center"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
-                
-                {/* Main Visual */}
-                <div className="relative w-full h-[340px] sm:h-[400px] lg:h-[460px] rounded-xl overflow-hidden border border-border/50">
-                  <Image 
-                    src="/reitcompare-data-transparency.jpg"
-                    alt="Abstract visualization representing data transparency and connected nodes"
-                    fill
-                    className="object-cover transition-transform duration-700 ease-out"
-                    style={{ transform: isHovered ? 'scale(1.03)' : 'scale(1)' }}
-                  />
-                  {/* Subtle overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue/5 to-transparent pointer-events-none mix-blend-multiply" />
+
+                {/* SVG Animated Connectors (measured from real node positions) */}
+                {paths && (
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                    <motion.path
+                      d={paths.a}
+                      fill="transparent"
+                      stroke="rgba(15,118,110,0.3)"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: isHovered ? 1 : 0.3 }}
+                      transition={{ duration: 1, ease: "easeInOut" }}
+                    />
+                    <motion.path
+                      d={paths.b}
+                      fill="transparent"
+                      stroke="rgba(15,118,110,0.3)"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: isHovered ? 1 : 0.2 }}
+                      transition={{ duration: 1.2, ease: "easeInOut", delay: 0.1 }}
+                    />
+                  </svg>
+                )}
+
+                <div className="relative z-10 w-full max-w-sm space-y-12">
+
+                  {/* Node 1: Metric */}
+                  <motion.div
+                    ref={node1Ref}
+                    className="bg-white border border-border shadow-lg rounded-xl p-5 ml-0 mr-auto w-64 relative"
+                    animate={{ y: isHovered ? -5 : 0 }}
+                  >
+                    <div className="absolute top-1/2 -right-3 w-3 h-3 bg-brand-blue rounded-full border-2 border-white shadow-sm" />
+                    <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Metric</span>
+                    <h4 className="font-display font-bold text-2xl text-foreground mb-1">Gearing</h4>
+                    <div className="font-mono-figure font-bold text-3xl text-brand-blue tracking-tight">28.7%</div>
+                  </motion.div>
+
+                  {/* Node 2: Source */}
+                  <motion.div
+                    ref={node2Ref}
+                    className="bg-white border border-border shadow-lg rounded-xl p-5 mx-auto w-64 relative"
+                    animate={{ y: isHovered ? -5 : 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="absolute top-1/2 -left-3 w-3 h-3 bg-brand-blue rounded-full border-2 border-white shadow-sm" />
+                    <div className="absolute top-1/2 -right-3 w-3 h-3 bg-brand-blue rounded-full border-2 border-white shadow-sm" />
+                    <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Source</span>
+                    <p className="text-[14px] font-semibold text-foreground leading-snug">FY24 Half Year Report</p>
+                    <p className="text-[12px] text-muted-foreground mt-1">Page 18, Note 4(a)</p>
+                  </motion.div>
+
+                  {/* Node 3: Methodology */}
+                  <motion.div
+                    ref={node3Ref}
+                    className="bg-white border border-border shadow-lg rounded-xl p-5 ml-auto mr-0 w-64 relative"
+                    animate={{ y: isHovered ? -5 : 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <div className="absolute top-1/2 -left-3 w-3 h-3 bg-brand-blue rounded-full border-2 border-white shadow-sm" />
+                    <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Methodology</span>
+                    <p className="text-[13px] text-foreground font-medium leading-relaxed">
+                      Total Debt divided by Total Tangible Assets, excluding derivative valuations.
+                    </p>
+                  </motion.div>
+
                 </div>
-
-                {/* Overlay Metadata Panel */}
-                <motion.div 
-                  className="absolute -left-6 sm:-left-12 lg:-left-20 top-1/2 -translate-y-1/2 bg-white border border-[#E5E7EB] rounded-[16px] shadow-[0_12px_40px_rgba(23,32,42,0.12)] p-6 w-[280px] z-20 hidden sm:block"
-                >
-                  <div className="space-y-6 relative">
-                    
-                    {/* Value Node */}
-                    <div className="relative">
-                      <div className="flex justify-between items-start mb-1">
-                        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Metric</span>
-                        <span className="text-[11px] font-medium text-muted-foreground bg-[#F7F8FA] px-2 py-0.5 rounded">30 Jun 2026</span>
-                      </div>
-                      <h4 className="font-display font-bold text-xl text-foreground mb-1">WALE</h4>
-                      <div className="font-mono-figure font-bold text-3xl text-brand-blue tracking-tight">
-                        5.1 <span className="text-sm text-muted-foreground font-medium uppercase tracking-widest ml-1">years</span>
-                      </div>
-                      
-                      {/* Connection Dot 1 */}
-                      <div className="absolute top-1/2 -right-6 w-2 h-2 rounded-full bg-brand-blue z-20" />
-                    </div>
-
-                    <div className="w-full h-px bg-border"></div>
-
-                    {/* Source Node */}
-                    <div className="relative">
-                      <span className="block text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Source</span>
-                      <p className="text-[14px] font-semibold text-foreground leading-snug">FY2026 Annual Report</p>
-                      <p className="text-[12px] text-muted-foreground mt-1">Page 24, Note 3(b)</p>
-                      
-                      {/* Connection Dot 2 */}
-                      <div className="absolute top-1/2 -right-6 w-2 h-2 rounded-full bg-brand-blue z-20" />
-                    </div>
-
-                    {/* SVG Connector Line */}
-                    <svg className="absolute -right-[60px] top-0 h-full w-[60px] pointer-events-none z-10 overflow-visible" style={{ left: '100%' }}>
-                      <motion.path 
-                        d="M 0 35 C 40 35, 20 100, 60 100" 
-                        fill="transparent" 
-                        stroke="#0F766E" 
-                        strokeWidth="1.5"
-                        strokeDasharray="4 4"
-                        initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ 
-                          pathLength: isHovered ? 1 : 0, 
-                          opacity: isHovered ? 1 : 0 
-                        }}
-                        transition={{ duration: 0.6, ease: "easeInOut" }}
-                      />
-                    </svg>
-
-                  </div>
-                </motion.div>
-
-                {/* Mobile Fallback Panel */}
-                <div className="mt-4 bg-[#F7F8FA] border border-border rounded-xl p-4 sm:hidden">
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">WALE</span>
-                      <div className="font-mono-figure font-bold text-2xl text-brand-blue tracking-tight">
-                        5.1 <span className="text-xs text-muted-foreground font-medium uppercase tracking-widest">yrs</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Source</span>
-                      <span className="text-xs font-semibold text-foreground">FY26 Annual Report</span>
-                    </div>
-                  </div>
-                </div>
-
               </div>
 
             </ScaleReveal>

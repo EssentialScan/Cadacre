@@ -5,26 +5,14 @@ import { HeroMapLoader } from "@/components/map/HeroMapLoader";
 import { Counter } from "@/components/motion/Counter";
 import { Button } from "@/components/ui/button";
 import type { Town } from "@/data/towns";
-import { AmbientDataBackground } from "@/components/ambient/AmbientDataBackground";
-import { useScroll, useTransform, motion } from "framer-motion";
-import { useRef } from "react";
+import { AmbientHeroBackground } from "@/components/ambient/AmbientHeroBackground";
 
 export function Hero({ towns }: { towns: Town[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  
-  // Fade out ambient background slightly when scrolling away from hero
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.3]);
-
   return (
-    <section ref={containerRef} className="relative overflow-hidden min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
       
-      <motion.div className="absolute inset-0" style={{ opacity }}>
-        <AmbientDataBackground />
-      </motion.div>
+      {/* Ambient atmospheric background — self-contained client component */}
+      <AmbientHeroBackground />
 
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 relative z-10 py-20">
         {/* Eyebrow */}
@@ -86,22 +74,35 @@ export function Hero({ towns }: { towns: Town[] }) {
           </div>
 
           {/* Map panel */}
-          <SlideIn delay={0.3} direction="right" className="lg:mt-4 relative group">
-            {/* Ambient Glow */}
-            <motion.div 
-              className="absolute -inset-4 rounded-3xl bg-brand-blue/[0.03] blur-2xl pointer-events-none"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <div className="overflow-hidden rounded-xl bg-white border border-border shadow-premium h-full min-h-[400px] transition-all hover:shadow-premium-hover relative z-10">
-              <HeroMapLoader towns={towns} />
+          <SlideIn delay={0.3} direction="right" className="lg:mt-4 relative z-20">
+            {/* Parallax wrapper for the image/panel */}
+            <div className="relative group lg:w-[115%] lg:-mr-[15%] transition-transform duration-1000 ease-out hover:-translate-y-1">
+              {/* Soft atmospheric shadow */}
+              <div 
+                className="absolute -inset-6 rounded-[2rem] opacity-40 blur-3xl pointer-events-none bg-blend-multiply"
+                style={{ background: 'radial-gradient(circle, rgba(15,118,110,0.08) 0%, transparent 70%)' }} 
+              />
+              
+              <div className="relative overflow-hidden rounded-2xl bg-white border border-border shadow-[0_8px_32px_rgba(15,23,42,0.06)] h-full min-h-[440px]">
+                <HeroMapLoader towns={towns} />
+              </div>
+              
+              {/* Live Data Indicator */}
+              <div className="absolute -bottom-4 -right-4 lg:-bottom-6 lg:-left-6 lg:right-auto bg-white/90 backdrop-blur-md border border-border rounded-lg shadow-sm py-2.5 px-4 flex items-center gap-3">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-blue"></span>
+                </span>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase leading-none mb-1">Live Status</span>
+                  <span className="text-[13px] font-medium text-foreground leading-none">Data updated 2h ago</span>
+                </div>
+              </div>
             </div>
-            <p className="mt-4 text-[11px] font-medium text-muted-foreground/60 text-right uppercase tracking-wider relative z-10">
-              Real assets, live from public filings
-            </p>
           </SlideIn>
         </div>
       </div>
     </section>
   );
 }
+
