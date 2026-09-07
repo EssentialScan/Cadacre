@@ -2,15 +2,12 @@ import { getDb } from "@/db/client";
 import { reits } from "@/db/schema";
 import ModellingClient from "./ModellingClient";
 import { isNotNull } from "drizzle-orm";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
-import { AmbientSection } from "@/components/ambient/AmbientSection";
 
 export const dynamic = 'force-dynamic';
 
 export default async function ModellingPage() {
   const db = getDb();
-  let availableReits = [];
+  let availableReits: any[] = [];
   
   if (db) {
     availableReits = await db

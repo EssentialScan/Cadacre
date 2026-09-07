@@ -1,8 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isSubscriber } from "@/lib/entitlements";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
 import { ReitPortfolioTracker } from "@/components/ReitPortfolioTracker";
 import { Lock } from "lucide-react";
 import Link from "next/link";

@@ -14,6 +14,7 @@ export default function ModellingClient({ initialReits }: { initialReits: any[] 
     reit: any;
     projections: any[];
     assumptions: string[];
+    error?: string;
   } | null>(null);
 
   const handleRunModel = async () => {
@@ -161,7 +162,10 @@ export default function ModellingClient({ initialReits }: { initialReits: any[] 
                       tickFormatter={(val) => `${val}%`}
                     />
                     <Tooltip 
-                      formatter={(value: number, name: string) => [`${value.toFixed(2)}%`, name.charAt(0).toUpperCase() + name.slice(1)]}
+                      formatter={(value: any, name: any) => {
+                        if (typeof value !== 'number') return [String(value), String(name)];
+                        return [`${value.toFixed(2)}%`, String(name).charAt(0).toUpperCase() + String(name).slice(1)];
+                      }}
                       labelStyle={{ color: '#0F172A', fontWeight: 'bold', marginBottom: '4px' }}
                       contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     />

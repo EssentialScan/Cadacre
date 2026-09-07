@@ -1,10 +1,6 @@
 import { getDb } from "@/db/client";
 import { userProfiles, portfolioHoldings, reits } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
-import { AppLayout } from "@/components/AppLayout";
-import { AmbientSection } from "@/components/ambient/AmbientSection";
 import CommunityClient from "./CommunityClient";
 import { auth } from "@clerk/nextjs/server";
 import { isSubscriber } from "@/lib/entitlements";

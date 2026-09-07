@@ -4,8 +4,8 @@ import { useState, useTransition } from "react";
 import {
   addPortfolioProperty,
   removePortfolioProperty,
-} from "@/app/dashboard/actions";
-import type { PortfolioProperty } from "@/app/dashboard/types";
+} from "@/app/(app)/dashboard/actions";
+import type { PortfolioProperty } from "@/app/(app)/dashboard/types";
 import { estimateWeeklyRepayment, formatMoney, RBA_INVESTOR_VARIABLE_RATE } from "@/lib/investmentMath";
 
 export function PortfolioTracker({

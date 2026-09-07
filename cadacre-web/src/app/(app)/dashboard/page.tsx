@@ -2,7 +2,6 @@ import { auth } from "@clerk/nextjs/server";
 import { getDb } from "@/db/client";
 import { reits } from "@/db/schema";
 import { desc, isNotNull } from "drizzle-orm";
-import { AppLayout } from "@/components/AppLayout";
 import DashboardClient from "./DashboardClient";
 import { redirect } from "next/navigation";
 import { isSubscriber } from "@/lib/entitlements";
@@ -19,7 +18,7 @@ export default async function DashboardPage() {
   const proSubscriber = await isSubscriber(userId);
 
   const db = getDb();
-  let allReits = [];
+  let allReits: any[] = [];
   
   if (db) {
     allReits = await db

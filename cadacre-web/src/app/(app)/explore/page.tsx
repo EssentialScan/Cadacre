@@ -1,4 +1,3 @@
-import { SiteHeader } from "@/components/SiteHeader";
 import { NationalAssetMap } from "@/components/NationalAssetMap";
 import { MapPin } from "lucide-react";
 import { getDb } from "@/db/client";

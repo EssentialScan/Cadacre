@@ -1,9 +1,7 @@
 "use client";
+import { AmbientSection } from "@/components/ambient/AmbientSection";
 
 import { useState } from "react";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
-import { AmbientSection } from "@/components/ambient/AmbientSection";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Loader2 } from "lucide-react";
 
