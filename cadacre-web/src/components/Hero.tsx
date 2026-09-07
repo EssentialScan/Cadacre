@@ -5,17 +5,26 @@ import { HeroMapLoader } from "@/components/map/HeroMapLoader";
 import { Counter } from "@/components/motion/Counter";
 import { Button } from "@/components/ui/button";
 import type { Town } from "@/data/towns";
+import { AmbientDataBackground } from "@/components/ambient/AmbientDataBackground";
+import { useScroll, useTransform, motion } from "framer-motion";
+import { useRef } from "react";
 
 export function Hero({ towns }: { towns: Town[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  
+  // Fade out ambient background slightly when scrolling away from hero
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.3]);
+
   return (
-    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
-      {/* Subtle Grid texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" aria-hidden
-        style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, #000 1px, transparent 0)",
-          backgroundSize: "40px 40px"
-        }}
-      />
+    <section ref={containerRef} className="relative overflow-hidden min-h-[90vh] flex items-center">
+      
+      <motion.div className="absolute inset-0" style={{ opacity }}>
+        <AmbientDataBackground />
+      </motion.div>
 
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 relative z-10 py-20">
         {/* Eyebrow */}
@@ -77,11 +86,17 @@ export function Hero({ towns }: { towns: Town[] }) {
           </div>
 
           {/* Map panel */}
-          <SlideIn delay={0.3} direction="right" className="lg:mt-4">
-            <div className="overflow-hidden rounded-xl bg-white border border-border shadow-premium h-full min-h-[400px] transition-all hover:shadow-premium-hover">
+          <SlideIn delay={0.3} direction="right" className="lg:mt-4 relative group">
+            {/* Ambient Glow */}
+            <motion.div 
+              className="absolute -inset-4 rounded-3xl bg-brand-blue/[0.03] blur-2xl pointer-events-none"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <div className="overflow-hidden rounded-xl bg-white border border-border shadow-premium h-full min-h-[400px] transition-all hover:shadow-premium-hover relative z-10">
               <HeroMapLoader towns={towns} />
             </div>
-            <p className="mt-4 text-[11px] font-medium text-muted-foreground/60 text-right uppercase tracking-wider">
+            <p className="mt-4 text-[11px] font-medium text-muted-foreground/60 text-right uppercase tracking-wider relative z-10">
               Real assets, live from public filings
             </p>
           </SlideIn>

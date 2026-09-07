@@ -1,24 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SlideIn } from "@/components/motion/ScrollAnimations";
-import { ScaleReveal } from "@/components/motion/ScrollAnimations";
-import { motion } from "framer-motion";
-import { MapPin, Search } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 export function HeroSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Parallax effect
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], [0, 12]);
+
   return (
-    <section className="relative overflow-hidden bg-background pt-16 pb-20 md:pt-28 md:pb-24 border-b border-border">
-      <div className="mx-auto max-w-6xl px-6 sm:px-8 relative z-10">
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+    <section ref={containerRef} className="relative overflow-visible bg-background pt-16 pb-20 md:pt-28 md:pb-24 border-b border-border">
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Copy */}
-          <div className="lg:col-span-5 flex flex-col items-start text-left">
+          <div className="lg:col-span-5 flex flex-col items-start text-left z-20">
             <SlideIn direction="up" delay={0.1}>
-              <div className="mb-6 inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.06em] text-muted-foreground">
-                Australian REIT data, without the spreadsheet
+              <div className="mb-6 inline-flex items-center rounded-full border border-border bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.06em] text-muted-foreground shadow-sm">
+                Australian REIT data
               </div>
             </SlideIn>
             
@@ -46,113 +55,68 @@ export function HeroSection() {
                 </Button>
               </Link>
             </SlideIn>
-
-            <SlideIn direction="up" delay={0.5} className="mt-12 flex items-center gap-6 border-t border-border pt-8 w-full">
-              <div className="flex flex-col">
-                <span className="font-medium text-foreground text-[15px] mb-1">65+ REITs</span>
-                <span className="text-[13px] text-muted-foreground">Tracked in dataset</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium text-foreground text-[15px] mb-1">1,500+</span>
-                <span className="text-[13px] text-muted-foreground">Mapped assets</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium text-foreground text-[15px] mb-1">National</span>
-                <span className="text-[13px] text-muted-foreground">Coverage</span>
-              </div>
-            </SlideIn>
           </div>
 
-          {/* Right Column: Miniature Product Preview */}
-          <div className="lg:col-span-7 relative w-full h-[540px] lg:h-[640px] perspective-1000">
-            <ScaleReveal delay={0.3} className="w-full h-full relative">
-              <motion.div 
-                initial={{ y: 12, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-                className="absolute inset-0 bg-white border border-border rounded-xl shadow-premium overflow-hidden flex flex-col"
+          {/* Right Column: Generated Image with Art Direction */}
+          <div className="lg:col-span-7 relative w-full h-[400px] sm:h-[500px] lg:h-[600px] flex justify-end">
+            <motion.div 
+              style={{ y }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full h-full lg:w-[110%] lg:-mr-[10%] rounded-[24px] overflow-visible shadow-[0_8px_30px_rgba(23,32,42,0.06)] border border-[rgba(23,32,42,0.08)]"
+            >
+              {/* Image Container with Masking */}
+              <div 
+                className="absolute inset-0 rounded-[24px] overflow-hidden"
+                style={{
+                  maskImage: "linear-gradient(to right, transparent 0%, black 15%)",
+                  WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 15%)"
+                }}
               >
-                {/* Fake App Header */}
-                <div className="h-14 border-b border-border bg-background/50 flex items-center px-5 gap-3">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-border" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-border" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-border" />
+                <Image 
+                  src="/reitcompare-australian-property-data.jpg"
+                  alt="Australian commercial property landscape with subtle property-data visualisation"
+                  fill
+                  priority
+                  className="object-cover object-right"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 50vw"
+                />
+              </div>
+
+              {/* Product UI Overlay */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 bg-white/90 backdrop-blur-md border border-[rgba(23,32,42,0.08)] rounded-[14px] p-4 sm:p-5 shadow-lg w-48 sm:w-56"
+              >
+                <div className="flex items-center gap-2 mb-3 border-b border-border/50 pb-3">
+                  <div className="w-5 h-5 rounded bg-brand-blue/10 flex items-center justify-center">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-brand-blue"></div>
                   </div>
-                  <div className="ml-auto flex items-center gap-2">
-                    <div className="bg-white border border-border rounded-md h-8 w-48 flex items-center px-3 shadow-[0_1px_2px_rgba(15,23,42,0.02)]">
-                      <Search className="h-3.5 w-3.5 text-muted-foreground/60 mr-2" />
-                      <span className="text-[11px] text-muted-foreground font-medium tracking-wide">Search REITs...</span>
-                    </div>
-                  </div>
+                  <span className="font-semibold text-[13px] tracking-tight">REITCompare</span>
                 </div>
-
-                {/* Fake App Body */}
-                <div className="flex-1 p-6 relative bg-background/30">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-display font-semibold text-lg text-foreground tracking-tight">Compare REITs</h3>
-                    <span className="text-xs text-muted-foreground font-medium tabular-nums">18 results</span>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[12px] text-muted-foreground">Coverage</span>
+                    <span className="text-[12px] font-medium text-foreground">65+ REITs</span>
                   </div>
-
-                  {/* Fake Filters */}
-                  <div className="flex gap-2 mb-6">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-border text-foreground shadow-[0_1px_2px_rgba(15,23,42,0.02)] text-xs font-medium">
-                      Sector: Industrial
-                      <span className="opacity-40 ml-1">×</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand-blue/10 border border-brand-blue/20 text-brand-blue text-xs font-medium">
-                      Yield &gt; 5%
-                      <span className="opacity-60 ml-1 cursor-pointer">×</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand-blue/10 border border-brand-blue/20 text-brand-blue text-xs font-medium">
-                      Gearing &lt; 40%
-                      <span className="opacity-60 ml-1 cursor-pointer">×</span>
-                    </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[12px] text-muted-foreground">Assets</span>
+                    <span className="text-[12px] font-medium text-foreground">1,500+</span>
                   </div>
-
-                  {/* Fake Table */}
-                  <div className="border border-border rounded-lg bg-white overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.02)]">
-                    <div className="grid grid-cols-4 gap-4 p-3 border-b border-border bg-background/50 text-[11px] uppercase font-bold tracking-wider text-muted-foreground">
-                      <div>REIT</div>
-                      <div className="text-right">Yield</div>
-                      <div className="text-right">NTA</div>
-                      <div className="text-right">Gearing</div>
+                  <div className="pt-2 mt-2 border-t border-border/50 flex justify-between items-center">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-data-green animate-pulse"></div>
+                      <span className="text-[10px] text-muted-foreground">Live sync</span>
                     </div>
-                    
-                    {/* Rows */}
-                    <div className="grid grid-cols-4 gap-4 p-4 border-b border-border hover:bg-muted/30 transition-colors group">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-[13px] text-foreground">GPT</span>
-                        <span className="text-[11px] text-muted-foreground">Diversified</span>
-                      </div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums pt-1">5.2%</div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums text-data-red pt-1">-8.4%</div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums pt-1">28.7%</div>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-4 p-4 border-b border-border hover:bg-muted/30 transition-colors">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-[13px] text-foreground">DXS</span>
-                        <span className="text-[11px] text-muted-foreground">Office</span>
-                      </div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums pt-1">6.1%</div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums text-data-red pt-1">-12.1%</div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums pt-1">31.2%</div>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-4 p-4 hover:bg-muted/30 transition-colors">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-[13px] text-foreground">GMG</span>
-                        <span className="text-[11px] text-muted-foreground">Industrial</span>
-                      </div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums pt-1">1.2%</div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums text-data-green pt-1">+4.2%</div>
-                      <div className="text-right font-mono-figure font-medium text-[13px] tabular-nums pt-1">8.5%</div>
-                    </div>
+                    <span className="text-[10px] text-muted-foreground">Updated 2h ago</span>
                   </div>
                 </div>
               </motion.div>
-            </ScaleReveal>
+            </motion.div>
           </div>
 
         </div>
