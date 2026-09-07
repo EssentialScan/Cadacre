@@ -52,7 +52,7 @@ export function FaqFinalSection() {
   return (
     <>
       {/* Differentiation Section */}
-      <section className="py-20 md:py-32 bg-transparent border-b border-border relative overflow-hidden">
+      <section className="py-20 md:py-32 bg-transparent relative overflow-hidden">
         <AmbientSection theme="neutral" />
         <div className="mx-auto max-w-6xl px-6 sm:px-8 relative z-10">
           <div className="text-center mb-20">
@@ -102,7 +102,7 @@ export function FaqFinalSection() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 md:py-32 bg-transparent border-b border-border relative overflow-hidden">
+      <section className="py-20 md:py-32 bg-transparent relative overflow-hidden">
         <AmbientSection theme="neutral" />
         <div className="mx-auto max-w-4xl px-6 sm:px-8 relative z-10">
           <SlideIn direction="up">

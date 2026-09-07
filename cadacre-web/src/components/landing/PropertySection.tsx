@@ -19,7 +19,7 @@ export function PropertySection() {
   const textY = useTransform(scrollYProgress, [0, 1], ["5%", "-5%"]);
 
   return (
-    <section ref={containerRef} className="py-20 md:py-32 lg:py-48 bg-[#F7F8FA] border-b border-border overflow-hidden relative">
+    <section ref={containerRef} className="py-20 md:py-32 lg:py-48 bg-[#F7F8FA] overflow-hidden relative">
       <AmbientSection theme="property" />
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
         

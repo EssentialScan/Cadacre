@@ -61,7 +61,7 @@ export function TransparencySection() {
   }, []);
 
   return (
-    <section ref={containerRef} className="py-20 md:py-32 bg-transparent relative overflow-hidden border-b border-border">
+    <section ref={containerRef} className="py-20 md:py-32 bg-transparent relative overflow-hidden">
       <AmbientSection theme="transparency" />
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
         

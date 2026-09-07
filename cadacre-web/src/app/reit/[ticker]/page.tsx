@@ -237,6 +237,46 @@ export default async function ReitDetailPage({ params }: { params: Promise<{ tic
                 </CardContent>
               </Card>
 
+              {/* Affiliate Links - Monetization Wedge */}
+              <Card className="bg-white shadow-premium border border-brand-blue/20 bg-gradient-to-b from-white to-brand-blue/5">
+                <CardHeader className="pb-4 pt-5">
+                  <CardTitle className="text-base font-semibold flex items-center gap-2">
+                    Invest in {dbReit.ticker}
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Compare brokers and start investing in {dbReit.name} today. Capital at risk.
+                  </p>
+                </CardHeader>
+                <CardContent className="p-5 pt-0 space-y-3">
+                  <a href={`https://pearler.com/invest/shares/asx/${dbReit.ticker.toLowerCase()}?utm_source=reitcompare&utm_medium=affiliate`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full px-4 py-3 bg-white border border-border rounded-lg shadow-sm hover:border-brand-blue hover:shadow-md transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">P</div>
+                      <span className="text-sm font-medium">Pearler</span>
+                    </div>
+                    <span className="text-xs font-semibold text-brand-blue group-hover:underline">View Broker →</span>
+                  </a>
+                  
+                  <a href={`https://hellostake.com/au/asx/${dbReit.ticker.toLowerCase()}?utm_source=reitcompare&utm_medium=affiliate`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full px-4 py-3 bg-white border border-border rounded-lg shadow-sm hover:border-brand-blue hover:shadow-md transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-white font-bold text-xs">S</div>
+                      <span className="text-sm font-medium">Stake</span>
+                    </div>
+                    <span className="text-xs font-semibold text-brand-blue group-hover:underline">View Broker →</span>
+                  </a>
+                  
+                  <a href={`https://www.cmcmarkets.com/en-au/invest?utm_source=reitcompare&utm_medium=affiliate`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full px-4 py-3 bg-white border border-border rounded-lg shadow-sm hover:border-brand-blue hover:shadow-md transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">C</div>
+                      <span className="text-sm font-medium">CMC Markets</span>
+                    </div>
+                    <span className="text-xs font-semibold text-brand-blue group-hover:underline">View Broker →</span>
+                  </a>
+                  <p className="text-[10px] text-muted-foreground/60 text-center pt-2">
+                    We may receive a commission if you open an account through these links. This does not constitute financial advice.
+                  </p>
+                </CardContent>
+              </Card>
+
             </div>
           </div>
 

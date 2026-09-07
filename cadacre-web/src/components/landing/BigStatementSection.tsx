@@ -3,7 +3,7 @@ import { AmbientSection } from "@/components/ambient/AmbientSection";
 
 export function BigStatementSection() {
   return (
-    <section className="py-20 md:py-48 bg-transparent border-b border-border relative overflow-hidden text-center">
+    <section className="py-20 md:py-48 bg-transparent relative overflow-hidden text-center">
       <AmbientSection theme="statement" />
       
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 relative z-10 text-center">

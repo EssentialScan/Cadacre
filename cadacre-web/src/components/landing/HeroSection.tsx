@@ -7,8 +7,10 @@ import { SlideIn } from "@/components/motion/ScrollAnimations";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { AmbientSection } from "@/components/ambient/AmbientSection";
+import { NationalAssetMap } from "@/components/NationalAssetMap";
+import { Lock } from "lucide-react";
 
-export function HeroSection() {
+export function HeroSection({ heroAssets }: { heroAssets?: any[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Parallax effect
@@ -20,7 +22,7 @@ export function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 12]);
 
   return (
-    <section ref={containerRef} className="relative overflow-visible bg-transparent pt-16 pb-20 md:pt-28 md:pb-24 border-b border-border">
+    <section ref={containerRef} className="relative overflow-visible bg-transparent pt-16 pb-20 md:pt-28 md:pb-24">
       <AmbientSection theme="hero" />
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -68,18 +70,13 @@ export function HeroSection() {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="relative w-full h-full lg:w-[110%] lg:-mr-[10%] rounded-[24px] overflow-visible shadow-[0_8px_30px_rgba(23,32,42,0.06)] border border-[rgba(23,32,42,0.08)]"
             >
-              {/* Image Container with Masking */}
+              {/* Map Container with Masking */}
               <div
-                className="absolute inset-0 rounded-[24px] overflow-hidden lg:[mask-image:linear-gradient(to_right,transparent_0%,black_15%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_15%)]"
+                className="absolute inset-0 rounded-[24px] overflow-hidden lg:[mask-image:linear-gradient(to_right,transparent_0%,black_15%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_15%)] bg-muted/30"
               >
-                <Image 
-                  src="/reitcompare-australian-property-data.jpg"
-                  alt="Australian commercial property landscape with subtle property-data visualisation"
-                  fill
-                  priority
-                  className="object-cover object-right"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 50vw"
-                />
+                <div className="relative w-full h-full">
+                  <NationalAssetMap assets={heroAssets || []} initialViewState={{ longitude: 133.7751, latitude: -25.2744, zoom: 3 }} isLockedSample={true} />
+                </div>
               </div>
 
               {/* Product UI Overlay */}
@@ -89,7 +86,7 @@ export function HeroSection() {
                 transition={{ delay: 0.6, duration: 0.5 }}
                 className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 bg-white/90 backdrop-blur-md border border-[rgba(23,32,42,0.08)] rounded-[14px] p-4 sm:p-5 shadow-lg w-48 sm:w-56"
               >
-                <div className="flex items-center gap-2 mb-3 border-b border-border/50 pb-3">
+                <div className="flex items-center gap-2 mb-3/50 pb-3">
                   <div className="w-5 h-5 rounded bg-brand-blue/10 flex items-center justify-center">
                     <div className="w-2.5 h-2.5 rounded-sm bg-brand-blue"></div>
                   </div>

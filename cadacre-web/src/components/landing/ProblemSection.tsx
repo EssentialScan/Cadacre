@@ -18,7 +18,7 @@ export function ProblemSection() {
   const imageY = useTransform(scrollYProgress, [0, 1], ["-2%", "4%"]);
 
   return (
-    <section ref={containerRef} className="py-20 md:py-32 bg-transparent overflow-hidden relative border-b border-border">
+    <section ref={containerRef} className="py-20 md:py-32 bg-transparent overflow-hidden relative">
       <AmbientSection theme="warm" />
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 relative">
         <div className="flex flex-col lg:flex-row relative z-10">

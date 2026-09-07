@@ -4,13 +4,14 @@ import { useState, useMemo } from "react";
 import maplibregl from "maplibre-gl";
 import Map, { Marker, Popup, NavigationControl } from "@vis.gl/react-maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { MapPin } from "lucide-react";
+import { MapPin, Lock } from "lucide-react";
+import Link from "next/link";
 export interface AssetMapItem {
   id: string;
   reitTicker: string;
   address: string;
   suburb: string | null;
-  state: string;
+  state?: string | null;
   lat: number | null;
   lng: number | null;
   propertyType: string | null;
@@ -24,9 +25,10 @@ interface NationalAssetMapProps {
     latitude: number;
     zoom: number;
   };
+  isLockedSample?: boolean;
 }
 
-export function NationalAssetMap({ assets, initialViewState }: NationalAssetMapProps) {
+export function NationalAssetMap({ assets, initialViewState, isLockedSample = false }: NationalAssetMapProps) {
   const [popupInfo, setPopupInfo] = useState<AssetMapItem | null>(null);
 
   const pins = useMemo(
@@ -89,6 +91,10 @@ export function NationalAssetMap({ assets, initialViewState }: NationalAssetMapP
     <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, borderRadius: "inherit" }}>
       <Map
         initialViewState={initialViewState || defaultViewState}
+        maxBounds={[
+          [110.0, -45.0], // Southwest coordinates (approximate Australia bounds)
+          [155.0, -9.0]   // Northeast coordinates
+        ]}
         mapStyle={`https://api.maptiler.com/maps/streets-v4/style.json?key=${MAPTILER_KEY}`}
         style={{ width: "100%", height: "100%", borderRadius: "inherit" }}
       >
@@ -118,13 +124,20 @@ export function NationalAssetMap({ assets, initialViewState }: NationalAssetMapP
               {popupInfo.address}
             </h4>
             <p className="text-xs text-muted-foreground mb-3">
-              {popupInfo.suburb}, {popupInfo.state}
+              {popupInfo.suburb}{popupInfo.state ? `, ${popupInfo.state}` : ""}
             </p>
             <div className="border-t border-border pt-2 mt-2 flex justify-between items-end">
               <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider">Book Value</span>
-              <span className="font-mono-figure font-bold text-foreground text-sm">
-                {formatCurrency(popupInfo.bookValue)}
-              </span>
+              {isLockedSample ? (
+                <Link href="/explore" className="group flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-0.5 rounded transition-colors cursor-pointer">
+                  <Lock className="w-3 h-3 text-amber-600" />
+                  <span className="text-[10px] font-bold text-amber-700">Premium Only</span>
+                </Link>
+              ) : (
+                <span className="font-mono-figure font-bold text-foreground text-sm">
+                  {formatCurrency(popupInfo.bookValue)}
+                </span>
+              )}
             </div>
           </div>
         </Popup>
