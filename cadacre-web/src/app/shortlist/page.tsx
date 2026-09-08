@@ -24,7 +24,7 @@ export default async function ShortlistPage({
 
   return (
     <div className="min-h-screen bg-parchment">
-      <header className="sticky top-0 z-50 border-b border-faded-rule bg-parchment/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-faded-rule bg-parchment/95 ">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/content.png" alt="Cadacre" width={1254} height={1254} priority className="h-9 w-9 rounded-sm" />

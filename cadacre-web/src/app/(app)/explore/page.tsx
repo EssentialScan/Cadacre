@@ -28,6 +28,11 @@ export default async function ExplorePage() {
           lng: reitAssets.lng,
           propertyType: reitAssets.propertyType,
           bookValue: reitAssets.bookValue,
+          occupancyRate: reitAssets.occupancyRate,
+          wale: reitAssets.wale,
+          capRate: reitAssets.capRate,
+          gla: reitAssets.gla,
+          majorTenant: reitAssets.majorTenant,
         })
         .from(reitAssets)
         .leftJoin(reits, eq(reits.id, reitAssets.reitId));

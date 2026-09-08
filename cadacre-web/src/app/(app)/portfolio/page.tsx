@@ -40,7 +40,7 @@ export default async function PortfolioPage() {
           <ReitPortfolioTracker />
         ) : (
           <div className="max-w-lg">
-            <div className="rounded-xl border border-border bg-white shadow-premium p-8 text-center">
+            <div className="rounded-xl border border-border bg-white shadow-sm p-8 text-center">
               <div className="mx-auto w-12 h-12 rounded-full bg-brand-blue/10 flex items-center justify-center mb-4">
                 <Lock className="h-6 w-6 text-brand-blue" />
               </div>

@@ -25,7 +25,7 @@ export function PremiumApiSection() {
           {/* Left: Typography */}
           <div className="flex flex-col items-start justify-center text-left">
             <SlideIn direction="up">
-              <div className="inline-flex items-center gap-2 mb-8 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 mb-8 bg-white border border-white/10 rounded-full px-4 py-1.5 ">
                 <Database className="h-4 w-4 text-brand-blue" />
                 <span className="text-[11px] font-bold uppercase tracking-widest text-white/80">REITCompare Pro & API</span>
               </div>
@@ -39,11 +39,11 @@ export function PremiumApiSection() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <Button size="lg" className="rounded-lg bg-white text-[#101820] hover:bg-white/90 border-none h-14 text-[15px] font-bold px-8 w-full sm:w-auto transition-colors">
+                <Button size="lg" className="rounded-lg bg-white text-[#101820] hover:bg-white border-none h-14 text-[15px] font-bold px-8 w-full sm:w-auto transition-colors">
                   Explore API
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="lg" className="rounded-lg bg-transparent border-white/20 text-white hover:bg-white/10 h-14 text-[15px] font-medium px-8 w-full sm:w-auto transition-colors">
+                <Button variant="outline" size="lg" className="rounded-lg bg-transparent border-white/20 text-white hover:bg-white h-14 text-[15px] font-medium px-8 w-full sm:w-auto transition-colors">
                   <Code2 className="h-4 w-4 mr-2 text-white/70" />
                   View documentation
                 </Button>
@@ -56,7 +56,7 @@ export function PremiumApiSection() {
             <ScaleReveal delay={0.2} className="relative lg:absolute lg:inset-0 w-full lg:h-full">
 
               {/* Image Base - decorative, hidden on mobile to avoid clashing with the code snippets */}
-              <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-full lg:w-[120%] h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-[0_24px_64px_rgba(0,0,0,0.4)]">
+              <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-full lg:w-[120%] h-[500px] rounded-lg overflow-hidden border border-white/10 shadow-[0_24px_64px_rgba(0,0,0,0.4)]">
                 <Image
                   src="/reitcompare-api-data.jpg"
                   alt="REITCompare Pro dashboard and API visualization"
@@ -75,9 +75,9 @@ export function PremiumApiSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: 0.4, duration: 0.6 }}
-                  className="bg-[#1C2733]/95 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-[0_24px_48px_rgba(0,0,0,0.5)] font-mono text-sm w-full max-w-[360px] pointer-events-auto"
+                  className="bg-[#1C2733]/95  border border-white/10 rounded-xl overflow-hidden shadow-[0_24px_48px_rgba(0,0,0,0.5)] font-mono text-sm w-full max-w-[360px] pointer-events-auto"
                 >
-                  <div className="flex items-center px-4 py-3 border-b border-white/10 bg-white/5">
+                  <div className="flex items-center px-4 py-3 border-b border-white/10 bg-white">
                     <div className="text-[10px] font-bold tracking-widest uppercase text-white/40">Request</div>
                     <div className="ml-auto text-brand-blue text-[11px] font-bold">GET /api/v1/reits/GPT</div>
                   </div>
@@ -100,9 +100,9 @@ export function PremiumApiSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: 0.6, duration: 0.6 }}
-                  className="bg-[#1C2733]/95 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-[0_24px_48px_rgba(0,0,0,0.5)] font-mono text-sm w-full max-w-[300px] pointer-events-auto lg:ml-12"
+                  className="bg-[#1C2733]/95  border border-white/10 rounded-xl overflow-hidden shadow-[0_24px_48px_rgba(0,0,0,0.5)] font-mono text-sm w-full max-w-[300px] pointer-events-auto lg:ml-12"
                 >
-                  <div className="flex items-center px-4 py-3 border-b border-white/10 bg-white/5">
+                  <div className="flex items-center px-4 py-3 border-b border-white/10 bg-white">
                     <div className="text-[10px] font-bold tracking-widest uppercase text-white/40">Webhook Alert</div>
                   </div>
                   <div className="p-4 text-white/80 leading-relaxed text-[12px]">

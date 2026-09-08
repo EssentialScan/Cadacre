@@ -43,7 +43,7 @@ export function CompetitivePositioningSection() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-white shadow-premium overflow-hidden">
+        <div className="rounded-lg border border-border bg-white shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

@@ -33,7 +33,7 @@ export function Pricing() {
           </SlideIn>
 
           <ScaleReveal delay={0.15} className="lg:col-span-6 lg:col-start-7">
-            <Card className="bg-white shadow-premium border border-border transition-all hover:shadow-premium-hover rounded-xl">
+            <Card className="bg-white shadow-sm border border-border transition-all hover:shadow-md rounded-xl">
               <CardHeader className="pb-8">
                 <div className="flex items-baseline justify-between">
                   <CardDescription className="font-mono-figure text-[10px] font-bold uppercase tracking-[0.2em] text-brand-blue">Free</CardDescription>

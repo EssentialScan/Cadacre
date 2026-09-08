@@ -126,7 +126,7 @@ export default function CommunitySection({ reitId, ticker }: { reitId: string, t
         </button>
       </div>
 
-      <Card className="bg-white shadow-premium border border-border">
+      <Card className="bg-white shadow-sm border border-border">
         <div className="flex border-b border-border/50">
           <button 
             onClick={() => setActiveTab("discussion")}

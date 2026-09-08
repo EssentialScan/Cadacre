@@ -26,7 +26,7 @@ export function ProblemSection() {
           {/* Left Column: Overlapping Text & Problems */}
           <div className="lg:w-[45%] relative z-20 flex flex-col justify-center lg:pr-12 lg:pt-24 lg:pb-24">
             {/* White floating panel for editorial overlap */}
-            <div className="absolute inset-0 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(15,23,42,0.04)] lg:block hidden -ml-8 -mr-8 lg:mr-0 z-0"></div>
+            <div className="absolute inset-0 bg-white  rounded-lg shadow-[0_8px_32px_rgba(15,23,42,0.04)] lg:block hidden -ml-8 -mr-8 lg:mr-0 z-0"></div>
             
             <div className="relative z-10 lg:p-8">
               <SlideIn direction="up">
@@ -92,7 +92,7 @@ export function ProblemSection() {
             
             <motion.div
               style={{ y: imageY }}
-              className="relative w-full aspect-[4/3] lg:aspect-[14/10] rounded-2xl lg:rounded-l-2xl lg:rounded-r-none overflow-hidden shadow-[0_8px_32px_rgba(15,23,42,0.08)] z-10 lg:ml-[-5%]"
+              className="relative w-full aspect-[4/3] lg:aspect-[14/10] rounded-lg lg:rounded-l-2xl lg:rounded-r-none overflow-hidden shadow-[0_8px_32px_rgba(15,23,42,0.08)] z-10 lg:ml-[-5%]"
             >
               <Image 
                 src="/reitcompare-fragmented-information.jpg"

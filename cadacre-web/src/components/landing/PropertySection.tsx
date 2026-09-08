@@ -27,7 +27,7 @@ export function PropertySection() {
           
           {/* Left: Magazine Style Image (60% width, irregular position) */}
           <div className="w-full lg:w-[60%] relative z-10 lg:-ml-12 lg:-mt-12">
-            <motion.div style={{ y: imageY }} className="relative w-full aspect-[4/5] lg:aspect-[4/4] rounded-2xl overflow-hidden shadow-[0_24px_64px_rgba(15,23,42,0.12)]">
+            <motion.div style={{ y: imageY }} className="relative w-full aspect-[4/5] lg:aspect-[4/4] rounded-lg overflow-hidden shadow-[0_24px_64px_rgba(15,23,42,0.12)]">
               <Image 
                 src="/reitcompare-property-asset.jpg"
                 alt="Architectural view of a commercial property asset"
@@ -39,7 +39,7 @@ export function PropertySection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
               
               {/* Glassmorphism Metadata Card */}
-              <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl max-w-[260px]">
+              <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 bg-white  border border-white/20 rounded-lg p-6 shadow-xl max-w-[260px]">
                 <div className="space-y-4">
                   <div>
                     <span className="block text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-wider">Property</span>
@@ -62,7 +62,7 @@ export function PropertySection() {
 
           {/* Right: Giant Headline & Copy */}
           <motion.div style={{ y: textY }} className="w-full lg:w-[50%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-20 pt-16 lg:pt-0 lg:pl-16">
-            <div className="bg-white/90 backdrop-blur-xl border border-white p-8 lg:p-12 rounded-[24px] shadow-[0_24px_48px_rgba(15,23,42,0.06)]">
+            <div className="bg-white  border border-white p-8 lg:p-12 rounded-[24px] shadow-[0_24px_48px_rgba(15,23,42,0.06)]">
               <SlideIn direction="up">
                 <h2 className="font-display text-[48px] md:text-[64px] lg:text-[72px] font-bold tracking-tight text-foreground leading-[1] mb-8">
                   Know the<br />asset.

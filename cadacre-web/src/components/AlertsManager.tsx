@@ -94,7 +94,7 @@ export function AlertsManager() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-white border border-border shadow-premium">
+      <Card className="bg-white border border-border shadow-sm">
         <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5 flex flex-row items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Bell className="h-4 w-4 text-brand-blue" />

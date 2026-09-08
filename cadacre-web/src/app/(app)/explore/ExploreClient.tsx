@@ -51,7 +51,7 @@ export function ExploreClient({ assets }: ExploreClientProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-[calc(100vh-64px)] relative w-full">
+    <div className="flex-1 flex flex-col h-full relative w-full">
       <NationalAssetMap 
         assets={filteredAssets} 
         uniqueTypes={uniqueTypes}

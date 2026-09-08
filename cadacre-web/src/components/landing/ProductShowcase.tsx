@@ -114,24 +114,24 @@ export function ProductShowcase({ initialReits }: { initialReits?: any[] }) {
 
             <div className="flex h-[calc(100%-3.5rem)]">
               {/* Sidebar */}
-              <div className="w-56 border-r border-border bg-white/50 p-4 shrink-0">
+              <div className="w-56 border-r border-border bg-white p-4 shrink-0">
                 <div className="space-y-1">
                   <div 
                     onClick={() => setActiveTab("Screener")}
-                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors ${activeTab === 'Screener' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white/50'}`}
+                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors ${activeTab === 'Screener' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white'}`}
                   >
                     Screener
                   </div>
                   <div 
                     onClick={() => setActiveTab("Portfolios")}
-                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors flex justify-between items-center ${activeTab === 'Portfolios' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white/50'}`}
+                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors flex justify-between items-center ${activeTab === 'Portfolios' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white'}`}
                   >
                     <span>Portfolios</span>
                     <span className="text-[9px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded">Demo</span>
                   </div>
                   <div 
                     onClick={() => setActiveTab("Alerts")}
-                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors flex justify-between items-center ${activeTab === 'Alerts' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white/50'}`}
+                    className={`px-3 py-2 text-[13px] rounded-lg cursor-pointer transition-colors flex justify-between items-center ${activeTab === 'Alerts' ? 'font-medium bg-white shadow-sm border border-border text-foreground' : 'text-muted-foreground hover:bg-white'}`}
                   >
                     <span>Alerts</span>
                     <span className="text-[9px] uppercase font-bold tracking-wider bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded">Demo</span>
@@ -145,7 +145,7 @@ export function ProductShowcase({ initialReits }: { initialReits?: any[] }) {
                   
                   {activeTab === 'Screener' && (
                     <>
-                      <div className="grid grid-cols-6 gap-4 px-5 py-4 bg-background/80 text-[11px] uppercase font-bold tracking-wider text-muted-foreground border-b border-border/50 sticky top-0 z-20 backdrop-blur-sm">
+                      <div className="grid grid-cols-6 gap-4 px-5 py-4 bg-background/80 text-[11px] uppercase font-bold tracking-wider text-muted-foreground border-b border-border/50 sticky top-0 z-20 ">
                         <div className="col-span-2">REIT</div>
                         <div className="text-right">Sector</div>
                         <div className="text-right">Yield</div>

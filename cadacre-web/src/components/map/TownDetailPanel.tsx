@@ -124,7 +124,7 @@ export function TownDetailPanel({
           transition={{ duration: 0.25, ease: EASE }}
         >
           <motion.div
-            className="absolute inset-0 bg-ink-navy/40 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-ink-navy/40 -[2px]"
             onClick={onClose}
             aria-hidden
           />
@@ -174,7 +174,7 @@ export function TownDetailPanel({
                 </button>
               </div>
 
-              <div className="mt-6 border border-ink-navy bg-white/60 p-4 shadow-[4px_4px_0_var(--faded-rule)]">
+              <div className="mt-6 border border-ink-navy bg-white p-4 shadow-[4px_4px_0_var(--faded-rule)]">
                 <p className="font-mono-figure text-[10px] uppercase tracking-[0.18em] text-survey-brass">
                   Location summary
                 </p>

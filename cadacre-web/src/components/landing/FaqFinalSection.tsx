@@ -64,7 +64,7 @@ export function FaqFinalSection() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             <SlideIn direction="up" delay={0.1}>
               <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-brand-blue/5 flex items-center justify-center mb-6 shadow-sm border border-brand-blue/10">
+                <div className="w-16 h-16 rounded-lg bg-brand-blue/5 flex items-center justify-center mb-6 shadow-sm border border-brand-blue/10">
                   <Settings className="h-6 w-6 text-brand-blue" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-foreground mb-3">Tool-first</h3>
@@ -76,7 +76,7 @@ export function FaqFinalSection() {
             
             <SlideIn direction="up" delay={0.2}>
               <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-brand-blue/5 flex items-center justify-center mb-6 shadow-sm border border-brand-blue/10">
+                <div className="w-16 h-16 rounded-lg bg-brand-blue/5 flex items-center justify-center mb-6 shadow-sm border border-brand-blue/10">
                   <Eye className="h-6 w-6 text-brand-blue" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-foreground mb-3">Transparent</h3>
@@ -88,7 +88,7 @@ export function FaqFinalSection() {
             
             <SlideIn direction="up" delay={0.3}>
               <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-brand-blue/5 flex items-center justify-center mb-6 shadow-sm border border-brand-blue/10">
+                <div className="w-16 h-16 rounded-lg bg-brand-blue/5 flex items-center justify-center mb-6 shadow-sm border border-brand-blue/10">
                   <Shield className="h-6 w-6 text-brand-blue" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-foreground mb-3">Independent</h3>
@@ -110,7 +110,7 @@ export function FaqFinalSection() {
           </SlideIn>
           
           <SlideIn direction="up" delay={0.1}>
-            <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgba(23,32,42,0.04)] border border-border/60 p-6 md:p-10">
+            <div className="bg-white rounded-lg shadow-[0_8px_30px_rgba(23,32,42,0.04)] border border-border/60 p-6 md:p-10">
               <Accordion className="w-full">
                 {faqs.map((faq, i) => (
                   <AccordionItem key={i} value={`item-${i}`} className="border-b border-border/60 last:border-0 py-3">
@@ -148,7 +148,7 @@ export function FaqFinalSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_40px_100px_rgba(15,23,42,0.1)] rounded-[32px] p-12 md:p-20 text-center relative overflow-hidden"
+            className="bg-white  border border-white/60 shadow-[0_40px_100px_rgba(15,23,42,0.1)] rounded-[32px] p-12 md:p-20 text-center relative overflow-hidden"
           >
             {/* Inner Glow */}
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-blue/30 to-transparent" />

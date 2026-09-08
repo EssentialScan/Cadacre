@@ -83,12 +83,12 @@ export function Hero({ towns }: { towns: Town[] }) {
                 style={{ background: 'radial-gradient(circle, rgba(15,118,110,0.08) 0%, transparent 70%)' }} 
               />
               
-              <div className="relative overflow-hidden rounded-2xl bg-white border border-border shadow-[0_8px_32px_rgba(15,23,42,0.06)] h-full min-h-[440px]">
+              <div className="relative overflow-hidden rounded-lg bg-white border border-border shadow-[0_8px_32px_rgba(15,23,42,0.06)] h-full min-h-[440px]">
                 <HeroMapLoader towns={towns} />
               </div>
               
               {/* Live Data Indicator */}
-              <div className="absolute -bottom-4 -right-4 lg:-bottom-6 lg:-left-6 lg:right-auto bg-white/90 backdrop-blur-md border border-border rounded-lg shadow-sm py-2.5 px-4 flex items-center gap-3">
+              <div className="absolute -bottom-4 -right-4 lg:-bottom-6 lg:-left-6 lg:right-auto bg-white  border border-border rounded-lg shadow-sm py-2.5 px-4 flex items-center gap-3">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-blue"></span>

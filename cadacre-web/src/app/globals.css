@@ -71,7 +71,7 @@
   --input: 214.3 31.8% 91.4%;
   --ring: 175 77% 26%;
   
-  --radius: 0.75rem; /* softer, slightly larger rounded corners */
+  --radius: 0.5rem; /* professional sharp rounded-lg corners */
 }
 
 @layer base {
@@ -91,13 +91,7 @@
   }
 }
 
-/* Precise Shadows (DESIGN.md) */
-.shadow-premium {
-  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 4px 6px -1px rgb(15 23 42 / 0.04), 0 10px 15px -3px rgb(15 23 42 / 0.03);
-}
-.shadow-premium-hover {
-  box-shadow: 0 4px 6px -1px rgb(15 23 42 / 0.05), 0 10px 15px -3px rgb(15 23 42 / 0.06), 0 20px 25px -5px rgb(15 23 42 / 0.04);
-}
+
 .shadow-soft {
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
 }

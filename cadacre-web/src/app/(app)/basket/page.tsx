@@ -58,7 +58,7 @@ export default function BasketBuilderPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Controls */}
-            <div className="md:col-span-1 space-y-6 bg-white p-6 rounded-2xl border border-border shadow-sm">
+            <div className="md:col-span-1 space-y-6 bg-white p-6 rounded-lg border border-border shadow-sm">
               <h3 className="font-bold text-foreground">Constraints</h3>
               
               <div>
@@ -114,13 +114,13 @@ export default function BasketBuilderPage() {
             {/* Results */}
             <div className="md:col-span-2 space-y-6">
               {!results && !loading && (
-                <div className="h-full border-2 border-dashed border-border rounded-2xl flex items-center justify-center bg-white/50 min-h-[400px]">
+                <div className="h-full border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-white/50 min-h-[400px]">
                   <p className="text-muted-foreground text-sm">Configure constraints and run the builder.</p>
                 </div>
               )}
 
               {loading && (
-                <div className="h-full border border-border rounded-2xl flex flex-col items-center justify-center bg-white min-h-[400px]">
+                <div className="h-full border border-border rounded-lg flex flex-col items-center justify-center bg-white min-h-[400px]">
                   <Loader2 className="w-8 h-8 text-brand-blue animate-spin mb-4" />
                   <p className="text-muted-foreground text-sm">Fetching live historical data...</p>
                 </div>
@@ -143,7 +143,7 @@ export default function BasketBuilderPage() {
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
+                  <div className="bg-white p-6 rounded-lg border border-border shadow-sm">
                     <h3 className="font-bold text-foreground mb-6">1-Year Historical Backtest ($10,000 Equal-Weighted)</h3>
                     <div className="h-[300px] w-full">
                       {results.backtest && results.backtest.length > 0 ? (
@@ -185,7 +185,7 @@ export default function BasketBuilderPage() {
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
                     <div className="px-6 py-4 border-b border-border bg-muted/20">
                       <h3 className="font-bold text-foreground">Matching Securities</h3>
                     </div>

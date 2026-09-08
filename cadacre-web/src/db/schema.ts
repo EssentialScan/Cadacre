@@ -21,6 +21,11 @@ export type PortfolioHolding = InferSelectModel<typeof portfolioHoldings>;
 export type ReitDistribution = InferSelectModel<typeof reitDistributions>;
 export type Alert = InferSelectModel<typeof alerts>;
 export type ApiKey = InferSelectModel<typeof apiKeys>;
+export type ReitMetric = InferSelectModel<typeof reitMetrics>;
+export type ReitHistoricalFinancial = InferSelectModel<typeof reitHistoricalFinancials>;
+export type ReitTransaction = InferSelectModel<typeof reitTransactions>;
+export type ReitEvent = InferSelectModel<typeof reitEvents>;
+export type ReitDocument = InferSelectModel<typeof reitDocuments>;
 
 export const sectorEnum = pgEnum("sector", ["Industrial", "Retail", "Office", "Diversified", "Specialized"]);
 
@@ -35,6 +40,13 @@ export const reits = pgTable(
     yield: doublePrecision("yield"),
     ntaDiscount: doublePrecision("nta_discount"),
     gearing: doublePrecision("gearing"),
+    entityType: text("entity_type"),
+    listingDate: date("listing_date"),
+    hq: text("hq"),
+    website: text("website"),
+    irPage: text("ir_page"),
+    businessModel: text("business_model"),
+    structure: text("structure"),
     wale: doublePrecision("wale"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -54,6 +66,16 @@ export const reitAssets = pgTable(
     lng: doublePrecision("lng"),
     propertyType: text("property_type"),
     bookValue: doublePrecision("book_value"),
+    occupancyRate: doublePrecision("occupancy_rate"), // percentage
+    wale: doublePrecision("wale"), // years
+    capRate: doublePrecision("cap_rate"), // percentage
+    gla: integer("gla"), // sqm
+    majorTenant: text("major_tenant"),
+    majorTenants: jsonb("major_tenants"),
+    acquisitionDate: date("acquisition_date"),
+    developmentStatus: text("development_status"),
+    developmentValue: doublePrecision("development_value"),
+    ownershipPct: doublePrecision("ownership_pct"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   }
 );
@@ -117,6 +139,9 @@ export const reitDistributions = pgTable("reit_distributions", {
   taxDeferredPct: doublePrecision("tax_deferred_pct").default(0),
   cgDiscountPct: doublePrecision("cg_discount_pct").default(0),
   foreignIncomePct: doublePrecision("foreign_income_pct").default(0),
+  frankingCreditsPct: doublePrecision("franking_credits_pct").default(0),
+  foreignTaxCreditsPct: doublePrecision("foreign_tax_credits_pct").default(0),
+  amitComponents: jsonb("amit_components"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -228,3 +253,99 @@ export const savedScreenerViews = pgTable("saved_screener_views", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+
+// ── Phase 4: REIT Intelligence Terminal Data Model ────────────────────────────
+
+export const reitMetrics = pgTable("reit_metrics", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  metricGroup: text("metric_group").notNull(),
+  metric: text("metric").notNull(),
+  value: text("value").notNull(),
+  unit: text("unit"),
+  period: text("period"),
+  asOfDate: date("as_of_date").notNull(),
+  sourceUrl: text("source_url"),
+  sourceTitle: text("source_title"),
+  sourceDate: date("source_date"),
+  sourceType: text("source_type"),
+  methodology: text("methodology"),
+  isCalculated: boolean("is_calculated").default(false),
+  confidence: text("confidence").default("high"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitHistoricalFinancials = pgTable("reit_historical_financials", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  financialYear: text("financial_year").notNull(),
+  revenue: doublePrecision("revenue"),
+  operatingEarnings: doublePrecision("operating_earnings"),
+  eps: doublePrecision("eps"),
+  distribution: doublePrecision("distribution"),
+  nta: doublePrecision("nta"),
+  propertyValue: doublePrecision("property_value"),
+  gearing: doublePrecision("gearing"),
+  occupancy: doublePrecision("occupancy"),
+  wale: doublePrecision("wale"),
+  sourceUrl: text("source_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitTransactions = pgTable("reit_transactions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  transactionDate: date("transaction_date").notNull(),
+  type: text("type").notNull(),
+  assetName: text("asset_name").notNull(),
+  location: text("location"),
+  counterparty: text("counterparty"),
+  value: doublePrecision("value"),
+  ownershipPct: doublePrecision("ownership_pct"),
+  settlementDate: date("settlement_date"),
+  reason: text("reason"),
+  sourceUrl: text("source_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitEvents = pgTable("reit_events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  eventDate: timestamp("event_date", { withTimezone: true }).notNull(),
+  title: text("title").notNull(),
+  eventType: text("event_type").notNull(),
+  description: text("description"),
+  sourceUrl: text("source_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitDocuments = pgTable("reit_documents", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reitId: uuid("reit_id").notNull().references(() => reits.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  documentType: text("document_type").notNull(),
+  publishDate: date("publish_date").notNull(),
+  reportingPeriod: text("reporting_period"),
+  sourceUrl: text("source_url").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reitMetricsRelations = relations(reitMetrics, ({ one }) => ({
+  reit: one(reits, { fields: [reitMetrics.reitId], references: [reits.id] }),
+}));
+
+export const reitHistoricalFinancialsRelations = relations(reitHistoricalFinancials, ({ one }) => ({
+  reit: one(reits, { fields: [reitHistoricalFinancials.reitId], references: [reits.id] }),
+}));
+
+export const reitTransactionsRelations = relations(reitTransactions, ({ one }) => ({
+  reit: one(reits, { fields: [reitTransactions.reitId], references: [reits.id] }),
+}));
+
+export const reitEventsRelations = relations(reitEvents, ({ one }) => ({
+  reit: one(reits, { fields: [reitEvents.reitId], references: [reits.id] }),
+}));
+
+export const reitDocumentsRelations = relations(reitDocuments, ({ one }) => ({
+  reit: one(reits, { fields: [reitDocuments.reitId], references: [reits.id] }),
+}));

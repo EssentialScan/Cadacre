@@ -53,7 +53,7 @@ export default function GlossaryPage() {
             <div className="space-y-8">
               {terms.map((item, index) => (
                 <SlideIn key={item.term} direction="up" delay={index * 0.05}>
-                  <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgba(23,32,42,0.04)] border border-border/60 p-6 md:p-8">
+                  <div className="bg-white rounded-lg shadow-[0_8px_30px_rgba(23,32,42,0.04)] border border-border/60 p-6 md:p-8">
                     <h3 className="text-xl font-bold text-foreground mb-3">{item.term}</h3>
                     <p className="text-muted-foreground leading-relaxed">{item.definition}</p>
                   </div>

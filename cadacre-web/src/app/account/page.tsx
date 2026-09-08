@@ -72,7 +72,7 @@ export default async function AccountPage() {
           </div>
 
           {/* Profile Settings Card */}
-          <div className="rounded-xl border border-border bg-white shadow-premium p-6 mb-8">
+          <div className="rounded-xl border border-border bg-white shadow-sm p-6 mb-8">
             <div className="mb-6">
               <h2 className="font-display text-lg font-bold text-foreground mb-1">Profile Settings</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -86,7 +86,7 @@ export default async function AccountPage() {
           </div>
 
           {/* Subscription Card */}
-          <div className="rounded-xl border border-border bg-white shadow-premium p-6 mb-8">
+          <div className="rounded-xl border border-border bg-white shadow-sm p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-lg font-bold text-foreground">Subscription</h2>
               <div className={`flex items-center gap-1.5 text-sm font-semibold ${subscribed ? "text-data-green" : "text-muted-foreground"}`}>
@@ -150,7 +150,7 @@ export default async function AccountPage() {
           </div>
 
           {/* API Keys Card */}
-          <div className="rounded-xl border border-border bg-white shadow-premium p-6 mb-8">
+          <div className="rounded-xl border border-border bg-white shadow-sm p-6 mb-8">
             <div className="mb-4">
               <h2 className="font-display text-lg font-bold text-foreground mb-1">Data API Keys</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -163,7 +163,7 @@ export default async function AccountPage() {
           </div>
 
           {/* Quick links */}
-          <div className="rounded-xl border border-border bg-white shadow-premium p-6">
+          <div className="rounded-xl border border-border bg-white shadow-sm p-6">
             <h2 className="font-display text-lg font-bold text-foreground mb-4">Quick links</h2>
             <div className="grid grid-cols-2 gap-3">
               {[

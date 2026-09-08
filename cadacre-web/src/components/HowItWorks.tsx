@@ -52,7 +52,7 @@ export function HowItWorks() {
         </SlideIn>
 
         {/* Sanity-style numbered tab list */}
-        <div className="mt-12 flex gap-1 rounded-full border border-faded-rule bg-white/60 p-1 backdrop-blur-sm w-fit">
+        <div className="mt-12 flex gap-1 rounded-full border border-faded-rule bg-white p-1  w-fit">
           {groups.map((g, i) => (
             <button
               key={g.id}

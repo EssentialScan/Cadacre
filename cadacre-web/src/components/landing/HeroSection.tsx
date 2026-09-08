@@ -84,7 +84,7 @@ export function HeroSection({ heroAssets }: { heroAssets?: any[] }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
-                className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 bg-white/90 backdrop-blur-md border border-[rgba(23,32,42,0.08)] rounded-[14px] p-4 sm:p-5 shadow-lg w-48 sm:w-56"
+                className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 bg-white  border border-[rgba(23,32,42,0.08)] rounded-[14px] p-4 sm:p-5 shadow-lg w-48 sm:w-56"
               >
                 <div className="flex items-center gap-2 mb-3/50 pb-3">
                   <div className="w-5 h-5 rounded bg-brand-blue/10 flex items-center justify-center">

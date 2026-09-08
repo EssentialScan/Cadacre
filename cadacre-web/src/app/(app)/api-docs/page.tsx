@@ -20,7 +20,7 @@ export default function ApiDocsPage() {
 
         <div className="space-y-12">
           {/* Authentication */}
-          <section className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+          <section className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
             <h2 className="font-display text-2xl font-bold text-foreground mb-4">Authentication</h2>
             <p className="text-muted-foreground mb-4">
               All requests to the API must include an API key in the `Authorization` header. You can generate an API key from your <Link href="/account" className="text-brand-blue hover:underline">Account dashboard</Link>.
@@ -31,7 +31,7 @@ export default function ApiDocsPage() {
           </section>
 
           {/* Rate Limits */}
-          <section className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+          <section className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
             <h2 className="font-display text-2xl font-bold text-foreground mb-4">Rate Limits</h2>
             <p className="text-muted-foreground mb-4">
               Rate limits are based on your subscription tier. Limits are returned in the response headers.
@@ -50,7 +50,7 @@ export default function ApiDocsPage() {
             <h2 className="font-display text-3xl font-bold text-foreground mb-6">Endpoints (v1)</h2>
 
             {/* GET /api/v1/reits */}
-            <div className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+            <div className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">
                 <span className="text-data-green mr-2">GET</span> /api/v1/reits
               </h3>
@@ -64,7 +64,7 @@ export default function ApiDocsPage() {
             </div>
 
             {/* GET /api/v1/reits/[ticker] */}
-            <div className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+            <div className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">
                 <span className="text-data-green mr-2">GET</span> /api/v1/reits/{"{ticker}"}
               </h3>
@@ -78,7 +78,7 @@ export default function ApiDocsPage() {
             </div>
 
             {/* GET /api/v1/reits/[ticker]/assets */}
-            <div className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+            <div className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">
                 <span className="text-data-green mr-2">GET</span> /api/v1/reits/{"{ticker}"}/assets
               </h3>
@@ -88,7 +88,7 @@ export default function ApiDocsPage() {
             </div>
 
             {/* GET /api/v1/assets */}
-            <div className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+            <div className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">
                 <span className="text-data-green mr-2">GET</span> /api/v1/assets
               </h3>
@@ -99,7 +99,7 @@ export default function ApiDocsPage() {
             </div>
 
             {/* GET /api/v1/prices */}
-            <div className="rounded-xl border border-border bg-white shadow-premium p-6 sm:p-8">
+            <div className="rounded-xl border border-border bg-white shadow-sm p-6 sm:p-8">
               <h3 className="font-display text-xl font-bold text-foreground mb-2">
                 <span className="text-data-green mr-2">GET</span> /api/v1/prices
               </h3>

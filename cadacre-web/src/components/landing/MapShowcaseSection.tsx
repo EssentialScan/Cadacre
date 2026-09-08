@@ -50,7 +50,7 @@ export function MapShowcaseSection() {
         className="absolute inset-0 z-10 pointer-events-none hidden lg:block"
       >
         {/* Geographic Breadcrumbs */}
-        <div className="absolute top-32 left-8 lg:left-24 bg-white/10 backdrop-blur-md border border-white/10 rounded-md px-4 py-2 shadow-sm flex items-center text-xs font-medium text-white pointer-events-auto">
+        <div className="absolute top-32 left-8 lg:left-24 bg-white  border border-white/10 rounded-md px-4 py-2 shadow-sm flex items-center text-xs font-medium text-white pointer-events-auto">
           <span className="text-white/70 hover:text-white cursor-pointer transition-colors">Australia</span>
           <span className="mx-2 text-white/30">/</span>
           <span className="text-white/70 hover:text-white cursor-pointer transition-colors">NSW</span>
@@ -65,7 +65,7 @@ export function MapShowcaseSection() {
           </div>
           <div className="absolute top-0 left-0 w-6 h-6 bg-white rounded-full animate-ping opacity-40" />
           
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-5 bg-white border border-white/20 shadow-[0_24px_48px_rgba(0,0,0,0.2)] rounded-2xl p-5 w-80">
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-5 bg-white border border-white/20 shadow-[0_24px_48px_rgba(0,0,0,0.2)] rounded-lg p-5 w-80">
             <div className="flex items-start justify-between mb-3">
               <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-blue/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-blue">
                 Industrial
@@ -90,13 +90,13 @@ export function MapShowcaseSection() {
         </div>
 
         {/* Other subtle pins & clusters */}
-        <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-white/80 backdrop-blur-sm rounded-full shadow-sm" />
-        <div className="absolute top-[30%] left-1/4 w-4 h-4 bg-white/90 backdrop-blur-sm rounded-full shadow-sm" />
-        <div className="absolute bottom-1/4 right-1/3 w-3.5 h-3.5 bg-white/80 backdrop-blur-sm rounded-full shadow-sm" />
+        <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-white  rounded-full shadow-sm" />
+        <div className="absolute top-[30%] left-1/4 w-4 h-4 bg-white  rounded-full shadow-sm" />
+        <div className="absolute bottom-1/4 right-1/3 w-3.5 h-3.5 bg-white  rounded-full shadow-sm" />
         
         {/* Glowing Clusters */}
-        <div className="absolute top-1/3 right-[15%] w-14 h-14 bg-white/10 backdrop-blur-md text-white flex items-center justify-center rounded-full text-sm font-bold border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.1)]">14</div>
-        <div className="absolute bottom-[20%] left-[30%] w-12 h-12 bg-white/10 backdrop-blur-md text-white flex items-center justify-center rounded-full text-xs font-bold border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.1)]">8</div>
+        <div className="absolute top-1/3 right-[15%] w-14 h-14 bg-white  text-white flex items-center justify-center rounded-full text-sm font-bold border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.1)]">14</div>
+        <div className="absolute bottom-[20%] left-[30%] w-12 h-12 bg-white  text-white flex items-center justify-center rounded-full text-xs font-bold border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.1)]">8</div>
       </motion.div>
 
       {/* Foreground Content Layer */}

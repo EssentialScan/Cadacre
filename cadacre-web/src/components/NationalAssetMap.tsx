@@ -16,6 +16,11 @@ export interface AssetMapItem {
   lng: number | null;
   propertyType: string | null;
   bookValue: number | null;
+  occupancyRate?: number | null;
+  wale?: number | null;
+  capRate?: number | null;
+  gla?: number | null;
+  majorTenant?: string | null;
 }
 
 interface NationalAssetMapProps {
@@ -146,7 +151,7 @@ export function NationalAssetMap({
             latitude={Number(popupInfo.lat)}
             onClose={() => setPopupInfo(null)}
             closeOnClick={false}
-            className="rounded-xl overflow-hidden shadow-premium z-50"
+            className="rounded-xl overflow-hidden shadow-sm z-50"
             maxWidth="300px"
           >
             <div className="p-1">
@@ -177,7 +182,7 @@ export function NationalAssetMap({
 
         {/* Sidebar Overlay for Property Details */}
         {popupInfo && !isLockedSample && (
-          <div className="absolute right-6 top-6 bottom-6 w-96 bg-white/95 backdrop-blur-xl shadow-2xl border border-slate-200/60 rounded-3xl z-50 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300">
+          <div className="absolute right-6 top-6 bottom-6 w-96 bg-white shadow-md border border-slate-200 rounded-lg z-50 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300">
             <div className="p-8 flex-1 overflow-y-auto">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2.5">
@@ -204,17 +209,62 @@ export function NationalAssetMap({
                 {popupInfo.suburb} {popupInfo.state}
               </p>
 
-              <div className="space-y-8">
-                <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-200/60 shadow-sm">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Book Value</span>
-                  <span className="font-mono-figure font-bold text-brand-blue text-3xl leading-none block">
-                    {formatCurrency(popupInfo.bookValue)}
-                  </span>
+              <div className="space-y-6">
+                
+                {/* Core Metrics Grid */}
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4">Financials & Leases</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 shadow-sm col-span-2">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 block mb-1">Book Value</span>
+                      <span className="font-mono-figure font-bold text-brand-blue text-2xl leading-none block">
+                        {formatCurrency(popupInfo.bookValue)}
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 shadow-sm">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 block mb-1">Cap Rate</span>
+                      <span className="font-mono-figure font-bold text-slate-800 text-xl leading-none block">
+                        {popupInfo.capRate ? `${popupInfo.capRate.toFixed(2)}%` : "-"}
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 shadow-sm">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 block mb-1">Occupancy</span>
+                      <span className="font-mono-figure font-bold text-slate-800 text-xl leading-none block">
+                        {popupInfo.occupancyRate ? `${popupInfo.occupancyRate.toFixed(1)}%` : "-"}
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 shadow-sm">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 block mb-1">WALE</span>
+                      <span className="font-mono-figure font-bold text-slate-800 text-xl leading-none block">
+                        {popupInfo.wale ? `${popupInfo.wale.toFixed(1)} yrs` : "-"}
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 shadow-sm">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 block mb-1">GLA</span>
+                      <span className="font-mono-figure font-bold text-slate-800 text-xl leading-none block">
+                        {popupInfo.gla ? `${popupInfo.gla.toLocaleString()} sqm` : "-"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-5">
+                {/* Major Tenant */}
+                {popupInfo.majorTenant && (
+                  <div className="bg-brand-blue/5 rounded-lg p-4 border border-brand-blue/10">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-brand-blue/70 block mb-1">Major Tenant</span>
+                    <span className="font-display font-semibold text-brand-blue text-lg block">
+                      {popupInfo.majorTenant}
+                    </span>
+                  </div>
+                )}
+
+                <div className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Location Details</h4>
-                  <div className="grid grid-cols-2 gap-6 bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+                  <div className="grid grid-cols-2 gap-6 bg-slate-50 rounded-lg p-6 border border-slate-200">
                     <div>
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block mb-1.5">Latitude</span>
                       <span className="text-sm font-mono text-slate-700 font-medium">{popupInfo.lat?.toFixed(4)}</span>
@@ -229,10 +279,10 @@ export function NationalAssetMap({
                 <div className="space-y-5">
                   <h4 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Quick Actions</h4>
                   <div className="flex flex-col gap-3">
-                    <Link href={`/reit/${popupInfo.reitTicker}`} className="w-full py-3.5 px-4 bg-brand-blue text-white text-sm font-bold rounded-xl hover:bg-brand-blue/90 transition-all text-center shadow-sm hover:shadow-md">
+                    <Link href={`/reit/${popupInfo.reitTicker}`} className="w-full py-2.5 px-4 bg-brand-blue text-white text-sm font-medium rounded-md hover:bg-brand-blue/90 transition-all text-center shadow-sm">
                       View REIT Profile
                     </Link>
-                    <button className="w-full py-3.5 px-4 bg-white border-2 border-slate-200 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all text-center">
+                    <button className="w-full py-2.5 px-4 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 transition-all text-center">
                       Add to Shortlist
                     </button>
                   </div>
@@ -242,26 +292,14 @@ export function NationalAssetMap({
           </div>
         )}
 
-        {/* Map Header Overlay */}
-        {!isLockedSample && (
-          <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none flex flex-col items-center">
-            <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-slate-200/60 flex items-center gap-3">
-              <div className="p-1.5 bg-brand-blue/10 rounded-full">
-                <MapPin className="h-4 w-4 text-brand-blue" />
-              </div>
-              <h1 className="font-display font-bold text-slate-900 text-sm tracking-wide">
-                National Asset Discovery
-              </h1>
-            </div>
-          </div>
-        )}
+
 
         {/* Filter Controls Overlay */}
         {!isLockedSample && toggleType && toggleReit && (
           <div className="absolute top-6 left-6 z-10 flex flex-col items-start gap-2">
             <button 
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-200 hover:border-slate-300 transition-all font-medium text-sm text-slate-700 hover:text-slate-900"
+              className="flex items-center gap-2 bg-white  px-4 py-2.5 rounded-xl shadow-sm border border-slate-200 hover:border-slate-300 transition-all font-medium text-sm text-slate-700 hover:text-slate-900"
             >
               <Filter className="w-4 h-4 text-brand-blue" />
               {showFilters ? "Close Filters" : "Filter Assets"}
@@ -273,7 +311,7 @@ export function NationalAssetMap({
             </button>
 
             {showFilters && (
-              <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-slate-200 w-[280px] overflow-hidden flex flex-col animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="bg-white  rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-slate-200 w-[280px] overflow-hidden flex flex-col animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex border-b border-slate-100">
                   <button 
                     onClick={() => setActiveFilterTab("type")}
@@ -342,34 +380,21 @@ export function NationalAssetMap({
           </div>
         )}
 
-        {/* Legend Overlay */}
-        {!isLockedSample && (
-          <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-slate-200 z-10 pointer-events-none">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Asset Types</h4>
-            <ul className="space-y-2.5">
-              {Object.entries(TYPE_COLORS).map(([type, colorClass]) => (
-                <li key={type} className="flex items-center gap-2.5 text-sm font-medium text-slate-700">
-                  <span className={cn("w-3 h-3 rounded-full shadow-sm", TYPE_BG_COLORS[type])}></span>
-                  {type}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+
 
         {/* Summary Statistics Overlay */}
         {!isLockedSample && (
           <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-10 pointer-events-none">
-            <div className="bg-brand-dark/95 backdrop-blur-md p-4 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-white/10 flex flex-col items-start min-w-[200px]">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-1">Total Assets</span>
-              <span className="font-display font-bold text-white text-3xl leading-none">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col items-start min-w-[200px]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Total Assets</span>
+              <span className="font-display font-bold text-slate-900 text-3xl leading-none">
                 {assets.length}
               </span>
             </div>
             
             {totalValue > 0 && (
-              <div className="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-slate-200 flex flex-col items-start min-w-[200px]">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Book Value</span>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col items-start min-w-[200px]">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Total Book Value</span>
                 <span className="font-mono-figure font-bold text-brand-blue text-xl leading-none">
                   {formatCurrency(totalValue)}
                 </span>

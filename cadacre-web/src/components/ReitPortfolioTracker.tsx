@@ -102,7 +102,7 @@ export function ReitPortfolioTracker() {
     <div className="space-y-8">
       {/* Summary Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="bg-white border border-border shadow-premium">
+        <Card className="bg-white border border-border shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="h-4 w-4 text-brand-blue opacity-70" />
@@ -111,7 +111,7 @@ export function ReitPortfolioTracker() {
             <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(totalCostBasis)}</p>
           </CardContent>
         </Card>
-        <Card className="bg-white border border-border shadow-premium">
+        <Card className="bg-white border border-border shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="h-4 w-4 text-data-green opacity-70" />
@@ -120,7 +120,7 @@ export function ReitPortfolioTracker() {
             <p className="text-2xl font-display font-bold text-brand-blue tabular-nums">{fmtPct(weightedYield)}</p>
           </CardContent>
         </Card>
-        <Card className="bg-white border border-border shadow-premium">
+        <Card className="bg-white border border-border shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-1">
               <BarChart3 className="h-4 w-4 text-brand-blue opacity-70" />
@@ -131,7 +131,7 @@ export function ReitPortfolioTracker() {
             </p>
           </CardContent>
         </Card>
-        <Card className="bg-white border border-border shadow-premium">
+        <Card className="bg-white border border-border shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-1">
               <BarChart3 className="h-4 w-4 text-muted-foreground opacity-70" />
@@ -163,7 +163,7 @@ export function ReitPortfolioTracker() {
       </div>
 
       {activeTab === "holdings" ? (
-        <Card className="bg-white border border-border shadow-premium">
+        <Card className="bg-white border border-border shadow-sm">
         <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5 flex flex-row items-center justify-between">
           <CardTitle className="text-base font-semibold">Holdings</CardTitle>
           <div className="flex gap-2">
@@ -295,9 +295,9 @@ export function ReitPortfolioTracker() {
       ) : (
         <div className="space-y-6">
           {loadingTax ? (
-            <div className="p-8 text-center text-muted-foreground text-sm border border-border rounded-xl bg-white shadow-premium">Loading tax data…</div>
+            <div className="p-8 text-center text-muted-foreground text-sm border border-border rounded-xl bg-white shadow-sm">Loading tax data…</div>
           ) : !taxData || taxData.holdings.length === 0 ? (
-            <div className="p-10 text-center border border-border rounded-xl bg-white shadow-premium">
+            <div className="p-10 text-center border border-border rounded-xl bg-white shadow-sm">
               <Calendar className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
               <p className="text-sm font-medium text-foreground mb-1">No distributions yet</p>
               <p className="text-sm text-muted-foreground">We haven't recorded any distributions for your holdings since their purchase dates.</p>
@@ -306,25 +306,25 @@ export function ReitPortfolioTracker() {
             <>
               {/* Tax Summary Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <Card className="bg-white border border-border shadow-premium">
+                <Card className="bg-white border border-border shadow-sm">
                   <CardContent className="p-5">
                     <p className="text-xs font-medium text-muted-foreground mb-1">Total Earned</p>
                     <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(taxData.summary.totalEarned)}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-white border-brand-blue/20 bg-brand-blue/5 shadow-premium">
+                <Card className="bg-white border-brand-blue/20 bg-brand-blue/5 shadow-sm">
                   <CardContent className="p-5">
                     <p className="text-xs font-medium text-brand-blue mb-1">Tax Deferred (Advantage)</p>
                     <p className="text-2xl font-display font-bold text-brand-blue tabular-nums">{fmt(taxData.summary.taxDeferredEarned)}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-white border border-border shadow-premium">
+                <Card className="bg-white border border-border shadow-sm">
                   <CardContent className="p-5">
                     <p className="text-xs font-medium text-muted-foreground mb-1">Capital Gains</p>
                     <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(taxData.summary.cgDiscountEarned)}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-white border border-border shadow-premium">
+                <Card className="bg-white border border-border shadow-sm">
                   <CardContent className="p-5">
                     <p className="text-xs font-medium text-muted-foreground mb-1">Foreign Income</p>
                     <p className="text-2xl font-display font-bold text-foreground tabular-nums">{fmt(taxData.summary.foreignIncomeEarned)}</p>
@@ -333,7 +333,7 @@ export function ReitPortfolioTracker() {
               </div>
 
               {/* Tax Table */}
-              <Card className="bg-white border border-border shadow-premium">
+              <Card className="bg-white border border-border shadow-sm">
                 <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5">
                   <CardTitle className="text-base font-semibold">Distribution Breakdown by Holding</CardTitle>
                 </CardHeader>

@@ -61,7 +61,7 @@ export default function ModellingClient({ initialReits }: { initialReits: any[] 
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Controls */}
-        <div className="md:col-span-1 space-y-6 bg-white p-6 rounded-2xl border border-border shadow-sm">
+        <div className="md:col-span-1 space-y-6 bg-white p-6 rounded-lg border border-border shadow-sm">
           <h3 className="font-bold text-foreground">Macro Assumptions</h3>
           
           <div>
@@ -117,20 +117,20 @@ export default function ModellingClient({ initialReits }: { initialReits: any[] 
         {/* Results */}
         <div className="md:col-span-2 space-y-6">
           {!results && !loading && (
-            <div className="h-full border-2 border-dashed border-border rounded-2xl flex items-center justify-center bg-white/50 min-h-[450px]">
+            <div className="h-full border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-white/50 min-h-[450px]">
               <p className="text-muted-foreground text-sm">Configure assumptions and run the model.</p>
             </div>
           )}
 
           {loading && (
-            <div className="h-full border border-border rounded-2xl flex flex-col items-center justify-center bg-white min-h-[450px]">
+            <div className="h-full border border-border rounded-lg flex flex-col items-center justify-center bg-white min-h-[450px]">
               <Loader2 className="w-8 h-8 text-brand-blue animate-spin mb-4" />
               <p className="text-muted-foreground text-sm">Computing mechanical scenarios...</p>
             </div>
           )}
 
           {results && !loading && !results.error && (
-            <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col min-h-[450px]">
+            <div className="bg-white p-6 rounded-lg border border-border shadow-sm flex flex-col min-h-[450px]">
               <div className="mb-6">
                 <h3 className="font-bold text-foreground text-lg">{results.reit.ticker} - 5 Year Distribution Yield Scenarios</h3>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground">

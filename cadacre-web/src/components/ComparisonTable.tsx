@@ -45,7 +45,7 @@ export function ComparisonTable({ reits }: { reits: Reit[] }) {
   const formatPercent = (val: number | null) => val == null ? "-" : `${val.toFixed(1)}%`;
 
   return (
-    <div className="w-full overflow-x-auto rounded-xl border border-border bg-white shadow-premium transition-all hover:shadow-premium-hover">
+    <div className="w-full overflow-x-auto rounded-xl border border-border bg-white shadow-sm transition-all hover:shadow-md">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent border-b-border/50">

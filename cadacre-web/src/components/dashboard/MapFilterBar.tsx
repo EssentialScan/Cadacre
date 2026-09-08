@@ -42,7 +42,7 @@ function Toggle({
   return (
     <label
       htmlFor={id}
-      className="flex h-[30px] items-center gap-1.5 self-end rounded-sm border border-faded-rule bg-white/80 px-2.5 text-[11px] font-medium text-ink-navy"
+      className="flex h-[30px] items-center gap-1.5 self-end rounded-sm border border-faded-rule bg-white px-2.5 text-[11px] font-medium text-ink-navy"
     >
       <input
         id={id}
@@ -57,7 +57,7 @@ function Toggle({
 }
 
 const inputClass =
-  "w-24 rounded-sm border border-faded-rule bg-white/80 px-2.5 py-1.5 font-mono-figure text-xs text-ink-navy placeholder:text-charcoal/30 outline-none transition focus:border-survey-brass focus:bg-white";
+  "w-24 rounded-sm border border-faded-rule bg-white px-2.5 py-1.5 font-mono-figure text-xs text-ink-navy placeholder:text-charcoal/30 outline-none transition focus:border-survey-brass focus:bg-white";
 
 export function MapFilterBar({
   towns,
@@ -92,7 +92,7 @@ export function MapFilterBar({
 
   return (
     <div className="pointer-events-none absolute inset-x-0 top-4 z-[900] flex justify-center">
-      <div className="terminal-corners pointer-events-auto inline-flex flex-col gap-3 rounded-sm border border-faded-rule bg-parchment/70 px-4 py-3 shadow-[0_24px_60px_-20px_rgba(18,22,28,0.25)] backdrop-blur-xl">
+      <div className="terminal-corners pointer-events-auto inline-flex flex-col gap-3 rounded-sm border border-faded-rule bg-parchment/70 px-4 py-3 shadow-[0_24px_60px_-20px_rgba(18,22,28,0.25)] ">
         <div className="flex items-center justify-between gap-4">
           <span className="font-mono-figure text-[9px] uppercase tracking-[0.22em] text-survey-brass">
             Screen
@@ -104,7 +104,7 @@ export function MapFilterBar({
 
         <div className="flex flex-wrap items-end gap-3">
           <Field label="Region" htmlFor="bar-region">
-            <div className="flex h-[30px] items-center gap-0.5 rounded-sm border border-faded-rule bg-white/80 p-0.5">
+            <div className="flex h-[30px] items-center gap-0.5 rounded-sm border border-faded-rule bg-white p-0.5">
               {(
                 [
                   { label: "All", value: undefined },
