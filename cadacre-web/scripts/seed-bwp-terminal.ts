@@ -6,6 +6,9 @@ import { eq } from "drizzle-orm";
 
 async function main() {
   const db = getDb();
+  if (!db) {
+    throw new Error("Failed to initialize database connection.");
+  }
   console.log("Seeding data terminal metrics for BWP...");
 
   const [bwp] = await db.select().from(reits).where(eq(reits.ticker, "BWP"));
